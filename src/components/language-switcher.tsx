@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Globe } from "lucide-react";
 import {
@@ -15,15 +16,15 @@ const languages = [
   { code: "ru", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439", short: "RU" },
 ] as const;
 
-function getCurrentLocale(): string {
-  if (typeof document === "undefined") return "en";
-  const match = document.cookie.match(/(?:^|;\s*)NEXT_LOCALE=([^;]*)/);
-  return match ? match[1] : "en";
-}
-
 export function LanguageSwitcher() {
   const router = useRouter();
-  const current = getCurrentLocale();
+  const [current, setCurrent] = useState("en");
+
+  useEffect(() => {
+    const match = document.cookie.match(/(?:^|;\s*)NEXT_LOCALE=([^;]*)/);
+    if (match) setCurrent(match[1]);
+  }, []);
+
   const currentLang = languages.find((l) => l.code === current) ?? languages[0];
 
   function handleSelect(code: string) {
