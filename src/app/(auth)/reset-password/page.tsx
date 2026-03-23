@@ -68,7 +68,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="grid gap-6">
       <div className="flex flex-col items-center gap-2">
-        <Image src="/logo-full.png" alt="The Street Dog App" width={300} height={300} className="w-[200px] h-[200px] object-contain" />
+        <Image src="/logo-full.png" alt="The Street Dog App" width={300} height={300} className="w-[300px] h-[300px] object-contain" />
         <h1 className="text-2xl font-bold tracking-tight">Reset Password</h1>
         <p className="text-sm text-muted-foreground">
           Enter your email to receive a reset link
