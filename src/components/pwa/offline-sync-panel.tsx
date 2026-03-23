@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CloudUpload, Loader2, RefreshCw, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,11 +28,14 @@ function timeAgo(iso: string): string {
 }
 
 export function OfflineSyncPanel() {
+  const router = useRouter();
   const { offlineDogs, count, sync, isSyncing, lastSyncResult } =
     useOfflineDogs();
   const [isOnline, setIsOnline] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     setIsOnline(navigator.onLine);
     const goOnline = () => setIsOnline(true);
     const goOffline = () => setIsOnline(false);
@@ -42,6 +46,13 @@ export function OfflineSyncPanel() {
       window.removeEventListener("offline", goOffline);
     };
   }, []);
+
+  const handleSync = useCallback(async () => {
+    const result = await sync();
+    if (result && result.synced > 0) {
+      router.refresh();
+    }
+  }, [sync, router]);
 
   // Build object URLs for dog thumbnails
   const thumbUrls = useMemo(() => {
@@ -63,6 +74,8 @@ export function OfflineSyncPanel() {
     };
   }, [thumbUrls]);
 
+  // Don't render during SSR — all data comes from IndexedDB (client-only)
+  if (!mounted) return null;
   if (count === 0 && !lastSyncResult) return null;
 
   return (
@@ -125,7 +138,7 @@ export function OfflineSyncPanel() {
         )}
 
         <Button
-          onClick={sync}
+          onClick={handleSync}
           disabled={isSyncing || count === 0 || !isOnline}
           variant="outline"
           size="sm"
