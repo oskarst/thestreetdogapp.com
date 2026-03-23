@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v2";
+const CACHE_NAME = "streetdog-v3";
 const STATIC_ASSETS = ["/manifest.json", "/icon-192.png", "/icon-512.png", "/offline.html", "/logo.png", "/leaflet/marker-icon.png", "/leaflet/marker-icon-2x.png", "/leaflet/marker-shadow.png"];
 
 // Install — cache static assets
@@ -119,16 +119,19 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          if (response && response.status === 200) {
+          // Only cache final 200 responses, never redirects (Safari rejects SW redirects)
+          if (response && response.status === 200 && !response.redirected) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
           }
           return response;
         })
         .catch(() =>
-          caches.match(event.request).then((cached) =>
-            cached || caches.match("/offline.html")
-          )
+          caches.match(event.request).then((cached) => {
+            // Never serve cached redirects — Safari throws on SW redirect responses
+            if (cached && cached.redirected) return caches.match("/offline.html");
+            return cached || caches.match("/offline.html");
+          })
         )
     );
     return;
