@@ -15,6 +15,7 @@ import { CharacterPicker } from "@/components/forms/character-picker";
 import { SizeSlider } from "@/components/forms/size-slider";
 import { GenderPicker } from "@/components/forms/gender-picker";
 import { AgePicker } from "@/components/forms/age-picker";
+import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import { scanEarTag } from "@/lib/ocr";
 import { saveOfflineDog } from "@/lib/offline-db";
 import { toast } from "sonner";
@@ -197,6 +198,7 @@ export function AddDogForm() {
         }}>
           Catch Another Dog
         </Button>
+        <OfflineSyncPanel />
       </div>
     );
   }

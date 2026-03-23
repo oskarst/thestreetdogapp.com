@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v3";
+const CACHE_NAME = "streetdog-v4";
 const STATIC_ASSETS = ["/manifest.json", "/icon-192.png", "/icon-512.png", "/offline.html", "/logo.png", "/leaflet/marker-icon.png", "/leaflet/marker-icon-2x.png", "/leaflet/marker-shadow.png"];
 
 // Install — cache static assets
@@ -137,7 +137,9 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network-first for other same-origin requests
+  // Network-first for other same-origin GET requests (Cache API doesn't support POST)
+  if (event.request.method !== "GET") return;
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {

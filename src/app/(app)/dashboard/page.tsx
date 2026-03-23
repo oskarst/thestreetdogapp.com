@@ -6,6 +6,7 @@ import { getUserSightings } from "@/lib/db/sightings";
 import { getUserScore } from "@/lib/db/users";
 import { ScoreBoard } from "@/components/dog/score-board";
 import { DashboardContent } from "@/components/dog/dashboard-content";
+import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import type { ScoreResult } from "@/types/database";
 
 export default async function DashboardPage() {
@@ -37,6 +38,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="px-4 py-4 space-y-4">
+      <OfflineSyncPanel />
       <ScoreBoard score={score} />
       <DashboardContent
         dogs={dogs}

@@ -41,29 +41,20 @@ export function useOfflineDogs() {
     load();
   }, [load]);
 
-  // Listen for online/offline and SW sync-complete messages
+  // Listen for SW sync-complete messages
   useEffect(() => {
-    const onOnline = () => {
-      // Auto-sync when coming back online
-      if (offlineDogs.length > 0) {
-        sync();
-      }
-    };
-
     const onSwMessage = (event: MessageEvent) => {
       if (event.data?.type === "SYNC_COMPLETE") {
         load();
       }
     };
 
-    window.addEventListener("online", onOnline);
     navigator.serviceWorker?.addEventListener("message", onSwMessage);
 
     return () => {
-      window.removeEventListener("online", onOnline);
       navigator.serviceWorker?.removeEventListener("message", onSwMessage);
     };
-  }, [offlineDogs.length, sync, load]);
+  }, [load]);
 
   return {
     offlineDogs,
