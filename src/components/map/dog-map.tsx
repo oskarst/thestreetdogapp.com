@@ -137,7 +137,7 @@ export default function DogMap({ dogs }: DogMapProps) {
 
   return (
     <>
-      <div ref={mapRef} className="w-full h-full" />
+      <div ref={mapRef} className="w-full h-full z-0" />
 
       <style jsx global>{`
         .marker-cluster-small {

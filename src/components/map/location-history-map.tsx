@@ -81,7 +81,7 @@ function LocationHistoryMapInner({ locations }: LocationHistoryMapProps) {
     };
   }, [locations]);
 
-  return <div ref={mapRef} style={{ height: 400, width: "100%" }} />;
+  return <div ref={mapRef} className="z-0" style={{ height: 400, width: "100%" }} />;
 }
 
 // Dynamic import wrapper to avoid SSR

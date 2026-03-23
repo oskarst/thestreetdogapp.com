@@ -89,7 +89,7 @@ function DailyActivityMapInner({ sightings }: DailyActivityMapProps) {
     };
   }, [sightings]);
 
-  return <div ref={mapRef} style={{ height: 400, width: "100%" }} />;
+  return <div ref={mapRef} className="z-0" style={{ height: 400, width: "100%" }} />;
 }
 
 import dynamic from "next/dynamic";

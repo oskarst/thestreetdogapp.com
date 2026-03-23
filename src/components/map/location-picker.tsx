@@ -142,7 +142,7 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
 
   return (
     <div className="space-y-2">
-      <div className="relative">
+      <div className="relative z-0">
         <div
           ref={mapRef}
           className="h-[250px] w-full rounded-lg border"

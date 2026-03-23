@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PawPrint, Loader2, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -105,7 +106,7 @@ export default function RegisterPage() {
   return (
     <div className="grid gap-6">
       <div className="flex flex-col items-center gap-2">
-        <PawPrint className="size-10 text-green-700 dark:text-green-400" />
+        <Image src="/logo.png" alt="Street Dog" width={48} height={48} className="h-12 w-12 object-contain" />
         <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
         <p className="text-sm text-muted-foreground">
           Join the Street Dog community
