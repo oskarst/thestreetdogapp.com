@@ -1,15 +1,16 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { CharacterIcon } from "@/components/dog/character-icon";
 import type { DogCharacter } from "@/types/database";
 
-const OPTIONS: { value: DogCharacter; emoji: string; label: string }[] = [
-  { value: "friendly", emoji: "\u{1F60A}", label: "Friendly" },
-  { value: "very_friendly", emoji: "\u{1F970}", label: "Very Friendly" },
-  { value: "indifferent", emoji: "\u{1F610}", label: "Indifferent" },
-  { value: "sleeping", emoji: "\u{1F634}", label: "Sleeping" },
-  { value: "afraid", emoji: "\u{1F630}", label: "Afraid" },
-  { value: "aggressive", emoji: "\u{1F621}", label: "Aggressive" },
+const OPTIONS: { value: DogCharacter; label: string }[] = [
+  { value: "friendly", label: "Friendly" },
+  { value: "very_friendly", label: "Very Friendly" },
+  { value: "indifferent", label: "Indifferent" },
+  { value: "sleeping", label: "Sleeping" },
+  { value: "afraid", label: "Afraid" },
+  { value: "aggressive", label: "Aggressive" },
 ];
 
 interface CharacterPickerProps {
@@ -32,7 +33,7 @@ export function CharacterPicker({ value, onChange }: CharacterPickerProps) {
               : "border-border bg-background text-foreground hover:bg-muted"
           )}
         >
-          <span className="text-lg">{opt.emoji}</span>
+          <CharacterIcon character={opt.value} className="size-5" />
           {opt.label}
         </button>
       ))}

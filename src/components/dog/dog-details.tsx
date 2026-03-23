@@ -1,6 +1,8 @@
 import type { DogRow } from "@/types/database";
 import { Badge } from "@/components/ui/badge";
 import { Tag, Star } from "lucide-react";
+import { CharacterIcon } from "@/components/dog/character-icon";
+import type { DogCharacter } from "@/types/database";
 
 function timeAgo(dateStr: string | null): string {
   if (!dateStr) return "Unknown";
@@ -80,7 +82,8 @@ export function DogDetails({
           <span className="text-muted-foreground">Character</span>
           <div className="mt-0.5">
             {dog.character ? (
-              <Badge variant="secondary">
+              <Badge variant="secondary" className="gap-1">
+                <CharacterIcon character={dog.character as DogCharacter} className="size-3.5" />
                 {formatCharacter(dog.character)}
               </Badge>
             ) : (

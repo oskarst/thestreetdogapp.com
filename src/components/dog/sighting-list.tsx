@@ -1,5 +1,7 @@
 import type { SightingWithUser } from "@/lib/db/sightings";
 import { Badge } from "@/components/ui/badge";
+import { CharacterIcon } from "@/components/dog/character-icon";
+import type { DogCharacter } from "@/types/database";
 
 function timeAgo(dateStr: string): string {
   const date = new Date(dateStr);
@@ -66,7 +68,8 @@ export function SightingList({ sightings }: SightingListProps) {
                 </span>
               </div>
               <div className="flex flex-wrap gap-1">
-                <Badge variant="secondary" className="text-[10px]">
+                <Badge variant="secondary" className="text-[10px] gap-0.5">
+                  <CharacterIcon character={s.character as DogCharacter} className="size-3" />
                   {formatCharacter(s.character)}
                 </Badge>
                 <Badge variant="secondary" className="text-[10px]">
