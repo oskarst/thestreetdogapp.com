@@ -179,25 +179,8 @@ export function AddDogForm() {
         </div>
         <h2 className="text-xl font-bold">Saved Offline</h2>
         <p className="text-sm text-muted-foreground max-w-xs">
-          Your dog catch has been saved and will automatically sync when you reconnect to the internet.
+          Your dog catch has been saved and will sync when you reconnect.
         </p>
-        <Button variant="outline" onClick={() => {
-          setDogImage(null);
-          setEarTagImage(null);
-          setEarTagId("");
-          setLocation(null);
-          setCharacter("");
-          setSize(5);
-          setGender("");
-          setAge("");
-          setNotes("");
-          setScanError("");
-          setExistingDog(null);
-          setError("");
-          setSavedOffline(false);
-        }}>
-          Catch Another Dog
-        </Button>
         <OfflineSyncPanel />
       </div>
     );

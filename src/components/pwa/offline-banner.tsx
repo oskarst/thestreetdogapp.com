@@ -24,7 +24,7 @@ export function OfflineBanner() {
   if (!isOffline) return null;
 
   return (
-    <div className="sticky top-0 z-50 flex items-center justify-center gap-2 bg-amber-500 px-4 py-2 text-sm font-medium text-amber-950">
+    <div className="flex items-center justify-center gap-2 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-900 border-b border-rose-200">
       <WifiOff className="size-4" />
       You&apos;re offline. Changes will sync when you reconnect.
     </div>

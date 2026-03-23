@@ -4,7 +4,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Toaster } from "sonner";
 import { ServiceWorkerRegister } from "@/components/pwa/sw-register";
-import { OfflineBanner } from "@/components/pwa/offline-banner";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import "./globals.css";
 
@@ -54,7 +53,6 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col antialiased">
         <ServiceWorkerRegister />
-        <OfflineBanner />
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

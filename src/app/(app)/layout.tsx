@@ -5,6 +5,7 @@ import { BottomTabs } from "@/components/nav/bottom-tabs";
 import { FloatingAddButton } from "@/components/nav/floating-add-button";
 import { AuthListener } from "@/components/auth/auth-listener";
 import { PrecachePages } from "@/components/pwa/sw-register";
+import { OfflineBanner } from "@/components/pwa/offline-banner";
 
 export default async function AppLayout({
   children,
@@ -39,6 +40,7 @@ export default async function AppLayout({
       <AuthListener />
       <PrecachePages />
       <TopNav user={userData} />
+      <OfflineBanner />
       <main className="flex-1 overflow-y-auto pb-24">{children}</main>
       <BottomTabs />
       <FloatingAddButton />
