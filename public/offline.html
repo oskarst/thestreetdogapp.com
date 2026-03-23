@@ -42,6 +42,7 @@
     line-height: 1.5;
     margin-bottom: 24px;
   }
+  .buttons { display: flex; flex-direction: column; gap: 10px; }
   button {
     background: #22c55e;
     color: white;
@@ -54,6 +55,11 @@
     width: 100%;
   }
   button:active { opacity: 0.8; }
+  .btn-secondary {
+    background: transparent;
+    color: #374151;
+    border: 1px solid #d1d5db;
+  }
 </style>
 </head>
 <body>
@@ -61,7 +67,10 @@
   <div class="icon">📡</div>
   <h1>You're Offline</h1>
   <p>Connect to the internet and try again. Any dogs you caught offline will sync automatically.</p>
-  <button onclick="location.reload()">Try Again</button>
+  <div class="buttons">
+    <button onclick="location.reload()">Try Again</button>
+    <button class="btn-secondary" onclick="history.back()">Go Back</button>
+  </div>
 </div>
 </body>
 </html>
