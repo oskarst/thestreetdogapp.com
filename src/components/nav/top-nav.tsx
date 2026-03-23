@@ -43,7 +43,7 @@ export function TopNav({ user }: TopNavProps) {
           style={{ fontFamily: "var(--font-heading)" }}
         >
           <Image src="/logo.png" alt="Street Dog" width={32} height={32} className="h-8 w-8 object-contain" />
-          <span>Street Dog</span>
+          <span>The Street Dog App</span>
         </Link>
 
         <div className="flex items-center gap-1">

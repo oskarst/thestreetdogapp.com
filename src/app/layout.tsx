@@ -21,7 +21,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Street Dog App",
+  title: "The Street Dog App",
   description: "Track and help street dogs",
   manifest: "/manifest.json",
   appleWebApp: {

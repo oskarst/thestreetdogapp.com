@@ -98,7 +98,7 @@ export function InstallPrompt() {
     <>
       <div className="fixed bottom-20 left-4 right-4 z-50 flex items-center gap-3 rounded-xl border bg-background p-3 shadow-lg sm:left-auto sm:right-4 sm:w-80">
         <div className="flex-1">
-          <p className="text-sm font-medium">Install Street Dog App</p>
+          <p className="text-sm font-medium">Install The Street Dog App</p>
           <p className="text-xs text-muted-foreground">
             {isSafari
               ? "Add to home screen for the best experience"
