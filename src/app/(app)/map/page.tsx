@@ -57,7 +57,7 @@ export default function MapPage() {
 
   return (
     <div
-      className="w-full relative"
+      className="w-full relative z-0"
       style={{ height: "calc(100vh - 56px - 64px)" }}
     >
       <DogMap dogs={dogs} />
