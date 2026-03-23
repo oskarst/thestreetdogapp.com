@@ -141,3 +141,9 @@
     margin-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
+
+/* Keep Leaflet maps below fixed nav elements (z-40 = 40) */
+.leaflet-container {
+  z-index: 0 !important;
+  isolation: isolate;
+}
