@@ -50,6 +50,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       className={`${dmSans.variable} ${spaceGrotesk.variable} h-full`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col antialiased">
         <ServiceWorkerRegister />

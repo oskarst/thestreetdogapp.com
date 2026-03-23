@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Loader2 } from "lucide-react";
+import { Loader2, WifiOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +44,7 @@ export function AddDogForm() {
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [savedOffline, setSavedOffline] = useState(false);
 
   async function handleEarTagImage(file: File | null) {
     setEarTagImage(file);
@@ -123,8 +124,8 @@ export function AddDogForm() {
           await (reg as ServiceWorkerRegistration & { sync: { register(tag: string): Promise<void> } }).sync.register("sync-dogs");
         }
 
-        toast.success("Saved offline -- will sync when you reconnect");
-        router.push("/dashboard");
+        setSavedOffline(true);
+        setSubmitting(false);
         return;
       } catch (err) {
         setError(
@@ -167,6 +168,23 @@ export function AddDogForm() {
       setError(err instanceof Error ? err.message : "Failed to submit");
       setSubmitting(false);
     }
+  }
+
+  if (savedOffline) {
+    return (
+      <div className="flex flex-col items-center gap-4 py-12 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+          <WifiOff className="h-8 w-8" />
+        </div>
+        <h2 className="text-xl font-bold">Saved Offline</h2>
+        <p className="text-sm text-muted-foreground max-w-xs">
+          Your dog catch has been saved and will automatically sync when you reconnect to the internet.
+        </p>
+        <Button variant="outline" onClick={() => setSavedOffline(false)}>
+          Catch Another Dog
+        </Button>
+      </div>
+    );
   }
 
   return (

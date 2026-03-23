@@ -9,6 +9,7 @@
     "dogs": "ძაღლები",
     "addDog": "დაამატე ძაღლი",
     "changeNickname": "მეტსახელის შეცვლა",
+    "changePassword": "პაროლის შეცვლა",
     "reportProblem": "პრობლემის მოხსენება",
     "adminPanel": "ადმინ პანელი"
   },

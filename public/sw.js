@@ -1,7 +1,7 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v1";
-const STATIC_ASSETS = ["/manifest.json", "/icon-192.png", "/icon-512.png"];
+const CACHE_NAME = "streetdog-v2";
+const STATIC_ASSETS = ["/manifest.json", "/icon-192.png", "/icon-512.png", "/offline.html", "/logo.png", "/leaflet/marker-icon.png", "/leaflet/marker-icon-2x.png", "/leaflet/marker-shadow.png"];
 
 // Install — cache static assets
 self.addEventListener("install", (event) => {
@@ -29,6 +29,24 @@ self.addEventListener("activate", (event) => {
     )
   );
   return self.clients.claim();
+});
+
+// Pre-cache key app pages when requested by the client
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "PRECACHE_PAGES") {
+    const pages = event.data.pages || [];
+    caches.open(CACHE_NAME).then((cache) => {
+      pages.forEach((url) => {
+        fetch(url, { credentials: "same-origin" })
+          .then((response) => {
+            if (response && response.status === 200) {
+              cache.put(url, response);
+            }
+          })
+          .catch(() => {}); // Ignore failures
+      });
+    });
+  }
 });
 
 // Fetch — strategy router
@@ -96,7 +114,27 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network-first for HTML/pages
+  // Network-first for HTML/pages, offline fallback
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return response;
+        })
+        .catch(() =>
+          caches.match(event.request).then((cached) =>
+            cached || caches.match("/offline.html")
+          )
+        )
+    );
+    return;
+  }
+
+  // Network-first for other same-origin requests
   event.respondWith(
     fetch(event.request)
       .then((response) => {

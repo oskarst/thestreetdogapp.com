@@ -15,7 +15,7 @@ export async function scanEarTag(file: File): Promise<ScanResult> {
   });
 
   if (res.status === 401) {
-    return { success: false, error: "Please sign in to use OCR scanning" };
+    return { success: false, error: "Log on Internet to use OCR." };
   }
 
   if (res.status === 429) {

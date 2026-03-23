@@ -1,6 +1,5 @@
 "use client";
 
-import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 
 interface SizeSliderProps {
@@ -13,12 +12,13 @@ export function SizeSlider({ value, onChange }: SizeSliderProps) {
     <div className="space-y-3">
       <div className="flex items-center gap-3">
         <span className="text-xs text-muted-foreground">Small</span>
-        <Slider
+        <input
+          type="range"
           min={1}
           max={10}
-          value={[value]}
-          onValueChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}
-          className="flex-1"
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="flex-1 h-1 appearance-none rounded-full bg-muted accent-primary cursor-pointer"
         />
         <span className="text-xs text-muted-foreground">Large</span>
         <Badge variant="secondary" className="min-w-[2rem] justify-center text-sm">

@@ -66,7 +66,10 @@ export default function RegisterPage() {
     });
 
     if (error) {
-      setErrors({ form: error.message });
+      const msg = error.message.toLowerCase().includes("rate limit")
+        ? "Too many attempts. Please try again in a few minutes."
+        : error.message;
+      setErrors({ form: msg });
       setLoading(false);
       return;
     }

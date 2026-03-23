@@ -9,6 +9,7 @@
     "dogs": "Dogs",
     "addDog": "Add Dog",
     "changeNickname": "Change Nickname",
+    "changePassword": "Change Password",
     "reportProblem": "Report a Problem",
     "adminPanel": "Admin Panel"
   },

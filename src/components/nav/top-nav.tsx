@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { PawPrint, User, Shield, Flag, LogOut, UserPen } from "lucide-react";
+import { User, Shield, Flag, LogOut, UserPen, KeyRound } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,7 +42,7 @@ export function TopNav({ user }: TopNavProps) {
           className="flex items-center gap-2 text-primary font-bold text-lg no-underline"
           style={{ fontFamily: "var(--font-heading)" }}
         >
-          <PawPrint className="h-6 w-6" />
+          <Image src="/logo.png" alt="Street Dog" width={32} height={32} className="h-8 w-8 object-contain" />
           <span>Street Dog</span>
         </Link>
 
@@ -59,6 +60,10 @@ export function TopNav({ user }: TopNavProps) {
               <DropdownMenuItem onClick={() => router.push("/change-nickname")}>
                 <UserPen className="mr-2 h-4 w-4" />
                 {t("changeNickname")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/change-password")}>
+                <KeyRound className="mr-2 h-4 w-4" />
+                {t("changePassword")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push("/report")}>
                 <Flag className="mr-2 h-4 w-4" />

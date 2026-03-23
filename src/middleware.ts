@@ -29,9 +29,19 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data, error: authError } = await supabase.auth.getUser();
+  const user = data.user;
+
+  // If auth check failed but user has a session cookie, don't kick them out.
+  // This handles offline/network errors and Safari cookie quirks.
+  if (authError && !user) {
+    const hasSessionCookie = request.cookies
+      .getAll()
+      .some((c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"));
+    if (hasSessionCookie) {
+      return supabaseResponse;
+    }
+  }
 
   const pathname = request.nextUrl.pathname;
 
@@ -54,6 +64,8 @@ export async function middleware(request: NextRequest) {
     "/adopt",
     "/veterinary",
     "/report",
+    "/change-nickname",
+    "/change-password",
     "/admin",
   ];
   if (
