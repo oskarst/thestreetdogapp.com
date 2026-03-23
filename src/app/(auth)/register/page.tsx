@@ -106,7 +106,7 @@ export default function RegisterPage() {
   return (
     <div className="grid gap-6">
       <div className="flex flex-col items-center gap-2">
-        <Image src="/logo.png" alt="Street Dog" width={48} height={48} className="h-12 w-12 object-contain" />
+        <Image src="/logo-full.png" alt="The Street Dog App" width={300} height={300} className="w-[200px] h-[200px] object-contain" />
         <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
         <p className="text-sm text-muted-foreground">
           Join the Street Dog community
