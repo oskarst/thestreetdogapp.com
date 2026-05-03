@@ -50,11 +50,8 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
       });
 
       const tileLayer = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-        {
-          subdomains: "abcd",
-          maxZoom: 19,
-        }
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        { maxZoom: 19 }
       ).addTo(map);
 
       // Detect if tiles fail to load (offline, no cache)
