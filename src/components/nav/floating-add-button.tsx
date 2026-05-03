@@ -1,11 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 
 export function FloatingAddButton() {
   const t = useTranslations("nav");
+  const pathname = usePathname();
+
+  // Don't render on the add-dog screen itself — the user is already there.
+  if (pathname === "/add-dog") return null;
 
   return (
     <Link
