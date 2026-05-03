@@ -27,6 +27,27 @@ export async function POST(request: Request) {
     const gender = formData.get("gender") as DogGender;
     const age = formData.get("age") as DogAge;
     const notes = (formData.get("notes") as string) || null;
+    const clientUuid = (formData.get("clientUuid") as string) || null;
+
+    // Idempotent replay: if this clientUuid was already accepted for this user,
+    // return the existing dogId without re-inserting or re-uploading.
+    if (clientUuid) {
+      const { data: existing } = await supabase
+        .from("sightings")
+        .select("dog_id")
+        .eq("user_id", user.id)
+        .eq("client_uuid", clientUuid)
+        .maybeSingle();
+
+      if (existing) {
+        return NextResponse.json({
+          dogId: existing.dog_id,
+          points: 0,
+          catchType: "repeat" as const,
+          duplicate: true,
+        });
+      }
+    }
 
     // Validate
     if (!dogImageFile) {
@@ -190,8 +211,26 @@ export async function POST(request: Request) {
       notes,
       image_url: dogImageUrl,
       ear_tag_image_url: earTagImageUrl,
+      client_uuid: clientUuid,
     });
-    if (sightingErr) throw sightingErr;
+    if (sightingErr) {
+      // Concurrent replay raced past the dedupe check and hit the unique index.
+      // Treat as duplicate — the other request already succeeded.
+      const isUniqueViolation =
+        typeof sightingErr === "object" &&
+        sightingErr !== null &&
+        "code" in sightingErr &&
+        (sightingErr as { code?: string }).code === "23505";
+      if (clientUuid && isUniqueViolation) {
+        return NextResponse.json({
+          dogId,
+          points: 0,
+          catchType: "repeat" as const,
+          duplicate: true,
+        });
+      }
+      throw sightingErr;
+    }
 
     // Calculate points
     let points: number;

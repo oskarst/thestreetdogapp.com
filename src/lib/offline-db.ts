@@ -2,8 +2,10 @@ import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
 export interface OfflineDogEntry {
   id?: number;
-  dogImage: Blob;
-  earTagImage?: Blob;
+  // Stored as File so the original name + mime survive replay (e.g. .heic from iOS).
+  // Older entries written before the File migration may still arrive as plain Blob.
+  dogImage: File | Blob;
+  earTagImage?: File | Blob;
   earTagId?: string;
   latitude: number;
   longitude: number;
@@ -12,7 +14,26 @@ export interface OfflineDogEntry {
   gender: DogGender;
   age: DogAge;
   notes?: string;
+  // Stable per-entry id used for server-side dedupe across replay paths.
+  // Optional because entries written before this field existed won't have one.
+  clientUuid?: string;
   createdAt: string;
+}
+
+const MIME_EXT: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/heic": "heic",
+  "image/heif": "heif",
+  "image/gif": "gif",
+};
+
+export function uploadFileName(blob: File | Blob, fallback: string): string {
+  if (blob instanceof File && blob.name) return blob.name;
+  const ext = MIME_EXT[blob.type ?? ""] ?? "jpg";
+  return `${fallback}.${ext}`;
 }
 
 const DB_NAME = "StreetDogDB";
@@ -89,9 +110,17 @@ export async function syncOfflineDogs(): Promise<{
   for (const entry of dogs) {
     try {
       const formData = new FormData();
-      formData.append("dogImage", entry.dogImage, "dog_image.jpg");
+      formData.append(
+        "dogImage",
+        entry.dogImage,
+        uploadFileName(entry.dogImage, "dog_image")
+      );
       if (entry.earTagImage) {
-        formData.append("earTagImage", entry.earTagImage, "ear_tag.jpg");
+        formData.append(
+          "earTagImage",
+          entry.earTagImage,
+          uploadFileName(entry.earTagImage, "ear_tag")
+        );
       }
       if (entry.earTagId) formData.append("earTagId", entry.earTagId);
       formData.append("latitude", String(entry.latitude));
@@ -101,6 +130,7 @@ export async function syncOfflineDogs(): Promise<{
       formData.append("gender", entry.gender);
       formData.append("age", entry.age);
       if (entry.notes) formData.append("notes", entry.notes);
+      if (entry.clientUuid) formData.append("clientUuid", entry.clientUuid);
 
       const res = await fetch("/api/sightings", {
         method: "POST",

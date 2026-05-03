@@ -22,6 +22,19 @@ import { toast } from "sonner";
 
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
+function makeUuid(): string {
+  // crypto.randomUUID requires a secure context; the app is HTTPS-only.
+  // Fallback covers Safari < 15.4 just in case.
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 export function AddDogForm() {
   const router = useRouter();
   const t = useTranslations("addDog");
@@ -116,6 +129,7 @@ export function AddDogForm() {
           gender,
           age,
           notes: notes.trim() || undefined,
+          clientUuid: makeUuid(),
           createdAt: new Date().toISOString(),
         });
 

@@ -119,6 +119,7 @@ export interface SightingRow {
   notes: string | null;
   image_url: string | null;
   ear_tag_image_url: string | null;
+  client_uuid: string | null;
   timestamp: string;
 }
 
@@ -135,6 +136,7 @@ export interface SightingInsert {
   notes?: string | null;
   image_url?: string | null;
   ear_tag_image_url?: string | null;
+  client_uuid?: string | null;
   timestamp?: string;
 }
 

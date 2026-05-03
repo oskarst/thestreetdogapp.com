@@ -1,6 +1,22 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v4";
+const CACHE_NAME = "streetdog-v5";
+
+const MIME_EXT = {
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/heic": "heic",
+  "image/heif": "heif",
+  "image/gif": "gif",
+};
+
+function uploadFileName(blob, fallback) {
+  if (blob && typeof blob.name === "string" && blob.name) return blob.name;
+  const ext = (blob && MIME_EXT[blob.type]) || "jpg";
+  return `${fallback}.${ext}`;
+}
 const STATIC_ASSETS = ["/manifest.json", "/icon-192.png", "/icon-512.png", "/offline.html", "/logo.png", "/leaflet/marker-icon.png", "/leaflet/marker-icon-2x.png", "/leaflet/marker-shadow.png"];
 
 // Install — cache static assets
@@ -170,9 +186,17 @@ async function syncOfflineDogs() {
     for (const entry of allDogs) {
       try {
         const formData = new FormData();
-        formData.append("dogImage", entry.dogImage, "dog_image.jpg");
+        formData.append(
+          "dogImage",
+          entry.dogImage,
+          uploadFileName(entry.dogImage, "dog_image")
+        );
         if (entry.earTagImage) {
-          formData.append("earTagImage", entry.earTagImage, "ear_tag.jpg");
+          formData.append(
+            "earTagImage",
+            entry.earTagImage,
+            uploadFileName(entry.earTagImage, "ear_tag")
+          );
         }
         if (entry.earTagId) formData.append("earTagId", entry.earTagId);
         formData.append("latitude", String(entry.latitude));
@@ -182,6 +206,7 @@ async function syncOfflineDogs() {
         formData.append("gender", entry.gender);
         formData.append("age", entry.age);
         if (entry.notes) formData.append("notes", entry.notes);
+        if (entry.clientUuid) formData.append("clientUuid", entry.clientUuid);
 
         const response = await fetch("/api/sightings", {
           method: "POST",
