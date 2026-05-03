@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdmin } from "@/lib/admin-auth";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isUUID } from "@/lib/validate";
 import type { UserRole } from "@/types/database";
 
 const VALID_ROLES: UserRole[] = ["user", "rescuer", "admin"];
@@ -13,6 +14,9 @@ export async function PATCH(
   if ("error" in auth) return auth.error;
 
   const { id } = await params;
+  if (!isUUID(id)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  }
   const body = await request.json();
   const role = body.role as UserRole;
 

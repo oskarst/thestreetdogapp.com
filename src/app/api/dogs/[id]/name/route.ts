@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { checkNameForProfanity } from "@/lib/moderation";
+import { isUUID } from "@/lib/validate";
 
 const MAX_NAME_ATTEMPTS_PER_DAY = 20;
 
@@ -9,6 +10,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+  if (!isUUID(id)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  }
 
   const supabase = await createClient();
   const {
@@ -93,8 +97,19 @@ export async function POST(
     );
   }
 
-  // Append to names[] without duplicates (case-insensitive).
+  // Append to names[] without duplicates (case-insensitive). Cap at 10
+  // names per dog to prevent unbounded array growth — at 10 someone has
+  // had plenty of opportunity to settle on a name.
   const existing = (dog.names as string[] | null) ?? [];
+  if (existing.length >= 10) {
+    return NextResponse.json(
+      {
+        error:
+          "This dog already has 10 names. Ask an admin to clean up before adding more.",
+      },
+      { status: 422 }
+    );
+  }
   if (existing.some((n) => n.toLowerCase() === rawName.toLowerCase())) {
     return NextResponse.json(
       { error: "That name is already on this dog." },

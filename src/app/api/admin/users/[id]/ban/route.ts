@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdmin } from "@/lib/admin-auth";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isUUID } from "@/lib/validate";
 
 export async function PATCH(
   _request: NextRequest,
@@ -10,6 +11,9 @@ export async function PATCH(
   if ("error" in auth) return auth.error;
 
   const { id } = await params;
+  if (!isUUID(id)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  }
 
   if (id === auth.user.id) {
     return NextResponse.json(

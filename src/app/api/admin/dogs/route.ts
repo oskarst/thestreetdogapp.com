@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdmin } from "@/lib/admin-auth";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sanitizeSearch } from "@/lib/validate";
 
 export async function GET(request: NextRequest) {
   const auth = await verifyAdmin();
@@ -14,9 +15,12 @@ export async function GET(request: NextRequest) {
     .select("*, profiles:first_registered_by_id(email)")
     .order("created_at", { ascending: false });
 
-  if (search) {
+  // Sanitize before string-interpolation into the PostgREST filter — see
+  // src/lib/validate.ts for what gets stripped and why.
+  const safeSearch = sanitizeSearch(search);
+  if (safeSearch) {
     query = query.or(
-      `ear_tag_id.ilike.%${search}%,names.cs.{${search}}`
+      `ear_tag_id.ilike.%${safeSearch}%,names.cs.{${safeSearch}}`
     );
   }
 

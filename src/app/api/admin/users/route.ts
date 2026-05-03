@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdmin } from "@/lib/admin-auth";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sanitizeSearch } from "@/lib/validate";
 
 export async function GET(request: NextRequest) {
   const auth = await verifyAdmin();
@@ -14,9 +15,10 @@ export async function GET(request: NextRequest) {
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (search) {
+  const safeSearch = sanitizeSearch(search);
+  if (safeSearch) {
     query = query.or(
-      `email.ilike.%${search}%,nickname.ilike.%${search}%`
+      `email.ilike.%${safeSearch}%,nickname.ilike.%${safeSearch}%`
     );
   }
 

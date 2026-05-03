@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v6";
+const CACHE_NAME = "streetdog-v7";
 
 const MIME_EXT = {
   "image/jpeg": "jpg",
@@ -130,39 +130,47 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network-first for HTML/pages, offline fallback
+  // HTML / page navigations.
+  //
+  // Caching authenticated HTML in the SW caused a cross-user contamination
+  // bug — on a shared device, user A's cached /dashboard could render for
+  // user B before the network response arrived. Now: only cache HTML for
+  // the small set of public routes (auth pages); authenticated routes go
+  // network-only with /offline.html as the offline fallback.
   if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          // Only cache final 200 responses, never redirects (Safari rejects SW redirects)
-          if (response && response.status === 200 && !response.redirected) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() =>
-          caches.match(event.request).then((cached) => {
-            // Never serve cached redirects — Safari throws on SW redirect responses
-            if (cached && cached.redirected) return caches.match("/offline.html");
-            // Don't serve cached HTML older than 24h — its referenced
-            // chunk hashes may have been replaced by a deploy in the
-            // meantime, leading to runtime 404s on those chunks.
-            if (cached) {
-              const dateHeader = cached.headers.get("date");
-              if (dateHeader) {
-                const ageMs = Date.now() - new Date(dateHeader).getTime();
-                if (ageMs > 24 * 60 * 60 * 1000) {
-                  return caches.match("/offline.html");
-                }
-              }
-              return cached;
+    const url = new URL(event.request.url);
+    const isPublicHtml =
+      url.pathname === "/login" ||
+      url.pathname === "/register" ||
+      url.pathname === "/reset-password" ||
+      url.pathname === "/offline.html";
+
+    if (isPublicHtml) {
+      event.respondWith(
+        fetch(event.request)
+          .then((response) => {
+            if (response && response.status === 200 && !response.redirected) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then((cache) =>
+                cache.put(event.request, clone)
+              );
             }
-            return caches.match("/offline.html");
+            return response;
           })
-        )
-    );
+          .catch(() =>
+            caches.match(event.request).then(
+              (cached) => cached || caches.match("/offline.html")
+            )
+          )
+      );
+    } else {
+      // Authenticated paths: network-only, never cache. /offline.html is
+      // shown if the network is down — that's preferable to serving the
+      // previous user's session HTML.
+      event.respondWith(
+        fetch(event.request).catch(() => caches.match("/offline.html"))
+      );
+    }
     return;
   }
 
