@@ -1,76 +1,149 @@
 import Link from "next/link";
-import { Trophy, ArrowLeft, Dog } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { getDogById } from "@/lib/db/dogs";
+import { Icon } from "@/components/ui/icon";
+import { SectionLabel } from "@/components/ui/section-label";
 
 interface DogCaughtPageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ points?: string; catchType?: string }>;
 }
 
+const CATCH_LABELS: Record<string, { eyebrow: string; bonus: number }> = {
+  new: { eyebrow: "+ pioneer catch", bonus: 9 }, // 10 base − 1 sighting
+  first_catch: { eyebrow: "+ tracker catch", bonus: 4 }, // 5 base − 1 sighting
+  repeat: { eyebrow: "+ patrol catch", bonus: 0 },
+};
+
 export default async function DogCaughtPage({
   params,
   searchParams,
 }: DogCaughtPageProps) {
   const { id } = await params;
-  const { points: pointsStr, catchType } = await searchParams;
+  const { points: pointsStr, catchType = "repeat" } = await searchParams;
   const points = parseInt(pointsStr ?? "1", 10);
 
-  let title: string;
-  let message: string;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
 
-  switch (catchType) {
-    case "new":
-      title = "New Dog!";
-      message = "Congratulations! You registered a brand new dog!";
-      break;
-    case "first_catch":
-      title = "First Catch!";
-      message = "You spotted this dog for the first time!";
-      break;
-    default:
-      title = "Repeat Sighting";
-      message = "You spotted this dog again! Every sighting counts.";
-  }
+  const dog = await getDogById(id).catch(() => null);
+  const heroImage = dog?.images?.[0] ?? null;
+
+  const labels = CATCH_LABELS[catchType] ?? CATCH_LABELS.repeat;
 
   return (
-    <div className="container mx-auto flex max-w-lg flex-col items-center px-4 py-12 text-center">
-      <div className="mb-6 flex size-20 items-center justify-center rounded-full bg-primary/10">
-        <Trophy className="size-10 text-primary" />
-      </div>
-
-      <h1 className="mb-2 text-3xl font-bold">{title}</h1>
-      <p className="mb-6 text-muted-foreground">{message}</p>
-
-      <Card className="mb-8 w-full">
-        <CardContent className="flex flex-col items-center py-6">
-          <span className="text-5xl font-bold text-primary">+{points}</span>
-          <span className="mt-1 text-sm text-muted-foreground">
-            points earned
+    <div className="flex flex-col">
+      {/* Hero photo with green flash overlay */}
+      <div className="relative aspect-[4/3] w-full bg-gradient-to-br from-[#b89876] via-[#8b6b48] to-[#5d4528] overflow-hidden">
+        {heroImage && (
+          <Image
+            src={heroImage}
+            alt={dog?.names?.[0] ?? "Caught dog"}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+        )}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(0deg, rgba(34,197,94,0.4) 0%, transparent 50%)",
+          }}
+        />
+        <span className="absolute top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-white/25 bg-black/50 backdrop-blur-sm px-3 py-1.5 font-mono text-[10px] tracking-[0.22em] uppercase text-white">
+          {labels.eyebrow}
+        </span>
+        <div className="absolute bottom-3.5 left-4 font-mono text-[64px] font-medium leading-none tracking-[-0.03em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+          +{points}
+          <span className="text-lg tracking-[0.16em] uppercase ml-1 align-[12px] opacity-85">
+            XP
           </span>
-        </CardContent>
-      </Card>
-
-      <div className="flex w-full flex-col gap-3">
-        <Link
-          href={`/dog/${id}`}
-          className={cn(buttonVariants({ size: "lg" }), "w-full")}
-        >
-          <Dog className="size-4" />
-          View Dog Profile
-        </Link>
-        <Link
-          href="/dashboard"
-          className={cn(
-            buttonVariants({ variant: "outline", size: "lg" }),
-            "w-full"
-          )}
-        >
-          <ArrowLeft className="size-4" />
-          Back to Dashboard
-        </Link>
+        </div>
       </div>
+
+      {/* Body */}
+      <div className="px-4 pt-4 pb-6 max-w-lg w-full mx-auto">
+        <h1 className="text-3xl font-bold tracking-[-0.02em] leading-none">
+          {dog?.names?.[0] ?? "New Subject"}
+        </h1>
+        {dog?.ear_tag_id && (
+          <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-1">
+            id {dog.ear_tag_id}
+          </div>
+        )}
+        {catchType === "new" && (
+          <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-1">
+            first registered by you
+          </div>
+        )}
+
+        <div className="mt-5">
+          <SectionLabel meta="scoring.rpc">Reward Breakdown</SectionLabel>
+          <div className="card-soft p-0 overflow-hidden">
+            <BreakdownRow
+              label={
+                catchType === "new"
+                  ? "Pioneer base"
+                  : catchType === "first_catch"
+                    ? "Tracker base"
+                    : "Patrol base"
+              }
+              value={`+${Math.max(points - 0, 1)} pt`}
+            />
+            <div className="flex justify-between items-baseline px-3.5 py-3 pt-3">
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                Total earned
+              </span>
+              <span className="font-mono text-[22px] font-medium tracking-[-0.02em] text-ink">
+                +{points} pt
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2.5 mt-6">
+          <Link
+            href={`/dog/${id}`}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98]"
+          >
+            <span className="font-mono text-[var(--green-brand)] font-medium">
+              &gt;
+            </span>
+            <Icon name="paw" size={18} className="opacity-90" />
+            View subject
+          </Link>
+          <Link
+            href="/dashboard"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-rule-2 bg-card text-sm font-medium text-ink hover:bg-muted transition-colors"
+          >
+            Back to dashboard
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BreakdownRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex justify-between items-baseline px-3.5 py-2.5 border-b border-dashed border-rule font-mono text-[12px] tracking-[0.04em]">
+      <span className="text-ink uppercase tracking-[0.1em] font-medium">
+        {label}
+      </span>
+      <span className="text-green-deep">{value}</span>
     </div>
   );
 }

@@ -7,15 +7,21 @@ import type { DogRow } from "@/types/database";
 
 const DogMap = dynamic(() => import("@/components/map/dog-map"), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-gray-50">
-      <div className="flex flex-col items-center gap-2">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        <p className="text-sm text-muted-foreground">Loading map...</p>
+  loading: () => <MapLoading message="Loading map…" />,
+});
+
+function MapLoading({ message }: { message: string }) {
+  return (
+    <div className="w-full h-full flex items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-3">
+        <div className="size-8 animate-spin rounded-full border-[3px] border-rule-2 border-t-ink" />
+        <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-muted-foreground">
+          {message}
+        </p>
       </div>
     </div>
-  ),
-});
+  );
+}
 
 export default function MapPage() {
   const [dogs, setDogs] = useState<DogRow[]>([]);
@@ -44,13 +50,10 @@ export default function MapPage() {
   if (loading) {
     return (
       <div
-        className="w-full flex items-center justify-center bg-gray-50"
+        className="w-full"
         style={{ height: "calc(100vh - 56px - 64px)" }}
       >
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="text-sm text-muted-foreground">Loading dogs...</p>
-        </div>
+        <MapLoading message="Loading subjects…" />
       </div>
     );
   }

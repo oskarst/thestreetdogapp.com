@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -23,15 +22,14 @@ export function GoogleAuthButton() {
   }
 
   return (
-    <Button
-      variant="outline"
-      size="lg"
-      className="w-full gap-2 h-10"
+    <button
+      type="button"
       onClick={handleGoogleLogin}
       disabled={loading}
+      className="w-full flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-rule-2 bg-card text-sm font-medium text-ink hover:bg-muted disabled:opacity-60 transition-colors"
     >
       {loading ? (
-        <Loader2 className="size-4 animate-spin" />
+        <Loader2 className="size-4 animate-spin text-muted-foreground" />
       ) : (
         <svg className="size-4" viewBox="0 0 24 24">
           <path
@@ -53,6 +51,6 @@ export function GoogleAuthButton() {
         </svg>
       )}
       Continue with Google
-    </Button>
+    </button>
   );
 }

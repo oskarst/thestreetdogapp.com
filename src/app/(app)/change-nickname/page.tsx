@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  SettingsForm,
+  SettingsField,
+} from "@/components/forms/settings-form";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
@@ -59,40 +59,26 @@ export default function ChangeNicknamePage() {
   }
 
   return (
-    <div className="mx-auto max-w-md px-4 py-8">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back
-      </button>
-
-      <h1 className="text-2xl font-bold tracking-tight mb-6">
-        Change Nickname
-      </h1>
-
-      <form onSubmit={handleSubmit} className="grid gap-4">
-        <div className="grid gap-1.5">
-          <Label htmlFor="nickname">New Nickname</Label>
-          <Input
-            id="nickname"
-            value={nickname}
-            onChange={(e) => {
-              setNickname(e.target.value);
-              setError("");
-            }}
-            placeholder="Enter new nickname"
-            autoFocus
-          />
-          {error && <p className="text-sm text-destructive">{error}</p>}
-        </div>
-
-        <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="size-4 animate-spin" />}
-          Save
-        </Button>
-      </form>
-    </div>
+    <SettingsForm
+      eyebrow="Profile · Nickname"
+      title="Change nickname"
+      description="Your callsign in the operator log."
+      onSubmit={handleSubmit}
+      submitLabel="Save"
+      loading={loading}
+      error={error}
+    >
+      <SettingsField
+        label="New Nickname"
+        type="text"
+        value={nickname}
+        onChange={(e) => {
+          setNickname(e.target.value);
+          setError("");
+        }}
+        placeholder="marta_k"
+        autoFocus
+      />
+    </SettingsForm>
   );
 }

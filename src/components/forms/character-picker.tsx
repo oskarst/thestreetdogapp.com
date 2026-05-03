@@ -5,12 +5,12 @@ import { CharacterIcon } from "@/components/dog/character-icon";
 import type { DogCharacter } from "@/types/database";
 
 const OPTIONS: { value: DogCharacter; label: string }[] = [
-  { value: "friendly", label: "Friendly" },
-  { value: "very_friendly", label: "Very Friendly" },
-  { value: "indifferent", label: "Indifferent" },
-  { value: "sleeping", label: "Sleeping" },
-  { value: "afraid", label: "Afraid" },
-  { value: "aggressive", label: "Aggressive" },
+  { value: "friendly", label: "friendly" },
+  { value: "very_friendly", label: "v.friendly" },
+  { value: "indifferent", label: "indiff." },
+  { value: "sleeping", label: "sleeping" },
+  { value: "afraid", label: "afraid" },
+  { value: "aggressive", label: "aggressive" },
 ];
 
 interface CharacterPickerProps {
@@ -20,23 +20,37 @@ interface CharacterPickerProps {
 
 export function CharacterPicker({ value, onChange }: CharacterPickerProps) {
   return (
-    <div className="flex flex-col gap-1.5">
-      {OPTIONS.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          onClick={() => onChange(opt.value)}
-          className={cn(
-            "flex items-center gap-3 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors",
-            value === opt.value
-              ? "border-primary bg-primary/10 text-primary"
-              : "border-border bg-background text-foreground hover:bg-muted"
-          )}
-        >
-          <CharacterIcon character={opt.value} className="size-5" />
-          {opt.label}
-        </button>
-      ))}
+    <div className="grid grid-cols-3 gap-2">
+      {OPTIONS.map((opt) => {
+        const active = value === opt.value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={cn(
+              "flex flex-col items-center gap-1 rounded-xl border bg-card py-2.5 px-1.5 transition-colors",
+              active
+                ? "border-ink bg-background text-ink"
+                : "border-rule text-ink-soft hover:border-rule-2"
+            )}
+          >
+            <CharacterIcon
+              character={opt.value}
+              size={22}
+              className={cn(active ? "text-ink" : "text-ink-soft")}
+            />
+            <span
+              className={cn(
+                "font-mono text-[9px] tracking-[0.1em] uppercase",
+                active ? "text-ink" : "text-muted-foreground"
+              )}
+            >
+              {opt.label}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }

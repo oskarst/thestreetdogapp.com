@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  SettingsForm,
+  SettingsField,
+} from "@/components/forms/settings-form";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
@@ -47,58 +47,40 @@ export default function ChangePasswordPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md px-4 py-8">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back
-      </button>
-
-      <h1 className="text-2xl font-bold tracking-tight mb-6">
-        Change Password
-      </h1>
-
-      <form onSubmit={handleSubmit} className="grid gap-4">
-        <div className="grid gap-1.5">
-          <Label htmlFor="password">New Password</Label>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setError("");
-            }}
-            placeholder="Min. 8 characters"
-            autoComplete="new-password"
-            autoFocus
-          />
-        </div>
-
-        <div className="grid gap-1.5">
-          <Label htmlFor="confirm">Confirm Password</Label>
-          <Input
-            id="confirm"
-            type="password"
-            value={confirm}
-            onChange={(e) => {
-              setConfirm(e.target.value);
-              setError("");
-            }}
-            placeholder="Repeat password"
-            autoComplete="new-password"
-          />
-        </div>
-
-        {error && <p className="text-sm text-destructive">{error}</p>}
-
-        <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="size-4 animate-spin" />}
-          Save
-        </Button>
-      </form>
-    </div>
+    <SettingsForm
+      eyebrow="Security · Password"
+      title="Change password"
+      description="Pick something you'll remember on patrol."
+      onSubmit={handleSubmit}
+      submitLabel="Save"
+      loading={loading}
+      error={error}
+    >
+      <SettingsField
+        label="New password"
+        type="password"
+        value={password}
+        onChange={(e) => {
+          setPassword(e.target.value);
+          setError("");
+        }}
+        placeholder="Min. 8 characters"
+        autoComplete="new-password"
+        togglePassword
+        autoFocus
+      />
+      <SettingsField
+        label="Confirm password"
+        type="password"
+        value={confirm}
+        onChange={(e) => {
+          setConfirm(e.target.value);
+          setError("");
+        }}
+        placeholder="Repeat password"
+        autoComplete="new-password"
+        togglePassword
+      />
+    </SettingsForm>
   );
 }

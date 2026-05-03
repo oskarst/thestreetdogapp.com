@@ -4,12 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { GoogleAuthButton } from "@/components/auth/google-auth-button";
+import { AuthShell } from "@/components/auth/auth-shell";
+import {
+  AuthField,
+  PrimaryAuthButton,
+  AuthDivider,
+} from "@/components/auth/auth-fields";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
@@ -46,74 +47,58 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="grid gap-6">
-      <div className="flex flex-col items-center gap-2">
-        <Image src="/logo-full.png" alt="The Street Dog App" width={300} height={300} className="w-[300px] h-[300px] object-contain" />
-        <p className="text-sm text-muted-foreground">
-          {t("signInDescription")}
-        </p>
-      </div>
+    <AuthShell
+      eyebrow="Operator Sign-In"
+      title="Welcome back."
+      description={t("signInDescription")}
+      footer={
+        <>
+          new operator?{" "}
+          <Link
+            href="/register"
+            className="text-ink underline underline-offset-[3px] font-medium"
+          >
+            register
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit}>
+        <AuthField
+          label={t("email")}
+          type="email"
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+        />
+        <AuthField
+          label={t("password")}
+          type="password"
+          placeholder="Your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
+          togglePassword
+          hint={
+            <Link href="/reset-password" className="hover:text-ink">
+              {t("forgotPassword").toLowerCase()}
+            </Link>
+          }
+        />
 
-      <div className="grid gap-4 rounded-xl border bg-card p-6 shadow-sm">
-        <GoogleAuthButton />
+        {error && (
+          <p className="text-sm text-destructive mb-2">{error}</p>
+        )}
 
-        <div className="relative flex items-center gap-3">
-          <div className="h-px flex-1 bg-border" />
-          <span className="text-xs text-muted-foreground">{t("or")}</span>
-          <div className="h-px flex-1 bg-border" />
-        </div>
+        <PrimaryAuthButton type="submit" loading={loading}>
+          {t("signIn")}
+        </PrimaryAuthButton>
+      </form>
 
-        <form onSubmit={handleSubmit} className="grid gap-3">
-          <div className="grid gap-1.5">
-            <Label htmlFor="email">{t("email")}</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-            />
-          </div>
+      <AuthDivider>{t("or")}</AuthDivider>
 
-          <div className="grid gap-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">{t("password")}</Label>
-              <Link
-                href="/reset-password"
-                className="text-xs text-muted-foreground hover:text-foreground"
-              >
-                {t("forgotPassword")}
-              </Link>
-            </div>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-            />
-          </div>
-
-          {error && <p className="text-sm text-destructive">{error}</p>}
-
-          <Button type="submit" size="lg" className="h-10" disabled={loading}>
-            {loading && <Loader2 className="size-4 animate-spin" />}
-            {t("signIn")}
-          </Button>
-        </form>
-      </div>
-
-      <p className="text-center text-sm text-muted-foreground">
-        {t("noAccount")}{" "}
-        <Link
-          href="/register"
-          className="font-medium text-foreground underline underline-offset-4 hover:text-green-700"
-        >
-          {t("register")}
-        </Link>
-      </p>
-    </div>
+      <GoogleAuthButton />
+    </AuthShell>
   );
 }

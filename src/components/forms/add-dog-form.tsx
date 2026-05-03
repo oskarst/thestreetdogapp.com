@@ -5,10 +5,8 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Loader2, WifiOff } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionLabel } from "@/components/ui/section-label";
 import { CameraUpload } from "@/components/image/camera-upload";
 import { LocationPicker } from "@/components/map/location-picker";
 import { CharacterPicker } from "@/components/forms/character-picker";
@@ -18,7 +16,6 @@ import { AgePicker } from "@/components/forms/age-picker";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import { scanEarTag } from "@/lib/ocr";
 import { saveOfflineDog } from "@/lib/offline-db";
-import { toast } from "sonner";
 
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
@@ -188,7 +185,7 @@ export function AddDogForm() {
   if (savedOffline) {
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-soft text-amber-brand">
           <WifiOff className="h-8 w-8" />
         </div>
         <h2 className="text-xl font-bold">Saved Offline</h2>
@@ -208,137 +205,98 @@ export function AddDogForm() {
         </div>
       )}
 
-      {/* Dog Photo */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("dogPhoto")} *</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CameraUpload
-            label={t("tapDogPhoto")}
-            onChange={setDogImage}
-            value={dogImage}
-            required
-          />
-        </CardContent>
-      </Card>
+      <section>
+        <SectionLabel meta="required">{t("dogPhoto")}</SectionLabel>
+        <CameraUpload
+          label={t("tapDogPhoto")}
+          onChange={setDogImage}
+          value={dogImage}
+          required
+        />
+      </section>
 
-      {/* Ear Tag */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("earTag")}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+      <section>
+        <SectionLabel meta="optional · ocr">{t("earTag")}</SectionLabel>
+        <div className="space-y-2.5">
           <CameraUpload
             label={t("tapEarTagPhoto")}
             onChange={handleEarTagImage}
             value={earTagImage}
           />
           {scanning && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 animate-spin" />
-              Scanning ear tag...
+            <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+              <Loader2 className="size-3.5 animate-spin" />
+              Scanning ear tag…
             </div>
           )}
           {scanError && (
-            <p className="text-sm text-muted-foreground">{scanError}</p>
+            <p className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+              {scanError}
+            </p>
           )}
           {existingDog && (
-            <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm dark:border-blue-800 dark:bg-blue-950">
-              Dog already registered &mdash;{" "}
+            <div className="rounded-lg border border-rule-2 bg-card px-3.5 py-2.5 text-sm">
+              Dog already registered —{" "}
               <a
                 href={`/dog/${existingDog.id}`}
-                className="font-medium text-blue-600 underline dark:text-blue-400"
+                className="font-medium text-ink underline underline-offset-2"
               >
                 {existingDog.name}
               </a>
             </div>
           )}
-          <div>
-            <Label htmlFor="earTagId">{t("earTagId")}</Label>
-            <Input
-              id="earTagId"
-              placeholder={t("earTagPlaceholder")}
-              value={earTagId}
-              onChange={(e) => setEarTagId(e.target.value)}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Location */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("location")} *</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <LocationPicker onChange={setLocation} />
-        </CardContent>
-      </Card>
-
-      {/* Character */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("character")} *</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CharacterPicker value={character} onChange={setCharacter} />
-        </CardContent>
-      </Card>
-
-      {/* Size */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("size")} *</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <SizeSlider value={size} onChange={setSize} />
-        </CardContent>
-      </Card>
-
-      {/* Gender */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("gender")} *</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <GenderPicker value={gender} onChange={setGender} />
-        </CardContent>
-      </Card>
-
-      {/* Age */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("age")} *</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <AgePicker value={age} onChange={setAge} />
-        </CardContent>
-      </Card>
-
-      {/* Notes */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("notes")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <textarea
-            rows={3}
-            placeholder={t("notesPlaceholder")}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          <Input
+            id="earTagId"
+            placeholder={t("earTagPlaceholder")}
+            value={earTagId}
+            onChange={(e) => setEarTagId(e.target.value)}
+            className="h-10 rounded-xl border-rule-2 bg-card font-mono text-sm tracking-[0.02em]"
           />
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      {/* Submit */}
-      <Button
+      <section>
+        <SectionLabel meta="gps locked">{t("location")}</SectionLabel>
+        <LocationPicker onChange={setLocation} />
+      </section>
+
+      <section>
+        <SectionLabel meta="pick one">{t("character")}</SectionLabel>
+        <CharacterPicker value={character} onChange={setCharacter} />
+      </section>
+
+      <section>
+        <SectionLabel meta="scale 1–10">{t("size")}</SectionLabel>
+        <SizeSlider value={size} onChange={setSize} />
+      </section>
+
+      <section>
+        <SectionLabel meta="pick one">{t("gender")}</SectionLabel>
+        <GenderPicker value={gender} onChange={setGender} />
+      </section>
+
+      <section>
+        <SectionLabel meta="pick one">{t("age")}</SectionLabel>
+        <AgePicker value={age} onChange={setAge} />
+      </section>
+
+      <section>
+        <SectionLabel meta="optional">{t("notes")}</SectionLabel>
+        <textarea
+          rows={3}
+          placeholder={t("notesPlaceholder")}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="w-full rounded-xl border border-rule-2 bg-card px-3.5 py-2.5 text-sm text-ink placeholder:text-muted-foreground focus:outline-none focus:border-ink"
+        />
+      </section>
+
+      <button
         type="submit"
-        size="lg"
         disabled={submitting}
-        className="w-full text-base"
+        className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
       >
+        <span className="font-mono text-[var(--green-brand)] font-medium">&gt;</span>
         {submitting ? (
           <>
             <Loader2 className="size-4 animate-spin" />
@@ -347,7 +305,7 @@ export function AddDogForm() {
         ) : (
           t("catchThisDog")
         )}
-      </Button>
+      </button>
     </form>
   );
 }

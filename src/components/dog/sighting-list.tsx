@@ -1,36 +1,17 @@
 import type { SightingWithUser } from "@/lib/db/sightings";
-import { Badge } from "@/components/ui/badge";
 import { CharacterIcon } from "@/components/dog/character-icon";
+import { SectionLabel } from "@/components/ui/section-label";
 import type { DogCharacter } from "@/types/database";
 
-function timeAgo(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-  if (seconds < 60) return "just now";
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-  const months = Math.floor(days / 30);
-  return `${months}mo ago`;
-}
-
-function formatCharacter(char: string): string {
-  return char.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-function getInitials(name: string | null): string {
-  if (!name) return "?";
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+function relativeOffset(dateStr: string): string {
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return "T-now";
+  const m = Math.floor(seconds / 60);
+  if (m < 60) return `T-${String(m).padStart(2, "0")}m`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `T-${String(h).padStart(2, "0")}h`;
+  const d = Math.floor(h / 24);
+  return `T-${d}d`;
 }
 
 interface SightingListProps {
@@ -40,51 +21,50 @@ interface SightingListProps {
 export function SightingList({ sightings }: SightingListProps) {
   if (sightings.length === 0) {
     return (
-      <div className="rounded-xl border border-border p-4 text-center text-sm text-muted-foreground">
+      <div className="rounded-xl border border-rule bg-card p-4 text-center text-sm text-muted-foreground">
         No sightings yet
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-border overflow-hidden">
-      <div className="px-4 py-3 border-b border-border bg-muted/30">
-        <h3 className="text-sm font-semibold">Recent Sightings</h3>
-      </div>
-      <div className="divide-y divide-border">
-        {sightings.map((s) => {
-          const nickname = s.profiles?.nickname ?? "Anonymous";
+    <div>
+      <SectionLabel meta={`last ${sightings.length}`}>
+        Sighting Log
+      </SectionLabel>
+      <div className="space-y-1.5">
+        {sightings.map((s, idx) => {
+          const nickname = s.profiles?.nickname ?? "anon";
+          const id = s.id.slice(0, 4).toUpperCase();
           return (
-            <div key={s.id} className="px-4 py-3 space-y-1.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground shrink-0">
-                    {getInitials(nickname)}
-                  </div>
-                  <span className="text-sm font-medium">{nickname}</span>
+            <div
+              key={s.id}
+              className="grid grid-cols-[88px_1fr_auto] gap-2.5 items-center bg-card rounded-xl px-3 py-2.5"
+            >
+              <span className="font-mono text-[10.5px] tracking-[0.04em] text-muted-foreground">
+                {relativeOffset(s.timestamp)} · #{id}
+              </span>
+              <div className="min-w-0">
+                <div className="text-[13px] font-semibold leading-tight">
+                  {nickname === "anon" ? "Sighting" : `by ${nickname}`}
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  {timeAgo(s.timestamp)}
-                </span>
+                <div className="font-mono text-[10.5px] tracking-[0.04em] text-muted-foreground mt-0.5 flex items-center gap-1.5">
+                  <CharacterIcon
+                    character={s.character as DogCharacter}
+                    size={12}
+                    className="text-muted-foreground"
+                  />
+                  {s.character.replace(/_/g, " ")} · size {s.size}/10
+                </div>
+                {s.notes && (
+                  <div className="text-[12px] text-muted-foreground mt-1 truncate">
+                    {s.notes}
+                  </div>
+                )}
               </div>
-              <div className="flex flex-wrap gap-1">
-                <Badge variant="secondary" className="text-[10px] gap-0.5">
-                  <CharacterIcon character={s.character as DogCharacter} className="size-3" />
-                  {formatCharacter(s.character)}
-                </Badge>
-                <Badge variant="secondary" className="text-[10px]">
-                  Size {s.size}/10
-                </Badge>
-                <Badge variant="secondary" className="text-[10px]">
-                  {s.gender.charAt(0).toUpperCase() + s.gender.slice(1)}
-                </Badge>
-                <Badge variant="secondary" className="text-[10px]">
-                  {s.age.charAt(0).toUpperCase() + s.age.slice(1)}
-                </Badge>
-              </div>
-              {s.notes && (
-                <p className="text-xs text-muted-foreground">{s.notes}</p>
-              )}
+              <span className="font-mono text-[12px] font-medium text-ink shrink-0">
+                #{idx + 1}
+              </span>
             </div>
           );
         })}

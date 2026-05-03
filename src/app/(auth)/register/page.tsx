@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { z } from "zod/v4";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { AuthShell } from "@/components/auth/auth-shell";
+import {
+  AuthField,
+  PrimaryAuthButton,
+  AuthDivider,
+} from "@/components/auth/auth-fields";
+import { GoogleAuthButton } from "@/components/auth/google-auth-button";
 import { createClient } from "@/lib/supabase/client";
 
 const registerSchema = z
@@ -81,122 +84,100 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="grid gap-6">
-        <div className="flex flex-col items-center gap-2">
-          <CheckCircle2 className="size-10 text-green-600" />
-          <h1 className="text-2xl font-bold tracking-tight">Check Your Email</h1>
-          <p className="text-center text-sm text-muted-foreground">
-            We sent a confirmation link to{" "}
-            <span className="font-medium text-foreground">{form.email}</span>.
-            Please verify your email to continue.
-          </p>
-        </div>
-        <div className="text-center">
+      <AuthShell
+        eyebrow="Confirmation Sent"
+        title="Check your email."
+        description=""
+        footer={
           <Link
             href="/login"
-            className="text-sm font-medium underline underline-offset-4 hover:text-green-700"
+            className="text-ink underline underline-offset-[3px] font-medium"
           >
-            Back to login
+            back to login
           </Link>
+        }
+      >
+        <div className="card-soft p-5 flex items-start gap-3">
+          <CheckCircle2 className="size-5 text-[var(--green-brand)] shrink-0 mt-0.5" />
+          <div className="text-sm leading-relaxed">
+            We sent a confirmation link to{" "}
+            <span className="font-medium text-ink">{form.email}</span>. Verify
+            your email to activate the operator account.
+          </div>
         </div>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="grid gap-6">
-      <div className="flex flex-col items-center gap-2">
-        <Image src="/logo-full.png" alt="The Street Dog App" width={300} height={300} className="w-[300px] h-[300px] object-contain" />
-        <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
-        <p className="text-sm text-muted-foreground">
-          Join the Street Dog community
-        </p>
-      </div>
+    <AuthShell
+      eyebrow="Operator Onboarding"
+      title="Join the pack."
+      description="Sign up to log street dogs in your city and climb the leaderboard."
+      footer={
+        <>
+          already an operator?{" "}
+          <Link
+            href="/login"
+            className="text-ink underline underline-offset-[3px] font-medium"
+          >
+            sign in
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit}>
+        <AuthField
+          label="Nickname"
+          type="text"
+          placeholder="marta_k"
+          value={form.nickname}
+          onChange={(e) => update("nickname", e.target.value)}
+          autoComplete="username"
+          error={errors.nickname}
+        />
+        <AuthField
+          label="Email"
+          type="email"
+          placeholder="you@example.com"
+          value={form.email}
+          onChange={(e) => update("email", e.target.value)}
+          autoComplete="email"
+          error={errors.email}
+        />
+        <AuthField
+          label="Password"
+          type="password"
+          placeholder="Min. 8 characters"
+          value={form.password}
+          onChange={(e) => update("password", e.target.value)}
+          autoComplete="new-password"
+          togglePassword
+          error={errors.password}
+        />
+        <AuthField
+          label="Confirm password"
+          type="password"
+          placeholder="Repeat password"
+          value={form.confirmPassword}
+          onChange={(e) => update("confirmPassword", e.target.value)}
+          autoComplete="new-password"
+          togglePassword
+          error={errors.confirmPassword}
+        />
 
-      <div className="grid gap-4 rounded-xl border bg-card p-6 shadow-sm">
-        <form onSubmit={handleSubmit} className="grid gap-3">
-          <div className="grid gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              value={form.email}
-              onChange={(e) => update("email", e.target.value)}
-              autoComplete="email"
-            />
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email}</p>
-            )}
-          </div>
+        {errors.form && (
+          <p className="text-sm text-destructive mb-2">{errors.form}</p>
+        )}
 
-          <div className="grid gap-1.5">
-            <Label htmlFor="nickname">Nickname</Label>
-            <Input
-              id="nickname"
-              type="text"
-              placeholder="Your nickname"
-              value={form.nickname}
-              onChange={(e) => update("nickname", e.target.value)}
-              autoComplete="username"
-            />
-            {errors.nickname && (
-              <p className="text-sm text-destructive">{errors.nickname}</p>
-            )}
-          </div>
+        <PrimaryAuthButton type="submit" loading={loading}>
+          Create operator
+        </PrimaryAuthButton>
+      </form>
 
-          <div className="grid gap-1.5">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Min. 8 characters"
-              value={form.password}
-              onChange={(e) => update("password", e.target.value)}
-              autoComplete="new-password"
-            />
-            {errors.password && (
-              <p className="text-sm text-destructive">{errors.password}</p>
-            )}
-          </div>
+      <AuthDivider>or</AuthDivider>
 
-          <div className="grid gap-1.5">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="Repeat password"
-              value={form.confirmPassword}
-              onChange={(e) => update("confirmPassword", e.target.value)}
-              autoComplete="new-password"
-            />
-            {errors.confirmPassword && (
-              <p className="text-sm text-destructive">
-                {errors.confirmPassword}
-              </p>
-            )}
-          </div>
-
-          {errors.form && (
-            <p className="text-sm text-destructive">{errors.form}</p>
-          )}
-
-          <Button type="submit" size="lg" className="h-10" disabled={loading}>
-            {loading && <Loader2 className="size-4 animate-spin" />}
-            Create Account
-          </Button>
-        </form>
-      </div>
-
-      <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{" "}
-        <Link
-          href="/login"
-          className="font-medium text-foreground underline underline-offset-4 hover:text-green-700"
-        >
-          Login
-        </Link>
-      </p>
-    </div>
+      <GoogleAuthButton />
+    </AuthShell>
   );
 }

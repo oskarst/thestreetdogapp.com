@@ -1,12 +1,12 @@
-import { Camera } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DogGalleryCard } from "@/components/dog/dog-gallery-card";
+import { Icon } from "@/components/ui/icon";
+import { SectionLabel } from "@/components/ui/section-label";
+import { GalleryFilters } from "@/components/dog/gallery-filters";
 import type { DogRow } from "@/types/database";
 
 async function getDogsWithImages(): Promise<DogRow[]> {
   const supabase = await createClient();
-  // Fetch dogs that have at least one image, ordered by newest first
-  // images is a text[] column — filter where array length > 0
   const { data, error } = await supabase
     .from("dogs")
     .select("*")
@@ -18,27 +18,51 @@ async function getDogsWithImages(): Promise<DogRow[]> {
 }
 
 export default async function GalleryPage() {
-  const dogs = await getDogsWithImages();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const userId = user?.id ?? "";
+
+  const [dogs, sightingsRes, favsRes] = await Promise.all([
+    getDogsWithImages(),
+    userId
+      ? supabase.from("sightings").select("dog_id").eq("user_id", userId)
+      : Promise.resolve({ data: [], error: null }),
+    userId
+      ? supabase.from("favorites").select("dog_id").eq("user_id", userId)
+      : Promise.resolve({ data: [], error: null }),
+  ]);
+
+  const caughtIds = new Set(
+    (sightingsRes.data ?? []).map((r: { dog_id: string }) => r.dog_id)
+  );
+  const favIds = new Set(
+    (favsRes.data ?? []).map((r: { dog_id: string }) => r.dog_id)
+  );
 
   return (
-    <div className="px-4 py-4 space-y-4">
-      <div className="flex items-center gap-2">
-        <Camera className="h-5 w-5 text-muted-foreground" />
-        <h1 className="text-xl font-bold">Dog Gallery</h1>
-      </div>
+    <div className="px-4 py-4 space-y-3">
+      <SectionLabel meta={`${dogs.length} subjects`}>The Pack</SectionLabel>
 
       {dogs.length === 0 ? (
-        <div className="rounded-xl bg-muted/50 p-8 text-center text-muted-foreground">
-          <Camera className="mx-auto mb-2 h-8 w-8" />
+        <div className="rounded-xl bg-card p-8 text-center text-muted-foreground border border-rule">
+          <Icon
+            name="paw"
+            size={32}
+            className="mx-auto mb-2 text-muted-foreground"
+          />
           <p className="font-medium">No photos yet</p>
-          <p className="text-sm">Be the first to snap a street dog!</p>
+          <p className="font-mono text-[11px] tracking-[0.04em] mt-1">
+            Be the first to log a street dog.
+          </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {dogs.map((dog) => (
-            <DogGalleryCard key={dog.id} dog={dog} />
-          ))}
-        </div>
+        <GalleryFilters
+          dogs={dogs}
+          caughtIds={Array.from(caughtIds)}
+          favIds={Array.from(favIds)}
+        />
       )}
     </div>
   );
