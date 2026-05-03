@@ -4,6 +4,7 @@
     "dashboard": "Панель",
     "map": "Карта",
     "gallery": "Галерея",
+    "missions": "Миссии",
     "admin": "Администратор",
     "logout": "Выход",
     "dogs": "Собаки",
@@ -241,5 +242,19 @@
     "id": "ИДЕНТИФИКАТОР:",
     "cancel": "Отмена"
   },
-  "common": {}
+  "common": {},
+  "missions": {
+    "title": "Миссии",
+    "subtitle": "Дополнительные патрули по районам",
+    "raionsLabel": "Районы Тбилиси",
+    "statusCompleted": "завершено",
+    "statusReady": "готова к получению",
+    "statusInProgress": "в процессе",
+    "statusEmpty": "пока нет собак",
+    "claimReward": "Получить +{xp}",
+    "abandonMission": "Закрыть миссию",
+    "bannerLabel": "МИССИЯ",
+    "bannerProgress": "записано {spotted} / {total}",
+    "howItWorks": "Выбери район — карта приблизит его границы. Запиши всех собак, чьи метки находятся внутри полигона, чтобы получить награду."
+  }
 }

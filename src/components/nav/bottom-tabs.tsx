@@ -13,6 +13,7 @@ export function BottomTabs() {
   const tabs: { href: string; label: string; icon: IconName }[] = [
     { href: "/dashboard", label: t("dogs"), icon: "home" },
     { href: "/map", label: t("map"), icon: "pin" },
+    { href: "/missions", label: t("missions"), icon: "flag" },
     { href: "/gallery", label: t("gallery"), icon: "image" },
   ];
 

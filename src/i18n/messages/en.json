@@ -4,6 +4,7 @@
     "dashboard": "Dashboard",
     "map": "Map",
     "gallery": "Gallery",
+    "missions": "Missions",
     "admin": "Admin",
     "logout": "Logout",
     "dogs": "Dogs",
@@ -241,5 +242,19 @@
     "id": "ID:",
     "cancel": "Cancel"
   },
-  "common": {}
+  "common": {},
+  "missions": {
+    "title": "Missions",
+    "subtitle": "Optional patrols by raion",
+    "raionsLabel": "Tbilisi raions",
+    "statusCompleted": "completed",
+    "statusReady": "ready to claim",
+    "statusInProgress": "in progress",
+    "statusEmpty": "no dogs yet",
+    "claimReward": "Claim +{xp}",
+    "abandonMission": "Close mission",
+    "bannerLabel": "MISSION",
+    "bannerProgress": "{spotted} / {total} spotted",
+    "howItWorks": "Pick a raion and the map zooms to its border. Spot every dog whose pin sits inside the polygon to unlock the reward."
+  }
 }

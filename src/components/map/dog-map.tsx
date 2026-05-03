@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -8,6 +10,21 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet.markercluster";
 import type { DogMarker } from "@/types/database";
 import { MapSidePanel } from "./map-side-panel";
+import { createClient } from "@/lib/supabase/client";
+
+interface MissionContext {
+  slug: string;
+  nameEn: string;
+  nameKa: string;
+  nameRu: string;
+  totalDogs: number;
+  mySpotted: number;
+  completed: boolean;
+  rewardXp: number;
+  myDogIds: string[];
+  allDistricts: { slug: string; ring: [number, number][] }[];
+  locale: string;
+}
 
 // Use the local marker assets that already ship with the PWA — drops the
 // unpkg.com runtime dep and saves a DNS lookup on cold start.
@@ -20,6 +37,13 @@ L.Icon.Default.mergeOptions({
 
 interface DogMapProps {
   dogs: DogMarker[];
+  mission?: MissionContext | null;
+}
+
+function localizedName(m: MissionContext): string {
+  if (m.locale === "ka") return m.nameKa;
+  if (m.locale === "ru") return m.nameRu;
+  return m.nameEn;
 }
 
 const TBILISI_CENTER: [number, number] = [41.7151, 44.8271];
@@ -48,14 +72,45 @@ function createDogIcon(dog: DogMarker): L.DivIcon {
   });
 }
 
-export default function DogMap({ dogs }: DogMapProps) {
+export default function DogMap({ dogs, mission }: DogMapProps) {
+  const router = useRouter();
+  const tMissions = useTranslations("missions");
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
+  const overlayLayerRef = useRef<L.LayerGroup | null>(null);
   const hasFitBoundsRef = useRef(false);
   const [selectedDog, setSelectedDog] = useState<DogMarker | null>(null);
+  const [claiming, startClaim] = useTransition();
+  const [claimError, setClaimError] = useState<string | null>(null);
+  const [claimedXp, setClaimedXp] = useState<number | null>(null);
 
   const handleClose = useCallback(() => setSelectedDog(null), []);
+  const ready = mission ? mission.mySpotted >= mission.totalDogs && mission.totalDogs > 0 : false;
+  const alreadyClaimed = mission?.completed || claimedXp != null;
+
+  function handleClaim() {
+    if (!mission) return;
+    setClaimError(null);
+    startClaim(async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.rpc("claim_district_mission", {
+        p_slug: mission.slug,
+        p_dog_ids: mission.myDogIds,
+      });
+      if (error) {
+        setClaimError(error.message);
+        return;
+      }
+      const result = data as { ok?: boolean; awarded?: number; error?: string } | null;
+      if (!result?.ok) {
+        setClaimError(result?.error ?? "claim_failed");
+        return;
+      }
+      setClaimedXp(result.awarded ?? mission.rewardXp);
+      router.refresh();
+    });
+  }
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
@@ -98,16 +153,52 @@ export default function DogMap({ dogs }: DogMapProps) {
     });
     map.addLayer(clusterGroup);
 
+    const overlay = L.layerGroup().addTo(map);
+
     mapInstanceRef.current = map;
     clusterGroupRef.current = clusterGroup;
+    overlayLayerRef.current = overlay;
 
     return () => {
       map.remove();
       mapInstanceRef.current = null;
       clusterGroupRef.current = null;
+      overlayLayerRef.current = null;
       hasFitBoundsRef.current = false;
     };
   }, []);
+
+  // Mission overlay: draw all districts dimmed, the active one highlighted.
+  // When a mission is active, fitBounds to its polygon (overrides the dog
+  // bounds fit on first render).
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const overlay = overlayLayerRef.current;
+    if (!map || !overlay) return;
+    overlay.clearLayers();
+    if (!mission) return;
+
+    for (const d of mission.allDistricts) {
+      const isActive = d.slug === mission.slug;
+      // Leaflet polygon takes [lat, lng]; our ring is [lon, lat].
+      const latlngs: [number, number][] = d.ring.map(([lon, lat]) => [lat, lon]);
+      L.polygon(latlngs, {
+        color: isActive ? "#15803d" : "#1a1612",
+        weight: isActive ? 2.5 : 1,
+        opacity: isActive ? 0.9 : 0.18,
+        fillColor: isActive ? "#22c55e" : "#1a1612",
+        fillOpacity: isActive ? 0.12 : 0.04,
+        interactive: false,
+      }).addTo(overlay);
+    }
+
+    const active = mission.allDistricts.find((d) => d.slug === mission.slug);
+    if (active) {
+      const bounds = L.latLngBounds(active.ring.map(([lon, lat]) => [lat, lon]));
+      map.fitBounds(bounds, { padding: [40, 40] });
+      hasFitBoundsRef.current = true;
+    }
+  }, [mission]);
 
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -139,6 +230,56 @@ export default function DogMap({ dogs }: DogMapProps) {
   return (
     <>
       <div ref={mapRef} className="w-full h-full z-0" />
+
+      {mission && (
+        <div className="absolute top-3 left-3 right-3 z-[500] flex items-center gap-2.5 rounded-xl bg-background/95 backdrop-blur-sm border border-rule-2 shadow-lg px-3 py-2.5">
+          <div className="flex-1 min-w-0">
+            <div className="font-mono text-[9.5px] tracking-[0.22em] uppercase text-muted-foreground">
+              {tMissions("bannerLabel")}
+            </div>
+            <div className="font-semibold text-[14px] leading-tight truncate">
+              {localizedName(mission)}
+            </div>
+            <div className="font-mono text-[10.5px] tracking-[0.04em] text-muted-foreground mt-0.5">
+              {tMissions("bannerProgress", {
+                spotted: mission.mySpotted,
+                total: mission.totalDogs,
+              })}
+            </div>
+            {claimError && (
+              <div className="font-mono text-[10px] tracking-[0.04em] text-destructive mt-1">
+                {claimError.replace(/_/g, " ")}
+              </div>
+            )}
+          </div>
+
+          {alreadyClaimed ? (
+            <span className="shrink-0 px-2.5 py-1.5 rounded-full bg-green-soft text-green-deep font-mono text-[11px] font-medium tracking-[0.04em]">
+              {claimedXp != null
+                ? `+${claimedXp} XP`
+                : tMissions("statusCompleted")}
+            </span>
+          ) : ready ? (
+            <button
+              onClick={handleClaim}
+              disabled={claiming}
+              className="shrink-0 px-3 py-1.5 rounded-full bg-ink text-background font-mono text-[11px] font-medium tracking-[0.04em] active:scale-95 transition-transform disabled:opacity-60"
+            >
+              {claiming
+                ? "…"
+                : tMissions("claimReward", { xp: mission.rewardXp })}
+            </button>
+          ) : null}
+
+          <button
+            onClick={() => router.push("/map")}
+            aria-label={tMissions("abandonMission")}
+            className="shrink-0 grid place-items-center size-7 rounded-full text-muted-foreground hover:bg-muted transition-colors"
+          >
+            <span aria-hidden className="text-lg leading-none">×</span>
+          </button>
+        </div>
+      )}
 
       <style jsx global>{`
         .marker-cluster-small {

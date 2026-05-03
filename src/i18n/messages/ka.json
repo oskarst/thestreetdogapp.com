@@ -4,6 +4,7 @@
     "dashboard": "დაფა",
     "map": "რუკა",
     "gallery": "გალერეა",
+    "missions": "მისიები",
     "admin": "ადმინისტრატორი",
     "logout": "გასვლა",
     "dogs": "ძაღლები",
@@ -241,5 +242,19 @@
     "id": "პირადობის მოწმობა:",
     "cancel": "გაუქმება"
   },
-  "common": {}
+  "common": {},
+  "missions": {
+    "title": "მისიები",
+    "subtitle": "არჩევითი პატრულირება რაიონების მიხედვით",
+    "raionsLabel": "თბილისის რაიონები",
+    "statusCompleted": "დასრულებული",
+    "statusReady": "მიღებისთვის მზად",
+    "statusInProgress": "მიმდინარე",
+    "statusEmpty": "ჯერ არ არის ძაღლები",
+    "claimReward": "მიიღე +{xp}",
+    "abandonMission": "მისიის დახურვა",
+    "bannerLabel": "მისია",
+    "bannerProgress": "{spotted} / {total} ნახულია",
+    "howItWorks": "აირჩიე რაიონი — რუკა მიუახლოვდება მის საზღვარს. დააფიქსირე ყველა ძაღლი, რომლის ნიშანიც პოლიგონშია, და მიიღე ჯილდო."
+  }
 }

@@ -1,6 +1,12 @@
 import dynamic from "next/dynamic";
+import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { DOG_MARKER_COLUMNS, type DogMarker } from "@/types/database";
+import {
+  getDistricts,
+  getMissionsProgress,
+  getMyDogIdsInDistrict,
+} from "@/lib/missions";
 
 // Leaflet ships ~150kB and only renders client-side. Keep it out of the
 // server bundle — and out of every other route's chunks.
@@ -20,7 +26,33 @@ async function getDogMarkers(): Promise<DogMarker[]> {
   return (data ?? []) as DogMarker[];
 }
 
-export default async function MapPage() {
+export default async function MapPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ mission?: string }>;
+}) {
+  const params = await searchParams;
+  const slug = params.mission ?? null;
+
+  // Mission overlay data is only fetched when the user explicitly opted in.
+  // Plain /map stays as fast as before.
+  let mission = null;
+  let myDogIds: string[] = [];
+  let districts = null;
+  let locale = "en";
+  if (slug) {
+    [districts, locale] = await Promise.all([
+      Promise.resolve(getDistricts()),
+      getLocale(),
+    ]);
+    const progress = await getMissionsProgress();
+    const found = progress.find((m) => m.slug === slug);
+    if (found) {
+      mission = found;
+      myDogIds = await getMyDogIdsInDistrict(slug);
+    }
+  }
+
   const dogs = await getDogMarkers();
 
   return (
@@ -28,7 +60,29 @@ export default async function MapPage() {
       className="w-full relative z-0"
       style={{ height: "calc(100vh - 56px - 64px)" }}
     >
-      <DogMap dogs={dogs} />
+      <DogMap
+        dogs={dogs}
+        mission={
+          mission && districts
+            ? {
+                slug: mission.slug,
+                nameEn: mission.name_en,
+                nameKa: mission.name_ka,
+                nameRu: mission.name_ru,
+                totalDogs: mission.totalDogs,
+                mySpotted: mission.mySpotted,
+                completed: mission.completed,
+                rewardXp: mission.rewardXp,
+                myDogIds,
+                allDistricts: districts.map((d) => ({
+                  slug: d.slug,
+                  ring: d.ring,
+                })),
+                locale,
+              }
+            : null
+        }
+      />
     </div>
   );
 }
