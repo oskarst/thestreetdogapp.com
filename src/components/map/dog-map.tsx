@@ -171,11 +171,14 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       .attribution({ prefix: '<a href="https://leafletjs.com">Leaflet</a>' })
       .addTo(map);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 19,
-    }).addTo(map);
+    L.tileLayer(
+      "https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png",
+      {
+        attribution:
+          '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com/">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19,
+      }
+    ).addTo(map);
 
     const clusterGroup = L.markerClusterGroup({
       iconCreateFunction: (cluster) => {

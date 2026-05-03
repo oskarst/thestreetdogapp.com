@@ -15,7 +15,7 @@ const SUPABASE_HOST = "cdfintysiouqfuzcwwck.supabase.co";
 // the current value still bars third-party JS from loading.
 const cspDirectives = [
   "default-src 'self'",
-  `img-src 'self' data: blob: https://${SUPABASE_HOST} https://*.basemaps.cartocdn.com https://*.openstreetmap.org`,
+  `img-src 'self' data: blob: https://${SUPABASE_HOST} https://*.basemaps.cartocdn.com https://*.openstreetmap.org https://tiles.stadiamaps.com https://server.arcgisonline.com`,
   // 'self' covers same-origin fetches; explicit hostnames listed for
   // belt-and-suspenders against deploy-platform edge rewrites.
   `connect-src 'self' https://woof.thestreetdogapp.com https://${SUPABASE_HOST} wss://${SUPABASE_HOST}`,

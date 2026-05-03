@@ -50,7 +50,7 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
       });
 
       const tileLayer = L.tileLayer(
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png",
         { maxZoom: 19 }
       ).addTo(map);
 
