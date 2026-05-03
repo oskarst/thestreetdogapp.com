@@ -246,6 +246,9 @@ export interface ScoreResult {
   ear_tag_bonus_count?: number;
   ear_tag_bonus_points?: number;
   quest_bonus_points?: number;
+  // Scoring v3 — +2 per sighting of a dog without an ear tag.
+  no_tag_bonus_count?: number;
+  no_tag_bonus_points?: number;
 }
 
 // -- Supabase Database interface --
