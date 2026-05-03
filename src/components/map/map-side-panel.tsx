@@ -69,7 +69,10 @@ export function MapSidePanel({ dog, onClose }: MapSidePanelProps) {
 
         {dog && (
           <div className="px-4 pb-6 pt-1 overflow-y-auto" style={{ maxHeight: "calc(60vh - 32px)" }}>
-            <div className="flex gap-3 items-start">
+            <Link
+              href={`/dog/${dog.id}`}
+              className="flex gap-3 items-start no-underline text-inherit -mx-2 px-2 py-2 rounded-xl hover:bg-muted/60 transition-colors"
+            >
               {/* Thumbnail */}
               {dog.images && dog.images.length > 0 ? (
                 <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-muted">
@@ -106,7 +109,7 @@ export function MapSidePanel({ dog, onClose }: MapSidePanelProps) {
                   </p>
                 )}
               </div>
-            </div>
+            </Link>
 
             <Link
               href={`/dog/${dog.id}`}
