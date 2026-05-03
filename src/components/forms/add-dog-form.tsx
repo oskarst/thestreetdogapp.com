@@ -168,8 +168,27 @@ export function AddDogForm() {
       });
 
       if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error(body?.error ?? t("errorGeneric"));
+        // Show the most useful message we can. If the response is JSON
+        // with .error, use it; otherwise fall back to the raw text body
+        // (e.g. Vercel HTML 500 → "Server error 500"); only as a last
+        // resort show the localised generic.
+        const text = await res.text();
+        let serverMsg: string | null = null;
+        try {
+          const parsed = JSON.parse(text);
+          serverMsg = parsed?.error ?? null;
+        } catch {
+          serverMsg = text.length > 0 && text.length < 200 ? text : null;
+        }
+        console.error(
+          "[add-dog] /api/sightings non-ok:",
+          res.status,
+          res.statusText,
+          text.slice(0, 500)
+        );
+        throw new Error(
+          serverMsg ?? `${t("errorGeneric")} (${res.status})`
+        );
       }
 
       const data = await res.json();
