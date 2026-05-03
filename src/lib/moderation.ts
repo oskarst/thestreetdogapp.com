@@ -20,7 +20,7 @@ export async function checkNameForProfanity(
 ): Promise<ModerationResult> {
   const name = rawName.trim();
   if (!name) return { ok: false, reason: "empty" };
-  if (name.length > 50) return { ok: false, reason: "too long" };
+  if (name.length > 20) return { ok: false, reason: "too long" };
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {

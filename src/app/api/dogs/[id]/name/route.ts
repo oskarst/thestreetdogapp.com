@@ -32,9 +32,9 @@ export async function POST(
       { status: 400 }
     );
   }
-  if (rawName.length > 50) {
+  if (rawName.length > 20) {
     return NextResponse.json(
-      { error: "Name must be 50 characters or fewer" },
+      { error: "Name must be 20 characters or fewer" },
       { status: 400 }
     );
   }

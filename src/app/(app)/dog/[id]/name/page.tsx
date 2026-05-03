@@ -151,7 +151,7 @@ export default function NameDogPage() {
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter a name…"
           className="w-full rounded-xl border border-rule-2 bg-card px-3.5 py-3 text-sm text-ink placeholder:text-muted-foreground focus:outline-none focus:border-ink"
-          maxLength={50}
+          maxLength={20}
           required
           autoFocus
         />
