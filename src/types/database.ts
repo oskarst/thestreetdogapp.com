@@ -34,6 +34,12 @@ export interface ProfileRow {
   quest_last_claimed_date: string | null;
   /** Scoring v2: cumulative XP from daily-quest claims. */
   quest_bonus_total: number;
+  /** Mission v2 active state — null when no active mission. */
+  active_mission_slug?: string | null;
+  active_mission_started_at?: string | null;
+  active_mission_distinct_count?: number;
+  active_mission_awards_today?: number;
+  active_mission_award_date?: string | null;
 }
 
 export interface ProfileInsert {

@@ -2,11 +2,7 @@ import dynamic from "next/dynamic";
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { DOG_MARKER_COLUMNS, type DogMarker } from "@/types/database";
-import {
-  getDistricts,
-  getMissionsProgress,
-  getMyDogIdsInDistrict,
-} from "@/lib/missions";
+import { getDistricts, getMissionsView } from "@/lib/missions";
 
 // Leaflet ships ~150kB and only renders client-side. Keep it out of the
 // server bundle — and out of every other route's chunks.
@@ -32,24 +28,53 @@ export default async function MapPage({
   searchParams: Promise<{ mission?: string }>;
 }) {
   const params = await searchParams;
-  const slug = params.mission ?? null;
+  const slugParam = params.mission ?? null;
 
-  // Mission overlay data is only fetched when the user explicitly opted in.
-  // Plain /map stays as fast as before.
-  let mission = null;
-  let myDogIds: string[] = [];
-  let districts = null;
+  // Mission overlay only fetches data when the URL says so. Plain /map stays
+  // as fast as before.
+  let missionContext = null;
   let locale = "en";
-  if (slug) {
-    [districts, locale] = await Promise.all([
-      Promise.resolve(getDistricts()),
-      getLocale(),
-    ]);
-    const progress = await getMissionsProgress();
-    const found = progress.find((m) => m.slug === slug);
-    if (found) {
-      mission = found;
-      myDogIds = await getMyDogIdsInDistrict(slug);
+  if (slugParam) {
+    const [view, loc] = await Promise.all([getMissionsView(), getLocale()]);
+    locale = loc;
+    if (view.active && view.active.slug === slugParam) {
+      const districts = getDistricts();
+      missionContext = {
+        slug: view.active.slug,
+        nameEn: view.active.name_en,
+        nameKa: view.active.name_ka,
+        nameRu: view.active.name_ru,
+        progress: view.active.progress,
+        target: view.active.target,
+        completionXp: view.active.completionXp,
+        allDistricts: districts.map((d) => ({
+          slug: d.slug,
+          ring: d.ring,
+        })),
+        locale,
+      };
+    } else {
+      // Slug doesn't match the active mission — render the polygon for
+      // browsing context but no progress UI.
+      const districts = getDistricts();
+      const target = districts.find((d) => d.slug === slugParam);
+      if (target) {
+        missionContext = {
+          slug: target.slug,
+          nameEn: target.name_en,
+          nameKa: target.name_ka,
+          nameRu: target.name_ru,
+          progress: 0,
+          target: 20,
+          completionXp: 50,
+          allDistricts: districts.map((d) => ({
+            slug: d.slug,
+            ring: d.ring,
+          })),
+          locale,
+          previewOnly: true,
+        };
+      }
     }
   }
 
@@ -60,29 +85,7 @@ export default async function MapPage({
       className="w-full relative z-0"
       style={{ height: "calc(100vh - 56px - 64px)" }}
     >
-      <DogMap
-        dogs={dogs}
-        mission={
-          mission && districts
-            ? {
-                slug: mission.slug,
-                nameEn: mission.name_en,
-                nameKa: mission.name_ka,
-                nameRu: mission.name_ru,
-                totalDogs: mission.totalDogs,
-                mySpotted: mission.mySpotted,
-                completed: mission.completed,
-                rewardXp: mission.rewardXp,
-                myDogIds,
-                allDistricts: districts.map((d) => ({
-                  slug: d.slug,
-                  ring: d.ring,
-                })),
-                locale,
-              }
-            : null
-        }
-      />
+      <DogMap dogs={dogs} mission={missionContext} />
     </div>
   );
 }

@@ -8,7 +8,15 @@ import { SectionLabel } from "@/components/ui/section-label";
 
 interface DogCaughtPageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ points?: string; catchType?: string }>;
+  searchParams: Promise<{
+    points?: string;
+    catchType?: string;
+    missionXp?: string;
+    missionProgress?: string;
+    missionTarget?: string;
+    missionCompleted?: string;
+    missionFinishXp?: string;
+  }>;
 }
 
 const CATCH_LABELS: Record<string, { eyebrow: string; bonus: number }> = {
@@ -22,8 +30,18 @@ export default async function DogCaughtPage({
   searchParams,
 }: DogCaughtPageProps) {
   const { id } = await params;
-  const { points: pointsStr, catchType = "repeat" } = await searchParams;
-  const points = parseInt(pointsStr ?? "1", 10);
+  const sp = await searchParams;
+  const points = parseInt(sp.points ?? "1", 10);
+  const catchType = sp.catchType ?? "repeat";
+  const missionXp = sp.missionXp ? parseInt(sp.missionXp, 10) : 0;
+  const missionProgress = sp.missionProgress
+    ? parseInt(sp.missionProgress, 10)
+    : 0;
+  const missionTarget = sp.missionTarget ? parseInt(sp.missionTarget, 10) : 0;
+  const missionCompleted = sp.missionCompleted === "1";
+  const missionFinishXp = sp.missionFinishXp
+    ? parseInt(sp.missionFinishXp, 10)
+    : 0;
 
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -94,16 +112,44 @@ export default async function DogCaughtPage({
               }
               value={`+${Math.max(points - 0, 1)} pt`}
             />
+            {missionXp > 0 && (
+              <BreakdownRow
+                label={
+                  missionCompleted
+                    ? `Mission ${missionProgress}/${missionTarget} · passed`
+                    : `Mission ${missionProgress}/${missionTarget}`
+                }
+                value={`+${missionXp} XP`}
+              />
+            )}
+            {missionCompleted && missionFinishXp > 0 && (
+              <BreakdownRow
+                label="Completion bonus"
+                value={`+${missionFinishXp} XP`}
+              />
+            )}
             <div className="flex justify-between items-baseline px-3.5 py-3 pt-3">
               <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
                 Total earned
               </span>
               <span className="font-mono text-[22px] font-medium tracking-[-0.02em] text-ink">
-                +{points} pt
+                +{points + missionXp + (missionCompleted ? missionFinishXp : 0)}{" "}
+                pt
               </span>
             </div>
           </div>
         </div>
+
+        {missionCompleted && (
+          <div className="mt-3 rounded-xl border border-[var(--green-brand)]/40 bg-green-soft p-3 text-center">
+            <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-green-deep">
+              Mission Passed
+            </div>
+            <div className="text-[14px] font-semibold text-ink mt-0.5">
+              Raion cleared — pick another from the dashboard
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col gap-2.5 mt-6">
           <Link

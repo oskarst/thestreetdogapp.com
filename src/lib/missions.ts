@@ -4,7 +4,11 @@ import path from "node:path";
 import { cache } from "react";
 
 import { createClient } from "@/lib/supabase/server";
-import { DOG_MARKER_COLUMNS } from "@/types/database";
+import { getCurrentProfile } from "@/lib/auth-cache";
+
+export const MISSION_TARGET = 20;
+export const MISSION_DAILY_CAP = 20;
+export const MISSION_COMPLETION_XP = 50;
 
 export interface DistrictFeature {
   slug: string;
@@ -17,11 +21,6 @@ export interface DistrictFeature {
   bbox: [number, number, number, number];
 }
 
-/**
- * Load the static GeoJSON once per server boot. Each feature is normalised
- * into a polygon ring + bbox; the bbox lets us reject most points before
- * running the (more expensive) ray-cast test.
- */
 function loadDistricts(): DistrictFeature[] {
   const file = path.join(process.cwd(), "public", "tbilisi-districts.geojson");
   const raw = readFileSync(file, "utf8");
@@ -60,10 +59,6 @@ export function getDistricts(): DistrictFeature[] {
   return _districts;
 }
 
-/**
- * Standard ray-casting point-in-polygon. Self-contained — no turf.js dep.
- * Coordinates are [lon, lat]; lon plays the role of x, lat the role of y.
- */
 export function pointInRing(
   lon: number,
   lat: number,
@@ -92,111 +87,98 @@ export function pointInDistrict(
   return pointInRing(lon, lat, district.ring);
 }
 
-export interface MissionProgress {
+export type MissionStatus = "completed" | "active" | "available";
+
+export interface MissionListItem {
   slug: string;
   name_en: string;
   name_ka: string;
   name_ru: string;
-  totalDogs: number;
-  mySpotted: number;
-  completed: boolean;
-  rewardXp: number;
+  status: MissionStatus;
+}
+
+export interface ActiveMission {
+  slug: string;
+  name_en: string;
+  name_ka: string;
+  name_ru: string;
+  startedAt: string;
+  progress: number;
+  target: number;
+  awardsToday: number;
+  dailyCap: number;
+  completionXp: number;
 }
 
 /**
- * Per-request batched mission progress for the calling user. One Supabase
- * round-trip for the dog markers, one for the user's sighted-dog ids, one
- * for already-claimed slugs.
- *
- * "In district" uses dog.last_latitude/last_longitude (same source the map
- * uses). A dog that has moved between raions counts toward whichever raion
- * its current pin is in, not its history — keeps the denominator and
- * numerator consistent.
+ * Read-only summary for the dashboard MissionsBlock and the /missions page.
+ * No "X dogs in district" counts — the v2 mechanic doesn't require knowing
+ * the district population, and showing it would just spoil the explore.
  */
-export const getMissionsProgress = cache(async (): Promise<MissionProgress[]> => {
-  const supabase = await createClient();
+export const getMissionsView = cache(
+  async (): Promise<{
+    list: MissionListItem[];
+    active: ActiveMission | null;
+  }> => {
+    const supabase = await createClient();
+    const districts = getDistricts();
 
-  const districts = getDistricts();
+    const [profile, completionsRes] = await Promise.all([
+      getCurrentProfile(),
+      supabase.rpc("get_my_mission_completions"),
+    ]);
 
-  const [dogsRes, mineRes, completionsRes] = await Promise.all([
-    supabase
-      .from("dogs")
-      .select(DOG_MARKER_COLUMNS)
-      .not("last_latitude", "is", null)
-      .not("last_longitude", "is", null),
-    supabase.rpc("get_my_caught_dog_ids"),
-    supabase.rpc("get_my_mission_completions"),
-  ]);
+    const completedSlugs = new Set(
+      ((completionsRes.data ?? []) as { district_slug: string }[]).map(
+        (r) => r.district_slug
+      )
+    );
 
-  const dogs = (dogsRes.data ?? []) as {
-    id: string;
-    last_latitude: number;
-    last_longitude: number;
-  }[];
+    const activeSlug = (profile?.active_mission_slug as string | null) ?? null;
+    const activeStarted =
+      (profile?.active_mission_started_at as string | null) ?? null;
+    const activeCount =
+      (profile?.active_mission_distinct_count as number | null) ?? 0;
+    const awardsToday =
+      (profile?.active_mission_awards_today as number | null) ?? 0;
+    const awardDate =
+      (profile?.active_mission_award_date as string | null) ?? null;
 
-  const myDogIds = new Set(
-    ((mineRes.data ?? []) as { dog_id: string }[]).map((r) => r.dog_id)
-  );
+    const today = new Date().toISOString().slice(0, 10);
+    const awardsTodayEffective = awardDate === today ? awardsToday : 0;
 
-  const completedSlugs = new Set(
-    ((completionsRes.data ?? []) as { district_slug: string }[]).map(
-      (r) => r.district_slug
-    )
-  );
+    const list: MissionListItem[] = districts.map((d) => {
+      let status: MissionStatus = "available";
+      if (completedSlugs.has(d.slug)) status = "completed";
+      else if (d.slug === activeSlug) status = "active";
+      return {
+        slug: d.slug,
+        name_en: d.name_en,
+        name_ka: d.name_ka,
+        name_ru: d.name_ru,
+        status,
+      };
+    });
 
-  return districts.map((d) => {
-    let totalDogs = 0;
-    let mySpotted = 0;
-    for (const dog of dogs) {
-      if (pointInDistrict(dog.last_longitude, dog.last_latitude, d)) {
-        totalDogs++;
-        if (myDogIds.has(dog.id)) mySpotted++;
+    let active: ActiveMission | null = null;
+    if (activeSlug) {
+      const d = districts.find((x) => x.slug === activeSlug);
+      if (d) {
+        active = {
+          slug: d.slug,
+          name_en: d.name_en,
+          name_ka: d.name_ka,
+          name_ru: d.name_ru,
+          startedAt: activeStarted ?? "",
+          progress: activeCount,
+          target: MISSION_TARGET,
+          awardsToday: awardsTodayEffective,
+          dailyCap: MISSION_DAILY_CAP,
+          completionXp: MISSION_COMPLETION_XP,
+        };
       }
     }
-    return {
-      slug: d.slug,
-      name_en: d.name_en,
-      name_ka: d.name_ka,
-      name_ru: d.name_ru,
-      totalDogs,
-      mySpotted,
-      completed: completedSlugs.has(d.slug),
-      rewardXp: 50,
-    };
-  });
-});
 
-/**
- * For the in-map mission overlay: returns the ids of dogs the user has sighted
- * which currently fall inside the named district. The client passes this list
- * back to claim_district_mission so the server can verify ownership before
- * awarding XP.
- */
-export async function getMyDogIdsInDistrict(slug: string): Promise<string[]> {
-  const district = getDistricts().find((d) => d.slug === slug);
-  if (!district) return [];
-  const supabase = await createClient();
-  const [dogsRes, mineRes] = await Promise.all([
-    supabase
-      .from("dogs")
-      .select(DOG_MARKER_COLUMNS)
-      .not("last_latitude", "is", null)
-      .not("last_longitude", "is", null),
-    supabase.rpc("get_my_caught_dog_ids"),
-  ]);
-  const dogs = (dogsRes.data ?? []) as {
-    id: string;
-    last_latitude: number;
-    last_longitude: number;
-  }[];
-  const mine = new Set(
-    ((mineRes.data ?? []) as { dog_id: string }[]).map((r) => r.dog_id)
-  );
-  return dogs
-    .filter(
-      (d) =>
-        mine.has(d.id) &&
-        pointInDistrict(d.last_longitude, d.last_latitude, district)
-    )
-    .map((d) => d.id);
-}
+    return { list, active };
+  }
+);

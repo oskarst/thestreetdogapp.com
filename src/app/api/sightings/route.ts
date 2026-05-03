@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getDistricts, pointInDistrict } from "@/lib/missions";
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -338,7 +339,63 @@ export async function POST(request: Request) {
       catchType = "repeat";
     }
 
-    return NextResponse.json({ dogId, points, catchType });
+    // Mission progress: if the user has an active mission AND this
+    // sighting falls inside its polygon, hand off to the SECURITY DEFINER
+    // RPC. The polygon test runs on the server here so the client can't
+    // farm bonus XP for sightings outside the raion.
+    let missionAward:
+      | {
+          awarded: number;
+          progress: number;
+          target: number;
+          completed: boolean;
+          completion_bonus: number;
+        }
+      | null = null;
+
+    try {
+      const { data: profileRow } = await supabase
+        .from("profiles")
+        .select("active_mission_slug")
+        .eq("id", user.id)
+        .single();
+      const activeSlug = (profileRow as { active_mission_slug: string | null } | null)
+        ?.active_mission_slug;
+      if (activeSlug) {
+        const district = getDistricts().find((d) => d.slug === activeSlug);
+        if (district && pointInDistrict(longitude, latitude, district)) {
+          const { data: awardRes } = await supabase.rpc(
+            "award_mission_progress",
+            { p_dog_id: dogId }
+          );
+          const a = awardRes as
+            | {
+                ok: boolean;
+                awarded?: number;
+                progress?: number;
+                target?: number;
+                completed?: boolean;
+                completion_bonus?: number;
+              }
+            | null;
+          if (a?.ok && a.awarded && a.awarded > 0) {
+            missionAward = {
+              awarded: a.awarded,
+              progress: a.progress ?? 0,
+              target: a.target ?? 20,
+              completed: a.completed ?? false,
+              completion_bonus: a.completion_bonus ?? 0,
+            };
+          }
+        }
+      }
+    } catch (missionErr) {
+      // Mission award failures must not break sighting creation. Log and
+      // move on — the user still gets the base sighting points.
+      console.error("[sightings] mission award failed:", missionErr);
+    }
+
+    return NextResponse.json({ dogId, points, catchType, missionAward });
   } catch (err) {
     console.error("[POST /api/sightings]", err);
     return NextResponse.json(

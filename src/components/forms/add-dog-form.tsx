@@ -192,9 +192,23 @@ export function AddDogForm() {
       }
 
       const data = await res.json();
-      router.push(
-        `/dog-caught/${data.dogId}?points=${data.points}&catchType=${data.catchType}`
-      );
+      const params = new URLSearchParams({
+        points: String(data.points),
+        catchType: String(data.catchType),
+      });
+      if (data.missionAward) {
+        params.set("missionXp", String(data.missionAward.awarded));
+        params.set("missionProgress", String(data.missionAward.progress));
+        params.set("missionTarget", String(data.missionAward.target));
+        if (data.missionAward.completed) {
+          params.set("missionCompleted", "1");
+          params.set(
+            "missionFinishXp",
+            String(data.missionAward.completion_bonus)
+          );
+        }
+      }
+      router.push(`/dog-caught/${data.dogId}?${params.toString()}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errorSubmit"));
       setSubmitting(false);

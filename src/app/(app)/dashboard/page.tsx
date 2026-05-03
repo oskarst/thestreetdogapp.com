@@ -9,6 +9,7 @@ import { DailyQuest } from "@/components/dog/daily-quest";
 import { StreakBlock } from "@/components/dog/streak-block";
 import { ScoreBoard } from "@/components/dog/score-board";
 import { Achievements } from "@/components/dog/achievements";
+import { MissionsBlock } from "@/components/dog/missions-block";
 import { DashboardContent } from "@/components/dog/dashboard-content";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import {
@@ -73,6 +74,7 @@ export default async function DashboardPage() {
       )}
       <ScoreBoard score={score} />
       <Achievements achievements={achievements} />
+      <MissionsBlock />
       <DashboardContent
         dogs={dogs}
         userId={user.id}
