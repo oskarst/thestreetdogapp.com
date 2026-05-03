@@ -132,7 +132,6 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
   const pickerLayerRef = useRef<L.LayerGroup | null>(null);
   const [picking, startPicking] = useTransition();
   const [pickerError, setPickerError] = useState<string | null>(null);
-  const [hovered, setHovered] = useState<string | null>(null);
 
   function handlePickChunk(slug: string) {
     if (!picker || picker.hasActive) return;
@@ -265,26 +264,15 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       const baseColor = picker.colors[c.colorIndex] ?? "#1a1612";
       const isCompleted = c.status === "completed";
       const isActive = c.status === "active";
-      const isHovered = hovered === c.slug;
       const interactive =
         !isCompleted && (!picker.hasActive || isActive);
 
       const polygon = L.polygon(latlngs, {
-        color: isActive
-          ? "#15803d"
-          : isHovered
-            ? "#1a1612"
-            : baseColor,
-        weight: isActive ? 3 : isHovered ? 2 : 1.5,
+        color: isActive ? "#15803d" : baseColor,
+        weight: isActive ? 3 : 1.5,
         opacity: isCompleted ? 0.45 : 0.95,
         fillColor: baseColor,
-        fillOpacity: isCompleted
-          ? 0.22
-          : isActive
-            ? 0.4
-            : isHovered
-              ? 0.45
-              : 0.28,
+        fillOpacity: isCompleted ? 0.22 : isActive ? 0.4 : 0.28,
         // Only tappable chunks capture pointer events. Non-interactive
         // chunks let pinch / double-tap zoom land on the underlying map
         // tile so the user can drill down before committing.
@@ -300,19 +288,19 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       });
 
       if (interactive) {
-        polygon.on("mouseover", () => setHovered(c.slug));
-        polygon.on("mouseout", () => setHovered(null));
         polygon.on("click", () => handlePickChunk(c.slug));
       }
       polygon.addTo(layer);
     }
 
-    if (allLatLngs.length > 0) {
+    // Fit only on the first render of the picker — subsequent re-runs
+    // must NOT snap the user out of their pinch-zoom.
+    if (!hasFitBoundsRef.current && allLatLngs.length > 0) {
       const bounds = L.latLngBounds(allLatLngs);
       map.fitBounds(bounds, { padding: [40, 40] });
       hasFitBoundsRef.current = true;
     }
-  }, [picker, hovered]);
+  }, [picker]);
 
   // Live "you are here" marker — only when an active mission asks for it.
   // Uses watchPosition so the marker tracks the spotter as they walk.
