@@ -33,11 +33,20 @@ function LocationHistoryMapInner({ locations }: LocationHistoryMapProps) {
 
     L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-      { attribution: "Tiles &copy; Esri", maxZoom: 16 }
+      {
+        attribution: "Tiles &copy; Esri",
+        maxZoom: 16,
+        className: "map-base-accessible",
+      }
     ).addTo(map);
     L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
-      { attribution: "", maxZoom: 16, pane: "shadowPane" }
+      {
+        attribution: "",
+        maxZoom: 16,
+        pane: "shadowPane",
+        className: "map-labels-accessible",
+      }
     ).addTo(map);
 
     // Fix default marker icon — use local copies in /public/leaflet/ instead

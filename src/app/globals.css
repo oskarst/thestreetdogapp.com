@@ -230,3 +230,29 @@
   from { transform: scale(0.4); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+/* Approximation of Esri's WCAG-AA "Accessible Basemap Gray v2" — applied
+   on top of the standard Esri Light Gray Canvas raster. The base layer
+   gets a contrast/saturation bump so streets and parks separate more
+   cleanly; the reference (label) layer gets stacked drop-shadows that
+   simulate the accessible style's white halos around dark text. */
+.map-base-accessible {
+  filter: contrast(1.12) saturate(0.85) brightness(1.02);
+}
+.map-labels-accessible {
+  filter:
+    drop-shadow(0 0 0.5px #fff)
+    drop-shadow(0 0 0.5px #fff)
+    drop-shadow(0 0 1px #fff);
+}
+.dark .map-base-accessible {
+  /* In dark mode the page chrome flips but the basemap doesn't have a
+     dark counterpart at this URL — invert + hue-rotate to fake it. */
+  filter: invert(0.94) hue-rotate(180deg) contrast(1.05) saturate(0.8);
+}
+.dark .map-labels-accessible {
+  filter:
+    invert(0.92)
+    drop-shadow(0 0 0.5px #000)
+    drop-shadow(0 0 0.5px #000);
+}

@@ -171,14 +171,16 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       .attribution({ prefix: '<a href="https://leafletjs.com">Leaflet</a>' })
       .addTo(map);
 
-    // Esri Light Gray Canvas: base + reference label overlay. Pair gives
-    // the cleaner accessibility-oriented look (low-saturation greys, larger
-    // contrast labels) without auth or API key.
+    // Esri Light Gray Canvas, raster, with CSS filters that approximate
+    // the WCAG-AA "Accessible Basemap Gray v2" styling: bumped contrast on
+    // the base, faux halos around labels via repeated drop-shadows. See
+    // .map-base-accessible / .map-labels-accessible in globals.css.
     L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
       {
         attribution: "Tiles &copy; Esri",
         maxZoom: 16,
+        className: "map-base-accessible",
       }
     ).addTo(map);
     L.tileLayer(
@@ -187,6 +189,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
         attribution: "",
         maxZoom: 16,
         pane: "shadowPane",
+        className: "map-labels-accessible",
       }
     ).addTo(map);
 
