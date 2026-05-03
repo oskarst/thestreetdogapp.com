@@ -9,6 +9,13 @@
 -- change so existing references are stale).
 -- ============================================================================
 
+-- Self-sufficient: this also adds the chunk-shape columns from migration
+-- 010 in case 010 was skipped on the target DB.
+ALTER TABLE public.mission_districts
+    ADD COLUMN IF NOT EXISTS parent_slug TEXT,
+    ADD COLUMN IF NOT EXISTS color_index INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS chunk_index INTEGER NOT NULL DEFAULT 1;
+
 DELETE FROM public.mission_dog_credits;
 DELETE FROM public.mission_completions;
 UPDATE public.profiles
