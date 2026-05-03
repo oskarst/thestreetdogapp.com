@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v7";
+const CACHE_NAME = "streetdog-v8";
 
 const MIME_EXT = {
   "image/jpeg": "jpg",
@@ -68,6 +68,16 @@ self.addEventListener("message", (event) => {
 // Fetch — strategy router
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
+
+  // Bypass Next.js RSC navigation fetches. The Next RSC client streams
+  // a custom payload format and is sensitive to any header/body
+  // manipulation by intermediaries — letting the browser handle these
+  // natively avoids the "access control checks" / "Failed to fetch RSC
+  // payload" errors that result when our cache-then-replay path
+  // round-trips the response.
+  if (url.searchParams.has("_rsc")) {
+    return;
+  }
 
   // Cache map tiles (cache-first)
   if (

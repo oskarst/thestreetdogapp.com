@@ -16,7 +16,9 @@ const SUPABASE_HOST = "cdfintysiouqfuzcwwck.supabase.co";
 const cspDirectives = [
   "default-src 'self'",
   `img-src 'self' data: blob: https://${SUPABASE_HOST} https://*.basemaps.cartocdn.com https://*.openstreetmap.org`,
-  `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST}`,
+  // 'self' covers same-origin fetches; explicit hostnames listed for
+  // belt-and-suspenders against deploy-platform edge rewrites.
+  `connect-src 'self' https://woof.thestreetdogapp.com https://${SUPABASE_HOST} wss://${SUPABASE_HOST}`,
   "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
