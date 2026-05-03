@@ -23,6 +23,8 @@ interface MissionContext {
   locale: string;
   /** True when the user is browsing this raion but it isn't their active mission. */
   previewOnly?: boolean;
+  /** When true, render a live "you are here" marker in the active raion. */
+  showUserLocation?: boolean;
 }
 
 // Use the local marker assets that already ship with the PWA — drops the
@@ -78,10 +80,12 @@ export default function DogMap({ dogs, mission }: DogMapProps) {
   const mapInstanceRef = useRef<L.Map | null>(null);
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
   const overlayLayerRef = useRef<L.LayerGroup | null>(null);
+  const userMarkerRef = useRef<L.Marker | null>(null);
   const hasFitBoundsRef = useRef(false);
   const [selectedDog, setSelectedDog] = useState<DogMarker | null>(null);
 
   const handleClose = useCallback(() => setSelectedDog(null), []);
+  const showUserLocation = mission?.showUserLocation ?? false;
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
@@ -170,6 +174,61 @@ export default function DogMap({ dogs, mission }: DogMapProps) {
       hasFitBoundsRef.current = true;
     }
   }, [mission]);
+
+  // Live "you are here" marker — only when an active mission asks for it.
+  // Uses watchPosition so the marker tracks the spotter as they walk.
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !showUserLocation) return;
+    if (typeof navigator === "undefined" || !navigator.geolocation) return;
+
+    const userIcon = L.divIcon({
+      className: "",
+      html: `<div style="
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #2563eb;
+        border: 3px solid white;
+        box-shadow: 0 0 0 1px rgba(37,99,235,0.4), 0 2px 6px rgba(0,0,0,0.3);
+        position: relative;
+      "><div style="
+        position: absolute;
+        inset: -8px;
+        border-radius: 50%;
+        background: rgba(37,99,235,0.18);
+        animation: pulse-dot 2s ease-in-out infinite;
+      "></div></div>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+    });
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        if (!userMarkerRef.current) {
+          userMarkerRef.current = L.marker([latitude, longitude], {
+            icon: userIcon,
+            interactive: false,
+            keyboard: false,
+            zIndexOffset: 1000,
+          }).addTo(map);
+        } else {
+          userMarkerRef.current.setLatLng([latitude, longitude]);
+        }
+      },
+      undefined,
+      { enableHighAccuracy: true, maximumAge: 30000, timeout: 15000 }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+      if (userMarkerRef.current) {
+        userMarkerRef.current.remove();
+        userMarkerRef.current = null;
+      }
+    };
+  }, [showUserLocation]);
 
   useEffect(() => {
     const map = mapInstanceRef.current;

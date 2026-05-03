@@ -182,3 +182,27 @@ export const getMissionsView = cache(
     return { list, active };
   }
 );
+
+/**
+ * Dog IDs the user has credited toward the active mission run. Used by the
+ * /map view so the mission overlay only shows dogs you've actually found —
+ * the raion starts empty and fills in as you spot dogs.
+ *
+ * Reads mission_dog_credits scoped to the current (slug, started_at).
+ */
+export async function getCreditedDogIds(
+  slug: string,
+  startedAt: string
+): Promise<Set<string>> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("mission_dog_credits")
+    .select("dog_id")
+    .eq("district_slug", slug)
+    .eq("started_at", startedAt);
+  if (error) {
+    console.error("[missions] getCreditedDogIds failed:", error.message);
+    return new Set();
+  }
+  return new Set(((data ?? []) as { dog_id: string }[]).map((r) => r.dog_id));
+}
