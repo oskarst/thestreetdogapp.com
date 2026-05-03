@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v10";
+const CACHE_NAME = "streetdog-v11";
 
 const MIME_EXT = {
   "image/jpeg": "jpg",
@@ -137,9 +137,15 @@ self.addEventListener("fetch", (event) => {
   //
   // Caching authenticated HTML in the SW caused a cross-user contamination
   // bug — on a shared device, user A's cached /dashboard could render for
-  // user B before the network response arrived. Now: only cache HTML for
-  // the small set of public routes (auth pages); authenticated routes go
-  // network-only with /offline.html as the offline fallback.
+  // user B before the network response arrived. So most authenticated
+  // routes go network-only with /offline.html as the offline fallback.
+  //
+  // Exception: /add-dog. The form is *designed* to work offline — it
+  // saves to IndexedDB and replays on reconnect — so showing the offline
+  // page there breaks the headline feature. The shared-device concern
+  // is bounded: only the layout's TopNav avatar+nickname are
+  // user-specific; the form itself contains no other user data, and
+  // submissions use the live session via the API, not the cached HTML.
   if (event.request.mode === "navigate") {
     const url = new URL(event.request.url);
     const isPublicHtml =
@@ -147,8 +153,9 @@ self.addEventListener("fetch", (event) => {
       url.pathname === "/register" ||
       url.pathname === "/reset-password" ||
       url.pathname === "/offline.html";
+    const isOfflineCapable = url.pathname === "/add-dog";
 
-    if (isPublicHtml) {
+    if (isPublicHtml || isOfflineCapable) {
       event.respondWith(
         fetch(event.request)
           .then((response) => {
@@ -167,9 +174,9 @@ self.addEventListener("fetch", (event) => {
           )
       );
     } else {
-      // Authenticated paths: network-only, never cache. /offline.html is
-      // shown if the network is down — that's preferable to serving the
-      // previous user's session HTML.
+      // Other authenticated paths: network-only, never cache.
+      // /offline.html is shown if the network is down — preferable to
+      // serving the previous user's session HTML.
       event.respondWith(
         fetch(event.request).catch(() => caches.match("/offline.html"))
       );
