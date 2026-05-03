@@ -32,7 +32,7 @@ function DailyActivityMapInner({ sightings }: DailyActivityMapProps) {
       .addTo(map);
 
     L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
       {
         attribution: "Tiles &copy; Esri",
         maxZoom: 16,
@@ -40,7 +40,7 @@ function DailyActivityMapInner({ sightings }: DailyActivityMapProps) {
       }
     ).addTo(map);
     L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
       {
         attribution: "",
         maxZoom: 16,

@@ -236,24 +236,15 @@
    gets a contrast/saturation bump so streets and parks separate more
    cleanly; the reference (label) layer gets stacked drop-shadows that
    simulate the accessible style's white halos around dark text. */
+/* Tuned for Esri Dark Gray Canvas: bumped contrast + light desaturation
+   on the base, dark halos around the (white) reference labels for
+   stronger legibility against the dark grey background. */
 .map-base-accessible {
-  filter: contrast(1.45) saturate(0.55) brightness(1.04);
+  filter: contrast(1.25) saturate(0.7);
 }
 .map-labels-accessible {
   filter:
-    contrast(1.4)
-    drop-shadow(0 0 0.5px #fff)
-    drop-shadow(0 0 0.5px #fff)
-    drop-shadow(0 0 1px #fff);
-}
-.dark .map-base-accessible {
-  /* In dark mode the page chrome flips but the basemap doesn't have a
-     dark counterpart at this URL — invert + hue-rotate to fake it. */
-  filter: invert(0.94) hue-rotate(180deg) contrast(1.35) saturate(0.55);
-}
-.dark .map-labels-accessible {
-  filter:
-    invert(0.92)
-    drop-shadow(0 0 0.5px #000)
-    drop-shadow(0 0 0.5px #000);
+    contrast(1.2)
+    drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.85));
 }
