@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Loader2, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { CheckCircle2 } from "lucide-react";
+import { AuthShell } from "@/components/auth/auth-shell";
+import {
+  AuthField,
+  PrimaryAuthButton,
+} from "@/components/auth/auth-fields";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ResetPasswordPage() {
@@ -43,72 +44,65 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <div className="grid gap-6">
-        <div className="flex flex-col items-center gap-2">
-          <CheckCircle2 className="size-10 text-green-600" />
-          <h1 className="text-2xl font-bold tracking-tight">Email Sent</h1>
-          <p className="text-center text-sm text-muted-foreground">
-            If an account exists for{" "}
-            <span className="font-medium text-foreground">{email}</span>, you
-            will receive a password reset link.
-          </p>
-        </div>
-        <div className="text-center">
+      <AuthShell
+        eyebrow="Reset Sent"
+        title="Email sent."
+        description=""
+        footer={
           <Link
             href="/login"
-            className="text-sm font-medium underline underline-offset-4 hover:text-green-700"
+            className="text-ink underline underline-offset-[3px] font-medium"
           >
-            Back to login
+            back to login
           </Link>
+        }
+      >
+        <div className="card-soft p-5 flex items-start gap-3">
+          <CheckCircle2 className="size-5 text-[var(--green-brand)] shrink-0 mt-0.5" />
+          <div className="text-sm leading-relaxed">
+            If an account exists for{" "}
+            <span className="font-medium text-ink">{email}</span>, you&apos;ll
+            receive a password reset link shortly.
+          </div>
         </div>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="grid gap-6">
-      <div className="flex flex-col items-center gap-2">
-        <Image src="/logo-full.png" alt="The Street Dog App" width={300} height={300} className="w-[300px] h-[300px] object-contain" />
-        <h1 className="text-2xl font-bold tracking-tight">Reset Password</h1>
-        <p className="text-sm text-muted-foreground">
-          Enter your email to receive a reset link
-        </p>
-      </div>
-
-      <div className="grid gap-4 rounded-xl border bg-card p-6 shadow-sm">
-        <form onSubmit={handleSubmit} className="grid gap-3">
-          <div className="grid gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError("");
-              }}
-              autoComplete="email"
-            />
-            {error && <p className="text-sm text-destructive">{error}</p>}
-          </div>
-
-          <Button type="submit" size="lg" className="h-10" disabled={loading}>
-            {loading && <Loader2 className="size-4 animate-spin" />}
-            Send Reset Link
-          </Button>
-        </form>
-      </div>
-
-      <p className="text-center text-sm text-muted-foreground">
-        Remember your password?{" "}
-        <Link
-          href="/login"
-          className="font-medium text-foreground underline underline-offset-4 hover:text-green-700"
-        >
-          Back to login
-        </Link>
-      </p>
-    </div>
+    <AuthShell
+      eyebrow="Operator Recovery"
+      title="Reset password."
+      description="Enter your email to receive a reset link."
+      footer={
+        <>
+          remember your password?{" "}
+          <Link
+            href="/login"
+            className="text-ink underline underline-offset-[3px] font-medium"
+          >
+            sign in
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit}>
+        <AuthField
+          label="Email"
+          type="email"
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setError("");
+          }}
+          autoComplete="email"
+          error={error}
+        />
+        <PrimaryAuthButton type="submit" loading={loading}>
+          Send reset link
+        </PrimaryAuthButton>
+      </form>
+    </AuthShell>
   );
 }

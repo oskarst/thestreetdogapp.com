@@ -1,33 +1,25 @@
-import { Heart, PawPrint, Mail, Phone, Clock } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Mail, Phone, Clock } from "lucide-react";
+import { SectionLabel } from "@/components/ui/section-label";
 
 export default function AdoptPage() {
   return (
     <div className="px-4 py-4 space-y-4 max-w-2xl mx-auto">
-      <div className="flex items-center gap-2">
-        <Heart className="h-5 w-5 text-rose-500" />
-        <h1 className="text-xl font-bold">Adopt a Street Dog</h1>
+      <div className="px-1">
+        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
+          Pack · Adoption
+        </div>
+        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">
+          Adopt a street dog
+        </h1>
+        <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+          Every street dog in Tbilisi deserves a loving home. By adopting, you
+          give a dog a second chance at life and gain a loyal companion.
+        </p>
       </div>
 
-      <p className="text-muted-foreground">
-        Every street dog in Tbilisi deserves a loving home. By adopting, you
-        give a dog a second chance at life and gain a loyal companion.
-      </p>
-
-      {/* Why Adopt */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <PawPrint className="h-4 w-4 text-primary" />
-            Why Adopt a Street Dog?
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm text-muted-foreground">
+      <section>
+        <SectionLabel>Why Adopt a Street Dog?</SectionLabel>
+        <div className="card-soft p-4 space-y-2 text-sm text-muted-foreground">
           <p>
             Tbilisi&apos;s street dogs are remarkably resilient, social, and
             affectionate. Many have been ear-tagged, vaccinated, and monitored
@@ -39,108 +31,86 @@ export default function AdoptPage() {
             <li>You free up resources for other dogs in need</li>
             <li>Adoption fees cover vaccinations and spay/neuter</li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      {/* How It Works */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="h-4 w-4 text-rose-500" />
-            How It Works
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm text-muted-foreground">
-          <div className="flex gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-              1
-            </span>
-            <div>
-              <p className="font-medium text-foreground">Find a Dog</p>
-              <p>Browse the gallery or map to find a dog you connect with.</p>
+      <section>
+        <SectionLabel meta="4 steps">How It Works</SectionLabel>
+        <div className="card-soft p-4 space-y-3 text-sm">
+          {[
+            {
+              n: "01",
+              title: "Find a dog",
+              body: "Browse the gallery or map to find a dog you connect with.",
+            },
+            {
+              n: "02",
+              title: "Contact us",
+              body: "Reach out to our adoption coordinator with the dog's ID.",
+            },
+            {
+              n: "03",
+              title: "Meet & greet",
+              body: "We arrange a meeting so you and the dog can get to know each other.",
+            },
+            {
+              n: "04",
+              title: "Take them home",
+              body: "Complete paperwork and welcome your new family member.",
+            },
+          ].map((s) => (
+            <div key={s.n} className="flex gap-3">
+              <span className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground shrink-0 pt-0.5">
+                {s.n}
+              </span>
+              <div>
+                <p className="font-semibold text-ink">{s.title}</p>
+                <p className="text-muted-foreground">{s.body}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-              2
-            </span>
-            <div>
-              <p className="font-medium text-foreground">Contact Us</p>
-              <p>Reach out to our adoption coordinator with the dog&apos;s ID.</p>
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-              3
-            </span>
-            <div>
-              <p className="font-medium text-foreground">Meet & Greet</p>
-              <p>We arrange a meeting so you and the dog can get to know each other.</p>
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-              4
-            </span>
-            <div>
-              <p className="font-medium text-foreground">Take Them Home</p>
-              <p>Complete paperwork and welcome your new family member!</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          ))}
+        </div>
+      </section>
 
-      {/* What to Expect */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <PawPrint className="h-4 w-4 text-primary" />
-            What to Expect
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm text-muted-foreground">
+      <section>
+        <SectionLabel>What to Expect</SectionLabel>
+        <div className="card-soft p-4 space-y-2 text-sm text-muted-foreground">
           <p>
-            Street dogs may need time to adjust to indoor life. Here are a few
-            things to keep in mind:
+            Street dogs may need time to adjust to indoor life. Keep these in
+            mind:
           </p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Allow 2-4 weeks for the dog to settle in</li>
+            <li>Allow 2–4 weeks for the dog to settle in</li>
             <li>Be patient with house training</li>
             <li>Schedule a vet checkup within the first week</li>
             <li>Provide a quiet, safe space for the dog to retreat to</li>
             <li>Introduce other pets gradually</li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      {/* Contact */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="h-4 w-4 text-rose-500" />
-            Ready to Adopt?
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm">
+      <section>
+        <SectionLabel meta="contact">Ready to Adopt?</SectionLabel>
+        <div className="card-soft p-4 space-y-3 text-sm">
           <p className="text-muted-foreground">
             Contact our adoption coordinator to start the process:
           </p>
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Mail className="h-4 w-4" />
-              <span>adopt@streetdog.app</span>
+            <div className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.04em] text-ink">
+              <Mail className="size-4 text-muted-foreground" />
+              adopt@streetdog.app
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Phone className="h-4 w-4" />
-              <span>+995 XXX XXX XXX</span>
+            <div className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.04em] text-ink">
+              <Phone className="size-4 text-muted-foreground" />
+              +995 XXX XXX XXX
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              <span>Mon-Fri, 10:00 - 18:00</span>
+            <div className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.04em] text-muted-foreground">
+              <Clock className="size-4" />
+              Mon–Fri, 10:00–18:00
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,185 +1,142 @@
-import {
-  Stethoscope,
-  Heart,
-  Phone,
-  MapPin,
-  Clock,
-  AlertTriangle,
-  Syringe,
-  ShieldPlus,
-} from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Phone, MapPin, Clock, AlertTriangle } from "lucide-react";
+import { SectionLabel } from "@/components/ui/section-label";
+
+const CLINICS = [
+  {
+    name: "Tbilisi Vet Emergency",
+    phone: "+995 32 2XX XX XX",
+    addr: "Rustaveli Ave, Tbilisi",
+    hours: "24/7 emergency services",
+  },
+  {
+    name: "Pets Clinic Tbilisi",
+    phone: "+995 32 2XX XX XX",
+    addr: "Vake District, Tbilisi",
+    hours: "Mon–Sat 9:00–20:00",
+  },
+  {
+    name: "Animal Help Georgia",
+    phone: "+995 5XX XX XX XX",
+    addr: "Saburtalo, Tbilisi",
+    hours: "Mon–Fri 10:00–18:00",
+  },
+];
 
 export default function VeterinaryPage() {
   return (
     <div className="px-4 py-4 space-y-4 max-w-2xl mx-auto">
-      <div className="flex items-center gap-2">
-        <Stethoscope className="h-5 w-5 text-primary" />
-        <h1 className="text-xl font-bold">Veterinary Care</h1>
+      <div className="px-1">
+        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
+          Pack · Veterinary
+        </div>
+        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">
+          Veterinary care
+        </h1>
+        <p className="text-sm text-muted-foreground mt-2">
+          Field references for keeping the pack healthy.
+        </p>
       </div>
 
-      {/* Emergency */}
-      <Card className="border-destructive/30 bg-destructive/5">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-destructive">
-            <AlertTriangle className="h-4 w-4" />
-            Emergency Contacts
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <p className="text-muted-foreground">
-            If you see a dog in immediate danger or severe distress, contact
-            one of these clinics:
-          </p>
-
-          <div className="space-y-4">
-            <div className="rounded-lg bg-card p-3 ring-1 ring-foreground/10">
-              <p className="font-semibold text-foreground">Tbilisi Vet Emergency</p>
-              <div className="mt-1 space-y-1 text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Phone className="h-3.5 w-3.5" />
-                  <span>+995 32 2XX XX XX</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-3.5 w-3.5" />
-                  <span>Rustaveli Ave, Tbilisi</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>24/7 Emergency Services</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-card p-3 ring-1 ring-foreground/10">
-              <p className="font-semibold text-foreground">Pets Clinic Tbilisi</p>
-              <div className="mt-1 space-y-1 text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Phone className="h-3.5 w-3.5" />
-                  <span>+995 32 2XX XX XX</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-3.5 w-3.5" />
-                  <span>Vake District, Tbilisi</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>Mon-Sat 9:00 - 20:00</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-card p-3 ring-1 ring-foreground/10">
-              <p className="font-semibold text-foreground">Animal Help Georgia</p>
-              <div className="mt-1 space-y-1 text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Phone className="h-3.5 w-3.5" />
-                  <span>+995 5XX XX XX XX</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-3.5 w-3.5" />
-                  <span>Saburtalo, Tbilisi</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>Mon-Fri 10:00 - 18:00</span>
-                </div>
-              </div>
-            </div>
+      <section>
+        <SectionLabel meta="3 listed">Emergency Contacts</SectionLabel>
+        <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 space-y-3">
+          <div className="flex items-start gap-2 text-sm text-destructive font-medium">
+            <AlertTriangle className="size-4 mt-0.5 shrink-0" />
+            If you see a dog in immediate danger or severe distress, call one of
+            these clinics first.
           </div>
-        </CardContent>
-      </Card>
+          {CLINICS.map((c) => (
+            <div
+              key={c.name}
+              className="rounded-xl border border-rule bg-card p-3 space-y-1.5"
+            >
+              <p className="font-semibold text-ink text-sm">{c.name}</p>
+              <div className="flex items-center gap-2 font-mono text-[12px] tracking-[0.04em] text-ink">
+                <Phone className="size-3.5 text-muted-foreground" />
+                {c.phone}
+              </div>
+              <div className="flex items-center gap-2 font-mono text-[12px] tracking-[0.04em] text-muted-foreground">
+                <MapPin className="size-3.5" />
+                {c.addr}
+              </div>
+              <div className="flex items-center gap-2 font-mono text-[12px] tracking-[0.04em] text-muted-foreground">
+                <Clock className="size-3.5" />
+                {c.hours}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      {/* Common Health Issues */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="h-4 w-4 text-rose-500" />
-            Common Health Issues
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
+      <section>
+        <SectionLabel>Common Health Issues</SectionLabel>
+        <div className="card-soft p-4 text-sm text-muted-foreground">
           <ul className="space-y-2">
             <li>
-              <span className="font-medium text-foreground">Injuries:</span>{" "}
-              Limping, open wounds, bleeding from traffic or fights
+              <span className="font-semibold text-ink">Injuries:</span> limping,
+              open wounds, bleeding from traffic or fights
             </li>
             <li>
-              <span className="font-medium text-foreground">Malnutrition:</span>{" "}
-              Visible ribs, lethargy, dull coat
+              <span className="font-semibold text-ink">Malnutrition:</span>{" "}
+              visible ribs, lethargy, dull coat
             </li>
             <li>
-              <span className="font-medium text-foreground">Parasites:</span>{" "}
-              Hair loss, excessive scratching, visible ticks or fleas
+              <span className="font-semibold text-ink">Parasites:</span> hair
+              loss, excessive scratching, visible ticks or fleas
             </li>
             <li>
-              <span className="font-medium text-foreground">Distemper:</span>{" "}
-              Coughing, nasal discharge, seizures
+              <span className="font-semibold text-ink">Distemper:</span>{" "}
+              coughing, nasal discharge, seizures
             </li>
             <li>
-              <span className="font-medium text-foreground">Mange:</span>{" "}
-              Patchy hair loss, scabby skin, persistent itching
+              <span className="font-semibold text-ink">Mange:</span> patchy hair
+              loss, scabby skin, persistent itching
             </li>
             <li>
-              <span className="font-medium text-foreground">Behavioral:</span>{" "}
-              Aggression, extreme fear, disorientation
+              <span className="font-semibold text-ink">Behavioral:</span>{" "}
+              aggression, extreme fear, disorientation
             </li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      {/* Vaccination Schedule */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Syringe className="h-4 w-4 text-primary" />
-            Vaccination Schedule
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          <p className="mb-3">
+      <section>
+        <SectionLabel meta="municipal program">
+          Vaccination Schedule
+        </SectionLabel>
+        <div className="card-soft p-4 text-sm">
+          <p className="text-muted-foreground mb-3">
             Tbilisi&apos;s municipal program provides free vaccinations for
             registered street dogs:
           </p>
-          <div className="space-y-2">
-            <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
-              <span className="font-medium text-foreground">Rabies</span>
-              <span>Annually</span>
-            </div>
-            <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
-              <span className="font-medium text-foreground">DHPP</span>
-              <span>Every 1-3 years</span>
-            </div>
-            <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
-              <span className="font-medium text-foreground">Bordetella</span>
-              <span>Annually</span>
-            </div>
-            <div className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
-              <span className="font-medium text-foreground">Deworming</span>
-              <span>Every 3-6 months</span>
-            </div>
+          <div className="space-y-1.5">
+            {[
+              ["Rabies", "Annually"],
+              ["DHPP", "Every 1–3 years"],
+              ["Bordetella", "Annually"],
+              ["Deworming", "Every 3–6 months"],
+            ].map(([k, v]) => (
+              <div
+                key={k}
+                className="flex justify-between rounded-xl bg-background border border-rule px-3 py-2.5"
+              >
+                <span className="font-semibold text-ink">{k}</span>
+                <span className="font-mono text-[12px] tracking-[0.04em] text-muted-foreground">
+                  {v}
+                </span>
+              </div>
+            ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      {/* First Aid Tips */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ShieldPlus className="h-4 w-4 text-primary" />
-            First Aid Tips
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm text-muted-foreground">
+      <section>
+        <SectionLabel>First Aid Tips</SectionLabel>
+        <div className="card-soft p-4 space-y-2 text-sm text-muted-foreground">
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <span className="font-medium text-foreground">Do not approach</span>{" "}
-              an aggressive or frightened dog directly
+              <span className="font-semibold text-ink">Do not approach</span> an
+              aggressive or frightened dog directly
             </li>
             <li>
               Offer water and food from a safe distance if the dog seems calm
@@ -187,9 +144,7 @@ export default function VeterinaryPage() {
             <li>
               For bleeding wounds, apply gentle pressure with a clean cloth
             </li>
-            <li>
-              Do not attempt to move a dog with suspected broken bones
-            </li>
+            <li>Do not attempt to move a dog with suspected broken bones</li>
             <li>
               Use the app&apos;s report feature to alert volunteers and vets
             </li>
@@ -197,13 +152,13 @@ export default function VeterinaryPage() {
               Keep the dog warm with a blanket if it appears to be in shock
             </li>
           </ul>
-          <p className="mt-3 rounded-lg bg-muted/50 p-3 text-xs">
-            Always prioritize your safety. If a dog is aggressive or
-            you are unsure how to help, call a vet clinic or submit a report
-            through the app instead.
+          <p className="mt-3 rounded-xl bg-background border border-rule p-3 text-xs leading-relaxed">
+            Always prioritize your safety. If a dog is aggressive or you&apos;re
+            unsure how to help, call a vet clinic or submit a report through the
+            app instead.
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
     </div>
   );
 }

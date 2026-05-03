@@ -21,6 +21,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ReportStatus } from "@/types/database";
 import { toast } from "sonner";
+import { AdminHeader } from "@/components/admin/admin-header";
 
 interface AdminReport {
   id: string;
@@ -72,7 +73,11 @@ export default function AdminReportsPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="font-heading text-xl font-semibold">Reports</h1>
+      <AdminHeader
+        eyebrow="Admin · Reports"
+        title="User reports"
+        meta={`${reports.length} loaded`}
+      />
 
       <Tabs
         defaultValue="all"

@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AdminHeader } from "@/components/admin/admin-header";
 import {
   Table,
   TableBody,
@@ -90,7 +91,11 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="font-heading text-xl font-semibold">Users</h1>
+      <AdminHeader
+        eyebrow="Admin · Users"
+        title="Operator registry"
+        meta={`${users.length} loaded`}
+      />
 
       <div className="flex items-center gap-2">
         <div className="relative flex-1 max-w-sm">

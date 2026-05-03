@@ -30,6 +30,7 @@ import {
 import { MoreHorizontal, Search } from "lucide-react";
 import type { DogRow } from "@/types/database";
 import { toast } from "sonner";
+import { AdminHeader } from "@/components/admin/admin-header";
 
 interface DogWithMeta extends DogRow {
   sightings_count: number;
@@ -96,7 +97,11 @@ export default function AdminDogsPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="font-heading text-xl font-semibold">Dogs</h1>
+      <AdminHeader
+        eyebrow="Admin · Dogs"
+        title="Subject registry"
+        meta={`${dogs.length} loaded`}
+      />
 
       <div className="flex items-center gap-2">
         <div className="relative flex-1 max-w-sm">

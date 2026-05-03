@@ -1,20 +1,15 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminHeader } from "@/components/admin/admin-header";
+import { SectionLabel } from "@/components/ui/section-label";
 
 export default function AdminSettingsPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="font-heading text-xl font-semibold">Settings</h1>
+    <div className="space-y-4">
+      <AdminHeader eyebrow="Admin · Settings" title="System settings" />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Application Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Settings management will be available in a future update.
-          </p>
-        </CardContent>
-      </Card>
+      <SectionLabel meta="placeholder">Application Settings</SectionLabel>
+      <div className="card-soft p-4 text-sm text-muted-foreground">
+        Settings management will be available in a future update.
+      </div>
     </div>
   );
 }

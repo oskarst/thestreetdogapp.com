@@ -3,17 +3,10 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Flag, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/hooks/use-user";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { SectionLabel } from "@/components/ui/section-label";
 import {
   Select,
   SelectContent,
@@ -25,7 +18,7 @@ import type { ReportType } from "@/types/database";
 
 const REPORT_TYPES: { value: ReportType; label: string }[] = [
   { value: "issue", label: "Issue" },
-  { value: "health", label: "Health Concern" },
+  { value: "health", label: "Health concern" },
   { value: "feedback", label: "Feedback" },
   { value: "other", label: "Other" },
 ];
@@ -84,79 +77,85 @@ export default function ReportPage() {
   }
 
   return (
-    <div className="px-4 py-4 max-w-lg mx-auto">
-      <div className="flex items-center gap-2 mb-4">
-        <Flag className="h-5 w-5 text-muted-foreground" />
-        <h1 className="text-xl font-bold">Submit Report</h1>
+    <div className="px-4 py-4 max-w-lg mx-auto space-y-4">
+      <div className="px-1">
+        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
+          Operator · Report
+        </div>
+        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">
+          Submit a report
+        </h1>
+        {dogId && (
+          <div className="mt-3 font-mono text-[11px] tracking-[0.04em] text-muted-foreground rounded-xl bg-card border border-rule px-3 py-2">
+            re subject:{" "}
+            <span className="text-ink font-medium">{dogId}</span>
+          </div>
+        )}
       </div>
 
-      {dogId && (
-        <div className="mb-4 rounded-lg bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
-          Reporting about dog: <span className="font-medium text-foreground">{dogId}</span>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <section>
+          <SectionLabel meta="pick one">Report Type</SectionLabel>
+          <Select
+            value={reportType}
+            onValueChange={(val) => setReportType(val as ReportType)}
+          >
+            <SelectTrigger
+              id="report-type"
+              className="h-11 w-full rounded-xl border-rule-2 bg-card text-sm"
+            >
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              {REPORT_TYPES.map((t) => (
+                <SelectItem key={t.value} value={t.value}>
+                  {t.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </section>
+
+        <section>
+          <SectionLabel meta="required">Message</SectionLabel>
+          <textarea
+            id="message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Please provide details…"
+            rows={6}
+            className="w-full rounded-xl border border-rule-2 bg-card px-3.5 py-2.5 text-sm text-ink placeholder:text-muted-foreground focus:outline-none focus:border-ink resize-none"
+            required
+          />
+        </section>
+
+        <div className="flex flex-col gap-2.5 pt-2">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
+          >
+            <span className="font-mono text-[var(--green-brand)] font-medium">
+              &gt;
+            </span>
+            {submitting ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Submitting…
+              </>
+            ) : (
+              "Submit report"
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard")}
+            className="w-full px-4 py-3 rounded-xl border border-rule-2 bg-card text-sm font-medium text-ink hover:bg-muted transition-colors"
+          >
+            Cancel
+          </button>
         </div>
-      )}
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Report Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="report-type">Report Type</Label>
-              <Select
-                value={reportType}
-                onValueChange={(val) => setReportType(val as ReportType)}
-              >
-                <SelectTrigger className="w-full" id="report-type">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {REPORT_TYPES.map((t) => (
-                    <SelectItem key={t.value} value={t.value}>
-                      {t.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="message">Message</Label>
-              <textarea
-                id="message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Please provide details..."
-                rows={5}
-                className="w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30 resize-none"
-                required
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Button type="submit" disabled={submitting} className="w-full">
-                {submitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  "Submit Report"
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={() => router.push("/dashboard")}
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+      </form>
     </div>
   );
 }

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/hooks/use-user";
+import { Icon } from "@/components/ui/icon";
 
 export default function NameDogPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,10 +18,7 @@ export default function NameDogPage() {
   const [dogImage, setDogImage] = useState<string | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Fetch dog image on mount
-  const [fetched, setFetched] = useState(false);
-  if (!fetched) {
-    setFetched(true);
+  useEffect(() => {
     const supabase = createClient();
     supabase
       .from("dogs")
@@ -27,12 +26,10 @@ export default function NameDogPage() {
       .eq("id", id)
       .single()
       .then(({ data }) => {
-        if (data?.images?.[0]) {
-          setDogImage(data.images[0]);
-        }
+        if (data?.images?.[0]) setDogImage(data.images[0]);
         setImageLoaded(true);
       });
-  }
+  }, [id]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,14 +41,11 @@ export default function NameDogPage() {
 
     try {
       const supabase = createClient();
-
-      // Fetch current names
       const { data: dog, error: fetchErr } = await supabase
         .from("dogs")
         .select("names")
         .eq("id", id)
         .single();
-
       if (fetchErr) throw fetchErr;
 
       const currentNames: string[] = dog?.names ?? [];
@@ -61,7 +55,6 @@ export default function NameDogPage() {
         .from("dogs")
         .update({ names: updatedNames })
         .eq("id", id);
-
       if (updateErr) throw updateErr;
 
       router.push(`/dog/${id}`);
@@ -74,62 +67,83 @@ export default function NameDogPage() {
   if (userLoading || !imageLoaded) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="animate-pulse text-muted-foreground">Loading...</div>
+        <Loader2 className="size-5 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
   return (
     <div className="px-4 py-6 max-w-md mx-auto space-y-6">
-      {dogImage && (
-        <div className="relative aspect-square w-32 mx-auto rounded-xl overflow-hidden bg-muted">
-          <Image
-            src={dogImage}
-            alt="Dog"
-            fill
-            className="object-cover"
-            sizes="128px"
-          />
-        </div>
-      )}
+      <div className="flex flex-col items-center">
+        {dogImage ? (
+          <div className="relative aspect-square w-32 rounded-2xl overflow-hidden border border-rule">
+            <Image
+              src={dogImage}
+              alt="Dog"
+              fill
+              className="object-cover"
+              sizes="128px"
+            />
+          </div>
+        ) : (
+          <div className="grid place-items-center size-32 rounded-2xl bg-card border border-rule text-muted-foreground">
+            <Icon name="paw" size={48} />
+          </div>
+        )}
+      </div>
 
       <div className="text-center">
-        <h1 className="text-lg font-bold">Name this dog</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Give this dog a name so others can recognize it
+        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
+          subject_{id.slice(0, 4).toUpperCase()}
+        </div>
+        <h1 className="text-[22px] font-bold tracking-[-0.02em] leading-tight">
+          Name this dog
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1.5">
+          So other operators can recognize them.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Enter a name..."
-          className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+          placeholder="Enter a name…"
+          className="w-full rounded-xl border border-rule-2 bg-card px-3.5 py-3 text-sm text-ink placeholder:text-muted-foreground focus:outline-none focus:border-ink"
           maxLength={50}
           required
+          autoFocus
         />
 
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
+        {error && <p className="text-sm text-destructive">{error}</p>}
 
         <button
           type="submit"
           disabled={submitting || !name.trim()}
-          className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
         >
-          {submitting ? "Saving..." : "Save Name"}
+          <span className="font-mono text-[var(--green-brand)] font-medium">
+            &gt;
+          </span>
+          {submitting ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              Saving…
+            </>
+          ) : (
+            "Save name"
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="w-full font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink py-2"
+        >
+          Cancel
         </button>
       </form>
-
-      <button
-        onClick={() => router.back()}
-        className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        Cancel
-      </button>
     </div>
   );
 }

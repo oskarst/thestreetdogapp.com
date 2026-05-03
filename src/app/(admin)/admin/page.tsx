@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Dog, MapPin, Flag } from "lucide-react";
+import { AdminHeader } from "@/components/admin/admin-header";
+import { SectionLabel } from "@/components/ui/section-label";
 
 interface RecentSighting {
   id: string;
@@ -23,92 +23,75 @@ export default async function AdminDashboardPage() {
         .eq("status", "open"),
       admin
         .from("sightings")
-        .select("id, timestamp, profiles:user_id(nickname, email), dogs:dog_id(ear_tag_id, names)")
+        .select(
+          "id, timestamp, profiles:user_id(nickname, email), dogs:dog_id(ear_tag_id, names)"
+        )
         .order("timestamp", { ascending: false })
         .limit(10),
     ]);
 
-  const stats = [
-    {
-      label: "Total Users",
-      value: usersRes.count ?? 0,
-      icon: Users,
-    },
-    {
-      label: "Total Dogs",
-      value: dogsRes.count ?? 0,
-      icon: Dog,
-    },
-    {
-      label: "Total Sightings",
-      value: sightingsRes.count ?? 0,
-      icon: MapPin,
-    },
-    {
-      label: "Open Reports",
-      value: reportsRes.count ?? 0,
-      icon: Flag,
-    },
+  const stats: { label: string; value: number; mult?: string }[] = [
+    { label: "Users", value: usersRes.count ?? 0 },
+    { label: "Dogs", value: dogsRes.count ?? 0 },
+    { label: "Sightings", value: sightingsRes.count ?? 0 },
+    { label: "Open Reports", value: reportsRes.count ?? 0 },
   ];
 
   const recent = (recentRes.data ?? []) as unknown as RecentSighting[];
 
   return (
-    <div className="space-y-6">
-      <h1 className="font-heading text-xl font-semibold">Admin Dashboard</h1>
+    <div>
+      <AdminHeader
+        eyebrow="Admin · Overview"
+        title="Mainframe dashboard"
+        meta={`updated ${new Date().toLocaleTimeString()}`}
+      />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
         {stats.map((s) => (
-          <Card key={s.label} size="sm">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm text-muted-foreground">
-                  {s.label}
-                </CardTitle>
-                <s.icon className="size-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="font-heading text-2xl font-bold">{s.value}</p>
-            </CardContent>
-          </Card>
+          <div key={s.label} className="card-soft p-4">
+            <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+              {s.label}
+            </div>
+            <div className="font-mono text-[28px] font-medium leading-none tracking-[-0.02em] mt-2">
+              {String(s.value).padStart(2, "0")}
+            </div>
+          </div>
         ))}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {recent.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No recent sightings.</p>
-          ) : (
-            <div className="space-y-3">
-              {recent.map((s) => (
-                <div
-                  key={s.id}
-                  className="flex items-center justify-between gap-2 text-sm"
-                >
-                  <div className="min-w-0">
-                    <span className="font-medium">
-                      {s.profiles?.nickname ?? s.profiles?.email ?? "Unknown"}
-                    </span>
-                    <span className="text-muted-foreground"> spotted </span>
-                    <span className="font-medium">
-                      {s.dogs?.names?.[0] ??
-                        s.dogs?.ear_tag_id ??
-                        "Unknown dog"}
-                    </span>
-                  </div>
-                  <time className="shrink-0 text-xs text-muted-foreground">
-                    {new Date(s.timestamp).toLocaleDateString()}
-                  </time>
+      <SectionLabel meta={`last ${recent.length}`}>Recent Activity</SectionLabel>
+      <div className="card-soft p-0 overflow-hidden">
+        {recent.length === 0 ? (
+          <p className="p-4 text-sm text-muted-foreground">
+            No recent sightings.
+          </p>
+        ) : (
+          <div className="divide-y divide-rule">
+            {recent.map((s) => (
+              <div
+                key={s.id}
+                className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm"
+              >
+                <div className="min-w-0 truncate">
+                  <span className="font-medium text-ink">
+                    {s.profiles?.nickname ?? s.profiles?.email ?? "Unknown"}
+                  </span>
+                  <span className="text-muted-foreground"> spotted </span>
+                  <span className="font-medium text-ink">
+                    {s.dogs?.names?.[0] ??
+                      s.dogs?.ear_tag_id ??
+                      "Unknown dog"}
+                  </span>
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                <time className="shrink-0 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+                  {new Date(s.timestamp).toLocaleDateString()}
+                </time>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

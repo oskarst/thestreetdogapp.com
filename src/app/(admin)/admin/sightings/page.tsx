@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { AdminHeader } from "@/components/admin/admin-header";
 
 interface AdminSighting {
   id: string;
@@ -55,7 +56,11 @@ export default function AdminSightingsPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="font-heading text-xl font-semibold">Sightings</h1>
+      <AdminHeader
+        eyebrow="Admin · Sightings"
+        title="Capture log"
+        meta={`${sightings.length} loaded`}
+      />
 
       <Table>
         <TableHeader>
