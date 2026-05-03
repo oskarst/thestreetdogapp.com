@@ -94,12 +94,15 @@ export default async function MapPage({
 
   const dogs = await getDogMarkers();
 
-  // When in active mission, the dog list is reduced to the dogs the user
-  // has already credited toward this run — the rest of the raion stays
-  // hidden so it's a discovery flow.
+  // Three rendering modes:
+  // - active mission: only dogs already credited to this run (discovery)
+  // - preview (browsing a raion that isn't yours): no dogs, just polygons
+  // - plain /map: all dogs
   const visibleDogs = creditedSet
     ? dogs.filter((d) => creditedSet!.has(d.id))
-    : dogs;
+    : missionContext?.previewOnly
+      ? []
+      : dogs;
 
   return (
     <div
