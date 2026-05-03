@@ -107,7 +107,8 @@
     "metaOptionalOcr": "optional · ocr",
     "metaGpsLocked": "gps locked",
     "metaPickOne": "pick one",
-    "metaScale": "scale 1–10"
+    "metaScale": "scale 1–10",
+    "pageTitle": "Spot a Dog"
   },
   "dogProfile": {
     "adoptInfo": "Adopt Info",
@@ -128,7 +129,10 @@
     "last": "Last",
     "sightings": "sightings",
     "recentSightings": "Recent Sightings",
-    "noSightings": "No sightings yet"
+    "noSightings": "No sightings yet",
+    "originallyFoundBy": "originally found by {name}",
+    "originallyFoundByYou": "originally found by you",
+    "originallyFoundByUnknown": "originally found by anon"
   },
   "map": {},
   "gallery": {

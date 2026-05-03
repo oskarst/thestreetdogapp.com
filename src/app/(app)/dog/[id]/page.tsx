@@ -101,7 +101,7 @@ export default async function DogProfilePage({
         totalSightings={sightings.length}
         totalCatchers={totalCatchers}
         registeredByNickname={registeredByProfile?.nickname ?? null}
-        caughtByYou={caughtByYou}
+        registrarIsYou={dog.first_registered_by_id === user.id}
       />
 
       {locations.length > 0 && (

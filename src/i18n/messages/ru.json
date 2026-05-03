@@ -107,7 +107,8 @@
     "metaOptionalOcr": "по желанию · ocr",
     "metaGpsLocked": "gps зафикс.",
     "metaPickOne": "выбери",
-    "metaScale": "шкала 1–10"
+    "metaScale": "шкала 1–10",
+    "pageTitle": "Заметить собаку"
   },
   "dogProfile": {
     "adoptInfo": "Принять информацию",
@@ -128,7 +129,10 @@
     "last": "Последний",
     "sightings": "наблюдения",
     "recentSightings": "Недавние наблюдения",
-    "noSightings": "Пока нет наблюдений"
+    "noSightings": "Пока нет наблюдений",
+    "originallyFoundBy": "впервые нашёл(ла) {name}",
+    "originallyFoundByYou": "впервые нашёл(ла) ты",
+    "originallyFoundByUnknown": "впервые нашёл(ла) аноним"
   },
   "map": {},
   "gallery": {

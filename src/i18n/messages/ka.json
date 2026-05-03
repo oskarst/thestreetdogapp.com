@@ -107,7 +107,8 @@
     "metaOptionalOcr": "სურვილისამებრ · ocr",
     "metaGpsLocked": "gps ჩაკეტილი",
     "metaPickOne": "აირჩიე",
-    "metaScale": "შკალა 1–10"
+    "metaScale": "შკალა 1–10",
+    "pageTitle": "ძაღლის შემჩნევა"
   },
   "dogProfile": {
     "adoptInfo": "ინფორმაციის მიღება",
@@ -128,7 +129,10 @@
     "last": "უკანასკნელი",
     "sightings": "სანახავი",
     "recentSightings": "ბოლოდროინდელი სანახავი",
-    "noSightings": "ჯერ არ არის სანახავი"
+    "noSightings": "ჯერ არ არის სანახავი",
+    "originallyFoundBy": "თავდაპირველად ნახა {name}-მ",
+    "originallyFoundByYou": "თავდაპირველად შენ ნახე",
+    "originallyFoundByUnknown": "თავდაპირველად ნახა ანონიმმა"
   },
   "map": {},
   "gallery": {

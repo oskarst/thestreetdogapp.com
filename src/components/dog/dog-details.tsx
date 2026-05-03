@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import type { DogRow, DogCharacter } from "@/types/database";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
@@ -29,16 +30,17 @@ interface DogDetailsProps {
   totalSightings: number;
   totalCatchers: number;
   registeredByNickname: string | null;
-  caughtByYou: boolean;
+  registrarIsYou: boolean;
 }
 
-export function DogDetails({
+export async function DogDetails({
   dog,
   totalSightings,
   totalCatchers,
   registeredByNickname,
-  caughtByYou,
+  registrarIsYou,
 }: DogDetailsProps) {
+  const t = await getTranslations("dogProfile");
   const name = dog.names?.[0] ?? "Unnamed Dog";
   const altNames = dog.names?.slice(1) ?? [];
   const created = new Date(dog.created_at);
@@ -51,14 +53,17 @@ export function DogDetails({
       <div className="px-1">
         <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-muted-foreground mb-1.5 flex items-center gap-2 flex-wrap">
           <span>subject_{dog.id.slice(0, 4).toUpperCase()}</span>
-          {caughtByYou && (
+          {registrarIsYou ? (
             <span className="text-green-deep bg-green-soft px-1.5 py-0.5 rounded font-medium">
-              caught by you
+              {t("originallyFoundByYou")}
             </span>
-          )}
-          {!caughtByYou && (
+          ) : registeredByNickname ? (
             <span className="text-muted-foreground bg-rule px-1.5 py-0.5 rounded">
-              uncaught
+              {t("originallyFoundBy", { name: registeredByNickname })}
+            </span>
+          ) : (
+            <span className="text-muted-foreground bg-rule px-1.5 py-0.5 rounded">
+              {t("originallyFoundByUnknown")}
             </span>
           )}
         </div>
@@ -95,15 +100,6 @@ export function DogDetails({
         <StatCell value={totalCatchers} label="Catchers" />
         <StatCell label="Last seen" valueText={timeAgo(dog.last_sighting_date)} />
       </div>
-
-      {registeredByNickname && (
-        <div className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground px-1">
-          first registered by{" "}
-          <span className="text-ink font-medium">
-            {registeredByNickname}
-          </span>
-        </div>
-      )}
 
       {/* Profile rows */}
       <div>
