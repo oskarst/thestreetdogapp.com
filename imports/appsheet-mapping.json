@@ -6,7 +6,8 @@
     "imported_at": "2026-05-03T09:07:07.718Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/15840292.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/15840292.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "6ec7971a-3540-4eee-874d-20989e7420fb"
   },
   "44630934": {
     "dog_id": "bd52e55a-5f0f-4f72-9509-b510130b2722",
@@ -15,7 +16,8 @@
     "imported_at": "2026-05-03T09:06:59.557Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/44630934.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "ba8ab150-d6d3-43e9-b9da-10f0c90a7fe2"
   },
   "6b6615a7": {
     "dog_id": "be75919e-22de-4c0d-a3c1-fc94e7c1cdd7",
@@ -23,7 +25,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:42.369Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6b6615a7.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "da24f69e-224b-4e38-a377-dec4004f2e1c"
   },
   "cc9765a1": {
     "dog_id": "0c64076d-2ac4-4aef-a866-1905d3f6b872",
@@ -31,7 +34,8 @@
     "ear_tag_id": "8628",
     "imported_at": "2026-05-03T09:06:42.711Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/cc9765a1.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "ab9574f8-e723-4c87-a6a8-37160db893ff"
   },
   "115772ac": {
     "dog_id": "4230aeb9-354a-407e-80e2-2568f8faaa1a",
@@ -39,7 +43,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:43.024Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/115772ac.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "1b82d8f4-5bad-42c6-a66b-a5c5a817a77f"
   },
   "1463c4dc": {
     "dog_id": "5b4746c3-ec37-42a7-bd57-962f08d84185",
@@ -47,7 +52,8 @@
     "ear_tag_id": "00814",
     "imported_at": "2026-05-03T09:06:43.323Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/1463c4dc.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "07de07d4-8b0d-4958-b3e4-c168d7bbd911"
   },
   "d15bde6a": {
     "dog_id": "6a6e0929-9da4-4b2d-a129-1e9bf4486746",
@@ -55,7 +61,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:43.605Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d15bde6a.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "7e720824-d3f7-457b-9b0d-9c18b64a5b18"
   },
   "0ae35b8d": {
     "dog_id": "a61c6be6-fb61-40fd-9755-27e195ead736",
@@ -63,7 +70,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:44.076Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/0ae35b8d.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "c9c27557-6bca-4401-b324-603a70d734c2"
   },
   "6e2490fa": {
     "dog_id": "335f4054-a169-420b-9213-9931bea6fff6",
@@ -71,7 +79,8 @@
     "ear_tag_id": "00136",
     "imported_at": "2026-05-03T09:06:44.339Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6e2490fa.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "71db42e3-6289-46d1-b32d-c7a3091588c7"
   },
   "72f83fa9": {
     "dog_id": "59da678b-d91b-4cd9-9aae-a4de0ef37342",
@@ -79,7 +88,8 @@
     "ear_tag_id": "13868",
     "imported_at": "2026-05-03T09:06:44.601Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/72f83fa9.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "6fef761a-c716-45db-b913-d35a9497964c"
   },
   "c8155a82": {
     "dog_id": "31372d7f-4586-41cf-b76f-a1fb1f8beda6",
@@ -87,7 +97,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:44.865Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/c8155a82.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "b29ff08b-364b-4641-b8f5-29a7a166df2f"
   },
   "0977abfe": {
     "dog_id": "c2f5f7f9-c2ee-41d8-89b3-46a0aa4beb9e",
@@ -95,7 +106,8 @@
     "ear_tag_id": "13449",
     "imported_at": "2026-05-03T09:06:45.130Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/0977abfe.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "a974396d-f26b-490f-a43f-de747cd35aff"
   },
   "6200de81": {
     "dog_id": "15e6f70a-204b-4479-a1e8-94f69e754a5e",
@@ -103,7 +115,8 @@
     "ear_tag_id": "09304",
     "imported_at": "2026-05-03T09:06:45.361Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6200de81.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "9dc4b506-39ba-4ecb-a3db-fef11238082f"
   },
   "3d44642c": {
     "dog_id": "bd52e55a-5f0f-4f72-9509-b510130b2722",
@@ -111,7 +124,8 @@
     "ear_tag_id": "00686",
     "imported_at": "2026-05-03T09:06:45.588Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/3d44642c.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "56d1e829-30ae-4f27-aa49-8a50439f5fb5"
   },
   "4abf4e7e": {
     "dog_id": "de8a653e-cb62-4751-8bbf-c0fc235ce968",
@@ -119,7 +133,8 @@
     "ear_tag_id": "20971",
     "imported_at": "2026-05-03T09:06:45.815Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/4abf4e7e.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "5583c6b7-cbcc-48e1-b5ef-df288602dae9"
   },
   "30e1d9dd": {
     "dog_id": "7dbae47a-d870-42d6-a9ef-3e41ac6797f8",
@@ -127,7 +142,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:46.030Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/30e1d9dd.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "fb948a16-0937-4d57-b7da-b709f46c2e64"
   },
   "8a14af13": {
     "dog_id": "27e41595-f1dd-4408-82c2-452a470d5cdb",
@@ -135,7 +151,8 @@
     "ear_tag_id": "Not visible",
     "imported_at": "2026-05-03T09:06:46.244Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/8a14af13.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "03cce2ec-56fb-4701-a851-86423e16988c"
   },
   "aa8888e3": {
     "dog_id": "474bd3e7-2224-4cb7-8478-b4fa43282007",
@@ -143,7 +160,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:46.454Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/aa8888e3.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "92c8fc18-b081-43c1-bda3-1971887bce1d"
   },
   "f5f41b3f": {
     "dog_id": "85d5cf14-fd0f-4209-af40-fd959dd3da65",
@@ -151,7 +169,8 @@
     "ear_tag_id": "17268",
     "imported_at": "2026-05-03T09:06:46.726Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/f5f41b3f.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "b994c10d-704b-44f6-9789-508a93c65465"
   },
   "6ed1c9bd": {
     "dog_id": "599d1512-be0e-4274-b3e0-e34b25e6bc19",
@@ -159,7 +178,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:46.954Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6ed1c9bd.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "95607f4c-75c6-44ff-9c1e-88e638649e6e"
   },
   "e8c81716": {
     "dog_id": "6e5e4296-2737-489b-8e8b-fd768ae8e87a",
@@ -167,7 +187,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:47.163Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/e8c81716.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "ce310d81-9ca2-4165-8281-bf464d0c9fe5"
   },
   "33c84976": {
     "dog_id": "15e6f70a-204b-4479-a1e8-94f69e754a5e",
@@ -176,7 +197,8 @@
     "imported_at": "2026-05-03T09:06:47.854Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/33c84976.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "7258d7a1-7aea-459b-95b9-df9dd1d16e3d"
   },
   "b811d798": {
     "dog_id": "ac9c25a1-3026-48d7-9669-598c02d6735d",
@@ -184,7 +206,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:48.073Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/b811d798.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "78f3b1db-cd42-41e0-87e5-7a15f25d8aff"
   },
   "6cba9416": {
     "dog_id": "6c877b76-4259-4150-948b-9f86b5650d08",
@@ -192,7 +215,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:48.386Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6cba9416.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "640ba405-9402-4ff4-8d66-4af12c3392bf"
   },
   "952ad0c3": {
     "dog_id": "3e3cc22f-4311-4702-b675-c5b41d68fcc0",
@@ -200,7 +224,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:48.638Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/952ad0c3.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "2d54ca64-03dc-4c28-b844-10a1f631abff"
   },
   "4ea81195": {
     "dog_id": "50c62114-d84f-4b5c-823f-32577ed3bcd0",
@@ -208,7 +233,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:48.873Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/4ea81195.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "25427721-8acf-4ba7-bddc-90cd1497c353"
   },
   "270a26c0": {
     "dog_id": "1e4aac5c-e9cf-454c-b97b-8c7cdb523f6a",
@@ -216,7 +242,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:49.095Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/270a26c0.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "0cc767cb-fcc4-455a-9272-73ee506b4e44"
   },
   "5822a042": {
     "dog_id": "3fd13d44-71b4-4728-ac79-c01bb4277a0d",
@@ -224,7 +251,8 @@
     "ear_tag_id": "22593",
     "imported_at": "2026-05-03T09:06:49.339Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/5822a042.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "51a79ea1-0c85-49e9-a1f3-90b29fdb8d09"
   },
   "70c2a13b": {
     "dog_id": "b3fa7f64-810b-4da2-91a8-fbda4c883d46",
@@ -232,7 +260,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:49.549Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/70c2a13b.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "5508e2ea-28c9-4c78-8e54-92c3cec71880"
   },
   "4ddc79a6": {
     "dog_id": "af8e24eb-7716-4ad2-b6d6-ae516ec0d43f",
@@ -240,7 +269,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:49.778Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/4ddc79a6.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "bdbb9ad4-4b31-485c-b802-da5a1ee1bbf8"
   },
   "99f5c699": {
     "dog_id": "bbbd29c6-1a6f-41da-a734-b61c622d6362",
@@ -248,7 +278,8 @@
     "ear_tag_id": "24402",
     "imported_at": "2026-05-03T09:06:49.988Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/99f5c699.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "a68980a0-0bb6-4126-813f-085afd98c0bf"
   },
   "0d63a2be": {
     "dog_id": "7a57dc86-2fe2-4b2f-a1a9-9889da3dc336",
@@ -256,7 +287,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:50.238Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/0d63a2be.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "7edd17dc-50fd-4b26-b5a6-ec513a4fcbe3"
   },
   "d4c79ad3": {
     "dog_id": "3fd13d44-71b4-4728-ac79-c01bb4277a0d",
@@ -265,7 +297,8 @@
     "imported_at": "2026-05-03T09:06:51.036Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d4c79ad3.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "ee00c259-42bd-4170-ace4-6dd263c9dc2c"
   },
   "89ab36cc": {
     "dog_id": "9e9a9092-efce-4ec2-885c-59352d123ac6",
@@ -273,7 +306,8 @@
     "ear_tag_id": "21324",
     "imported_at": "2026-05-03T09:06:51.513Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/89ab36cc.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "28b975e0-1c55-46e6-b565-ebd062e3c802"
   },
   "9edfeef4": {
     "dog_id": "d05ddf15-a545-4326-b087-9663530061b2",
@@ -281,7 +315,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:51.722Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/9edfeef4.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "3715b6d2-f037-41d3-a5fa-19ff9427434f"
   },
   "983e9d9a": {
     "dog_id": "ab84acee-f08d-49a9-ab62-f4f6d39f232e",
@@ -289,7 +324,8 @@
     "ear_tag_id": "31824",
     "imported_at": "2026-05-03T09:06:51.992Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/983e9d9a.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "5f25e616-8250-4399-95c1-05f6b9dcae5c"
   },
   "6bdfeb8f": {
     "dog_id": "53af2992-cd8e-4e1d-a258-6c67cf1115c0",
@@ -297,7 +333,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:52.422Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6bdfeb8f.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "c86e61c7-3c06-4cfa-820b-9fd9d24c6fc2"
   },
   "47fc62ba": {
     "dog_id": "6aa31a04-d700-46a5-b28d-42071a74dd71",
@@ -305,7 +342,8 @@
     "ear_tag_id": "22084",
     "imported_at": "2026-05-03T09:06:52.636Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/47fc62ba.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "77f4a196-bad7-40b4-9594-43af01b9e835"
   },
   "d83d2fb0": {
     "dog_id": "6f66dc66-a168-4a89-8f59-7e11ea5a8450",
@@ -313,7 +351,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:52.844Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d83d2fb0.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "7ff2e087-7116-4783-8e74-19e0e12c7b44"
   },
   "655d4ed9": {
     "dog_id": "7663a543-a5f1-43f5-bdcd-f23f422c9799",
@@ -321,7 +360,8 @@
     "ear_tag_id": "76015",
     "imported_at": "2026-05-03T09:06:53.072Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/655d4ed9.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "9c052b53-3b70-4c32-a253-074b36644e53"
   },
   "0849ddfe": {
     "dog_id": "037a2771-7d90-4532-ad91-3680a53a218d",
@@ -329,7 +369,8 @@
     "ear_tag_id": "14319",
     "imported_at": "2026-05-03T09:06:53.282Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/0849ddfe.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "74ec1b6b-1822-4268-8e2f-e54a9380fca4"
   },
   "d9ef680d": {
     "dog_id": "4d68a0a8-8360-41cc-9624-301efeb17413",
@@ -337,7 +378,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:53.493Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d9ef680d.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "8b422f9f-5261-40b0-adbf-a8aa8fb3d6dc"
   },
   "9d960987": {
     "dog_id": "e83e03ef-c53b-4904-b79e-84c646079338",
@@ -345,7 +387,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:53.709Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/9d960987.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "fede9817-86c1-4447-b958-7613dba405e1"
   },
   "5b010ad4": {
     "dog_id": "186baa4b-7294-46de-a6a2-58a88308d9de",
@@ -353,7 +396,8 @@
     "ear_tag_id": "29013",
     "imported_at": "2026-05-03T09:06:53.924Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/5b010ad4.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "93ac03f2-b3f0-4a7d-92eb-45afb833e419"
   },
   "f69d8a3d": {
     "dog_id": "15e6f70a-204b-4479-a1e8-94f69e754a5e",
@@ -362,7 +406,8 @@
     "imported_at": "2026-05-03T09:06:54.582Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/f69d8a3d.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "e23ea8b6-cc62-4186-9d8b-b66e421d9cd3"
   },
   "c1d921f0": {
     "dog_id": "97849042-819d-4030-b036-ecea26c63225",
@@ -370,7 +415,8 @@
     "ear_tag_id": "24902",
     "imported_at": "2026-05-03T09:06:54.818Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/c1d921f0.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "473d14d3-0bfa-451d-80c6-3904189e6e28"
   },
   "a0cb9829": {
     "dog_id": "ed97dc7e-b50e-40f1-9457-4dedf689c875",
@@ -378,7 +424,8 @@
     "ear_tag_id": "23962",
     "imported_at": "2026-05-03T09:06:55.053Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/a0cb9829.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "fe9de5f1-a814-475e-aff5-b28bec8b3ee5"
   },
   "301a030a": {
     "dog_id": "7c747ff7-188d-48a8-aa10-47924bbfd4aa",
@@ -386,7 +433,8 @@
     "ear_tag_id": "28513",
     "imported_at": "2026-05-03T09:06:55.262Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/301a030a.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "3775a668-25f5-4802-929a-c4718a5b54e7"
   },
   "9f77ba4b": {
     "dog_id": "d8e6a9f9-34c8-409a-b77d-83aa91b8819b",
@@ -394,7 +442,8 @@
     "ear_tag_id": "07896",
     "imported_at": "2026-05-03T09:06:55.475Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/9f77ba4b.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "37eada25-2caa-4db5-aae3-662758c0c864"
   },
   "6b113bca": {
     "dog_id": "c2f5f7f9-c2ee-41d8-89b3-46a0aa4beb9e",
@@ -403,7 +452,8 @@
     "imported_at": "2026-05-03T09:06:56.110Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6b113bca.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "6f555189-3a7a-4164-a285-4925164cb3bb"
   },
   "56fe61c4": {
     "dog_id": "85d5cf14-fd0f-4209-af40-fd959dd3da65",
@@ -412,7 +462,8 @@
     "imported_at": "2026-05-03T09:06:56.789Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/56fe61c4.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "cc7d81db-5a64-4b8a-8c4a-c3bed200051c"
   },
   "e6617156": {
     "dog_id": "b8a7a978-2d7d-4f71-b704-cd23e7fcd81b",
@@ -420,7 +471,8 @@
     "ear_tag_id": "082628",
     "imported_at": "2026-05-03T09:06:56.997Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/e6617156.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "e9082dba-eef7-4011-a74c-a3f7d77d92ca"
   },
   "13d7e318": {
     "dog_id": "59da678b-d91b-4cd9-9aae-a4de0ef37342",
@@ -429,7 +481,8 @@
     "imported_at": "2026-05-03T09:06:57.868Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/13d7e318.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "8a7e8850-91cb-46c2-ba6d-5b1a5a2172bf"
   },
   "cfb48c5b": {
     "dog_id": "de8a653e-cb62-4751-8bbf-c0fc235ce968",
@@ -438,7 +491,8 @@
     "imported_at": "2026-05-03T09:06:58.500Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/cfb48c5b.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "424b7219-640a-4e64-be6b-31881029cad6"
   },
   "ae043312": {
     "dog_id": "f4d6de64-8450-42ba-a6fe-0979606f4475",
@@ -446,7 +500,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:06:58.708Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/ae043312.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "09f4ade8-39df-4f44-8022-a60db1c321bf"
   },
   "7c950274": {
     "dog_id": "bc93ee2b-f10a-43fe-88c5-967329941b34",
@@ -454,7 +509,8 @@
     "ear_tag_id": "12297",
     "imported_at": "2026-05-03T09:06:58.917Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/7c950274.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "85be9aa4-a19b-42d3-85c0-83349a3d9ac6"
   },
   "318db9e7": {
     "dog_id": "dcd04d91-1615-49f5-b285-c984973b100a",
@@ -462,7 +518,8 @@
     "ear_tag_id": "73449",
     "imported_at": "2026-05-03T09:06:59.767Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/318db9e7.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "3ae3fb83-6f7c-48e5-b3ff-0280f1674a21"
   },
   "6064e4b5": {
     "dog_id": "a47ee69e-a4dc-4fc9-a611-d6960c61079e",
@@ -470,7 +527,8 @@
     "ear_tag_id": "23074",
     "imported_at": "2026-05-03T09:06:59.979Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6064e4b5.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "56abac69-d61f-465c-9264-abc39524e50a"
   },
   "e2127564": {
     "dog_id": "6677a6d1-0747-4b75-ad00-8273b780008d",
@@ -478,7 +536,8 @@
     "ear_tag_id": "30168",
     "imported_at": "2026-05-03T09:07:00.227Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/e2127564.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "a6b85cbd-9fd1-45c8-b50f-a9f0e087005c"
   },
   "6357aca2": {
     "dog_id": "f7fc35f5-400e-4f6a-a960-33be02c81cac",
@@ -486,7 +545,8 @@
     "ear_tag_id": "05901",
     "imported_at": "2026-05-03T09:07:00.456Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6357aca2.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "a963213e-8ed9-4233-8336-d91e8bae6a5f"
   },
   "d88494b9": {
     "dog_id": "81d07b47-c441-4067-8a61-e4066c01d29d",
@@ -495,7 +555,8 @@
     "imported_at": "2026-05-03T09:07:00.666Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d88494b9.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/d88494b9.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "d4c59701-61fa-4bd9-be6f-071fd8f9b446"
   },
   "ef439888": {
     "dog_id": "9e70836c-033b-45d2-bfc9-12240721a196",
@@ -504,7 +565,8 @@
     "imported_at": "2026-05-03T09:07:00.874Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/ef439888.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/ef439888.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "7a499b58-9c0d-4ab4-a60b-94096b543276"
   },
   "8f8e53c3": {
     "dog_id": "24f2dd0f-8900-41d7-9704-3cd89bf6f628",
@@ -513,7 +575,8 @@
     "imported_at": "2026-05-03T09:07:01.082Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/8f8e53c3.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/8f8e53c3.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "cda4f5ef-5335-4ff3-91c1-8ede0b07ed11"
   },
   "d93a2734": {
     "dog_id": "386b2199-6243-4ef2-9e9d-c9ecefd80501",
@@ -522,7 +585,8 @@
     "imported_at": "2026-05-03T09:07:01.295Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d93a2734.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/d93a2734.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "81a7d250-016d-408f-b9f0-896db873ae04"
   },
   "78a7e6a4": {
     "dog_id": "97849042-819d-4030-b036-ecea26c63225",
@@ -532,7 +596,8 @@
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/78a7e6a4.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/78a7e6a4.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "7965522c-2c5f-4d4d-81fc-0043c5677864"
   },
   "a0bd4888": {
     "dog_id": "06371616-a786-46b7-85be-04a5f1e95d30",
@@ -541,7 +606,8 @@
     "imported_at": "2026-05-03T09:07:02.148Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/a0bd4888.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/a0bd4888.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "bbbf47a7-135b-43cd-a003-6c64cc33b613"
   },
   "c2a9043e": {
     "dog_id": "d2f5d54a-252c-4fbf-bcbd-c04f0aa8e88e",
@@ -550,7 +616,8 @@
     "imported_at": "2026-05-03T09:07:02.356Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/c2a9043e.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/c2a9043e.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "0841b455-1028-45f6-b9cd-cf49466c19c2"
   },
   "1722a919": {
     "dog_id": "9e70836c-033b-45d2-bfc9-12240721a196",
@@ -559,7 +626,8 @@
     "imported_at": "2026-05-03T09:07:02.979Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/1722a919.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "b9d0a119-952a-43d2-b05c-9a7d720fe565"
   },
   "d62daa8b": {
     "dog_id": "24f2dd0f-8900-41d7-9704-3cd89bf6f628",
@@ -568,7 +636,8 @@
     "imported_at": "2026-05-03T09:07:03.604Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d62daa8b.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "b0166635-7941-45a4-98ab-d734441e7faf"
   },
   "dd02eaba": {
     "dog_id": "b9526fcc-f274-4149-ae19-4e0a858411c4",
@@ -577,7 +646,8 @@
     "imported_at": "2026-05-03T09:07:03.813Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/dd02eaba.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/dd02eaba.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "33edc726-b505-4434-a5aa-1298003a645f"
   },
   "d0c56750": {
     "dog_id": "6ebc31ad-2878-4a44-84fc-3ede3d12a1e2",
@@ -586,7 +656,8 @@
     "imported_at": "2026-05-03T09:07:04.021Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d0c56750.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/d0c56750.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "005d8220-6558-42c0-be2e-6877826f1a95"
   },
   "895932b4": {
     "dog_id": "9ed8840d-533a-4db8-95a6-c4143d853e74",
@@ -595,7 +666,8 @@
     "imported_at": "2026-05-03T09:07:04.229Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/895932b4.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/895932b4.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "f019ecc4-3893-4680-8477-feea2b826e4a"
   },
   "41a5f54f": {
     "dog_id": "acc8134f-fbbd-44bd-8b39-98c5cb97caad",
@@ -603,7 +675,8 @@
     "ear_tag_id": "32520",
     "imported_at": "2026-05-03T09:07:04.491Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/41a5f54f.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "6046c402-83a3-4ad0-b9cf-a758c4ae13f4"
   },
   "f416a232": {
     "dog_id": "cc6ac662-bc01-4d9a-94a9-bbf262323e44",
@@ -612,7 +685,8 @@
     "imported_at": "2026-05-03T09:07:04.830Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/f416a232.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/f416a232.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "5deb72dd-e51f-4c08-b1d1-49f5c1b19314"
   },
   "8778ea6e": {
     "dog_id": "64f53f3a-26c2-4c5c-bdcd-6a16f873a930",
@@ -621,7 +695,8 @@
     "imported_at": "2026-05-03T09:07:05.056Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/8778ea6e.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/8778ea6e.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "fed66c82-ea58-4352-953a-ff08eab733e2"
   },
   "30eba7d6": {
     "dog_id": "7e937984-0ab1-4683-9dbf-868612cf9e71",
@@ -630,7 +705,8 @@
     "imported_at": "2026-05-03T09:07:05.269Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/30eba7d6.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/30eba7d6.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "d8b580be-fc48-41d7-a5da-50da83cb7687"
   },
   "5d582ce4": {
     "dog_id": "3ff739c8-9d73-441c-be95-1ccc04cee669",
@@ -639,7 +715,8 @@
     "imported_at": "2026-05-03T09:07:05.482Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/5d582ce4.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/5d582ce4.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "0cafe995-1d01-44b7-ad24-95cacd0f501a"
   },
   "96e8e64c": {
     "dog_id": "00284139-dc53-46dc-bcd4-d33b65b8e703",
@@ -647,7 +724,8 @@
     "ear_tag_id": null,
     "imported_at": "2026-05-03T09:07:05.693Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/96e8e64c.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "058ce114-8b4f-4edf-be88-c3fad20c7f3e"
   },
   "ff409c58": {
     "dog_id": "d9aae4be-2b12-4a11-8836-d9a003c21792",
@@ -656,7 +734,8 @@
     "imported_at": "2026-05-03T09:07:05.900Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/ff409c58.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/ff409c58.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "069aebd2-768c-41c7-8c5b-436e5cc0deec"
   },
   "2b5f76f9": {
     "dog_id": "24b08a80-1756-4673-9756-1cc89797ba9e",
@@ -665,7 +744,8 @@
     "imported_at": "2026-05-03T09:07:06.113Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/2b5f76f9.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/2b5f76f9.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "e6fc06b3-0790-473b-a2e5-25873a3c3061"
   },
   "aacdda63": {
     "dog_id": "d2f5d54a-252c-4fbf-bcbd-c04f0aa8e88e",
@@ -674,7 +754,8 @@
     "imported_at": "2026-05-03T09:07:06.738Z",
     "merged_with_existing": true,
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/aacdda63.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "1944d7bb-4b06-4779-b041-5ab0b809ca25"
   },
   "d421bccf": {
     "dog_id": "80e2ce1a-4cbb-41d7-adc1-7fe3d30a082b",
@@ -683,7 +764,8 @@
     "imported_at": "2026-05-03T09:07:07.298Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d421bccf.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/d421bccf.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "f51d59d3-b99f-4c0f-a4a0-0995cb86106b"
   },
   "43e800fb": {
     "dog_id": "b2457af4-c6ec-4101-99fe-f960b3f3e45a",
@@ -692,7 +774,8 @@
     "imported_at": "2026-05-03T09:07:07.509Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/43e800fb.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/43e800fb.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "7ca3c843-ac50-43b8-87c6-dfbd63dc3bb3"
   },
   "90829e4c": {
     "dog_id": "86a0bdca-1f43-4716-9c13-1794a341de56",
@@ -701,7 +784,8 @@
     "imported_at": "2026-05-03T09:07:07.931Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/90829e4c.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/90829e4c.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "538c1a39-61a2-47a2-ab58-8bc6e6f3a0be"
   },
   "02a025ee": {
     "dog_id": "1bfa2e95-d761-4feb-94d6-baba065de0d9",
@@ -710,7 +794,8 @@
     "imported_at": "2026-05-03T09:07:08.138Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/02a025ee.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/02a025ee.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "34d48ec6-e264-4d40-a494-abf748289321"
   },
   "6fe72d37": {
     "dog_id": "4d9ff9ac-5cdb-49b3-bbc6-41a24b4faad2",
@@ -719,6 +804,7 @@
     "imported_at": "2026-05-03T09:07:08.348Z",
     "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6fe72d37.jpg",
     "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/6fe72d37.jpg",
-    "image_uploaded": true
+    "image_uploaded": true,
+    "sighting_id": "91b310eb-e728-46c6-8f2a-5fc9cbbc19d0"
   }
 }
