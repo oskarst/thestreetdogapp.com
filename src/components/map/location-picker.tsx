@@ -50,8 +50,12 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
       });
 
       const tileLayer = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-        { subdomains: "abcd", maxZoom: 19 }
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 16 }
+      ).addTo(map);
+      L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 16, pane: "shadowPane" }
       ).addTo(map);
 
       // Detect if tiles fail to load (offline, no cache)

@@ -266,7 +266,7 @@
     "pickerPrompt": "შეეხე უბანს მისიის დასაწყებად",
     "pickerBlocked": "ჯერ მიმდინარე მისია დაასრულე",
     "pickerSubtitle": "ერთ უბანში 20 ძაღლი დააფიქსირე. თითოეულში მზარდი XP.",
-    "pickerSubtitleMap": "შეეხე ფერად უბანს რუკაზე, რომ დაიწყო.",
+    "pickerSubtitleMap": "აირჩიე სექტორი",
     "modalAbort": "გაუქმება",
     "modalConfirm": "დადასტურება",
     "dailyCounter": "{today} / {cap} ბონუს ძაღლი დღეს",

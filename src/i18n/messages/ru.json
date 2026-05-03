@@ -266,7 +266,7 @@
     "pickerPrompt": "Тапни по участку, чтобы начать миссию",
     "pickerBlocked": "Сначала закончи активную миссию",
     "pickerSubtitle": "Запиши 20 собак в одном участке. За каждую — растущий XP.",
-    "pickerSubtitleMap": "Нажми на цветной участок на карте, чтобы начать.",
+    "pickerSubtitleMap": "Выбери сектор",
     "modalAbort": "Отмена",
     "modalConfirm": "Подтвердить",
     "dailyCounter": "{today} / {cap} бонусных собак сегодня",
