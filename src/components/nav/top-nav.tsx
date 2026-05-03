@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { User, Shield, Flag, LogOut, UserPen, KeyRound } from "lucide-react";
+import { Shield, Flag, LogOut, UserPen, KeyRound } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,10 +24,36 @@ interface TopNavProps {
   };
 }
 
+const SECTION_NAMES: Record<string, string> = {
+  "/dashboard": "home",
+  "/map": "map",
+  "/gallery": "pack",
+  "/add-dog": "add",
+  "/dog": "subject",
+  "/dog-caught": "result",
+  "/change-nickname": "settings",
+  "/change-password": "settings",
+  "/report": "report",
+  "/admin": "admin",
+};
+
+function sectionFor(pathname: string): string {
+  for (const prefix of Object.keys(SECTION_NAMES)) {
+    if (pathname === prefix || pathname.startsWith(prefix + "/")) {
+      return SECTION_NAMES[prefix];
+    }
+  }
+  return "app";
+}
+
 export function TopNav({ user }: TopNavProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = createClient();
   const t = useTranslations("nav");
+
+  const initial = user.nickname.charAt(0).toUpperCase();
+  const section = sectionFor(pathname);
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -35,24 +61,37 @@ export function TopNav({ user }: TopNavProps) {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-border/50 shadow-sm">
+    <header className="sticky top-0 z-40 bg-background border-b border-rule">
       <div className="flex items-center justify-between px-4 h-14">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 text-primary font-bold text-lg no-underline"
-          style={{ fontFamily: "var(--font-heading)" }}
+          className="flex items-center gap-2.5 no-underline"
         >
-          <Image src="/logo.png" alt="Street Dog" width={32} height={32} className="h-8 w-8 object-contain" />
-          <span>The Street Dog App</span>
+          <Image
+            src="/logo.png"
+            alt="Street Dog"
+            width={32}
+            height={32}
+            className="h-8 w-8 object-contain"
+            priority
+          />
+          <span className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-ink">
+            Street-Dog
+            <span className="font-medium text-muted-foreground ml-1">
+              // {section}
+            </span>
+          </span>
         </Link>
 
         <div className="flex items-center gap-1">
           <LanguageSwitcher />
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center gap-2 rounded-lg px-2.5 h-7 text-sm font-medium hover:bg-muted transition-colors outline-none cursor-pointer">
-              <User className="h-4 w-4" />
-              <span className="max-w-[100px] truncate">
+            <DropdownMenuTrigger className="inline-flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 bg-muted text-ink hover:bg-rule transition-colors outline-none cursor-pointer">
+              <span className="grid size-[22px] place-items-center rounded-full bg-ink text-background font-mono text-[11px] font-medium">
+                {initial}
+              </span>
+              <span className="font-mono text-[11px] font-medium tracking-[0.04em] max-w-[100px] truncate">
                 {user.nickname}
               </span>
             </DropdownMenuTrigger>

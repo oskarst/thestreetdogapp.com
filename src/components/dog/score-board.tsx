@@ -1,59 +1,64 @@
 "use client";
 
-import { Trophy } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { SectionLabel } from "@/components/ui/section-label";
 import type { ScoreResult } from "@/types/database";
 
 interface ScoreBoardProps {
   score: ScoreResult;
 }
 
+/**
+ * Dog Spotting Stats — three trading-card-style tiles in mono with
+ * Pioneers (×10), Trackers (×5), Spottings (×1) and points contributions.
+ */
 export function ScoreBoard({ score }: ScoreBoardProps) {
   const t = useTranslations("dashboard");
 
   const stats = [
-    { label: t("newDogs"), count: score.new_dogs, points: score.new_dogs_points },
     {
-      label: t("uniqueDogs"),
+      label: "Pioneers",
+      mult: "×10",
+      count: score.new_dogs,
+      points: score.new_dogs_points,
+    },
+    {
+      label: "Trackers",
+      mult: "×5",
       count: score.unique_dogs,
       points: score.unique_dogs_points,
     },
     {
-      label: t("totalCatches"),
+      label: "Spottings",
+      mult: "×1",
       count: score.total_catches,
       points: score.total_catches_points,
     },
   ];
 
   return (
-    <div className="rounded-xl bg-card ring-1 ring-foreground/10 p-4">
-      <h3
-        className="flex items-center gap-2 text-base font-bold mb-3"
-        style={{ fontFamily: "var(--font-heading)" }}
-      >
-        <Trophy className="h-5 w-5 text-amber-500" />
-        {t("yourScore")}
-      </h3>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <section>
+      <SectionLabel meta={`${score.total_score} pt total`}>
+        Dog Spotting Stats
+      </SectionLabel>
+      <div className="grid grid-cols-3 gap-2">
         {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-lg bg-muted/50 p-3 text-center"
-          >
-            <div className="text-2xl font-bold text-primary">{stat.count}</div>
-            <div className="text-xs text-muted-foreground">{stat.label}</div>
-            <div className="text-xs font-medium text-primary/80">
+          <div key={stat.label} className="card-soft p-3 pt-3.5">
+            <div className="font-mono text-[10px] text-muted-foreground tracking-[0.06em]">
+              {stat.mult}
+            </div>
+            <div className="font-mono text-[26px] font-medium leading-none tracking-[-0.02em] mt-1.5">
+              {String(stat.count).padStart(2, "0")}
+            </div>
+            <div className="font-mono text-[10px] font-medium tracking-[0.16em] uppercase text-ink mt-2">
+              {stat.label}
+            </div>
+            <div className="font-mono text-[10px] text-green-deep mt-0.5 tracking-[0.04em]">
               +{stat.points} {t("pts")}
             </div>
           </div>
         ))}
-        <div className="rounded-lg bg-primary/10 p-3 text-center">
-          <div className="text-2xl font-bold text-primary">
-            {score.total_score}
-          </div>
-          <div className="text-xs font-bold text-primary">{t("totalScore")}</div>
-        </div>
       </div>
-    </div>
+    </section>
   );
 }

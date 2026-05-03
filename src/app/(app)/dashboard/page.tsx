@@ -3,10 +3,19 @@ import { createClient } from "@/lib/supabase/server";
 import { getDogs } from "@/lib/db/dogs";
 import { getUserFavorites } from "@/lib/db/favorites";
 import { getUserSightings } from "@/lib/db/sightings";
-import { getUserScore } from "@/lib/db/users";
+import { getProfile, getUserScore } from "@/lib/db/users";
+import { DashboardHero } from "@/components/dog/dashboard-hero";
+import { DailyQuest } from "@/components/dog/daily-quest";
 import { ScoreBoard } from "@/components/dog/score-board";
+import { Achievements } from "@/components/dog/achievements";
 import { DashboardContent } from "@/components/dog/dashboard-content";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
+import {
+  deriveStreak,
+  isDailyQuestComplete,
+  deriveAchievements,
+  shortHexId,
+} from "@/lib/dashboard";
 import type { ScoreResult } from "@/types/database";
 
 export default async function DashboardPage() {
@@ -17,7 +26,7 @@ export default async function DashboardPage() {
 
   if (!user) redirect("/login");
 
-  const [dogs, favoriteIds, sightings, score] = await Promise.all([
+  const [dogs, favoriteIds, sightings, score, profile] = await Promise.all([
     getDogs(),
     getUserFavorites(user.id),
     getUserSightings(user.id),
@@ -32,14 +41,34 @@ export default async function DashboardPage() {
         total_score: 0,
       })
     ),
+    getProfile(user.id),
   ]);
 
   const caughtDogIds = new Set(sightings.map((s) => s.dog_id));
+  const streakDays = deriveStreak(sightings);
+  const questComplete = isDailyQuestComplete(sightings);
+  const achievements = deriveAchievements({
+    newDogs: score.new_dogs,
+    uniqueDogs: score.unique_dogs,
+    totalCatches: score.total_catches,
+    streakDays,
+  });
+
+  const nickname =
+    profile?.nickname ?? user.email?.split("@")[0] ?? "Operator";
 
   return (
     <div className="px-4 py-4 space-y-4">
       <OfflineSyncPanel />
+      <DashboardHero
+        score={score}
+        nickname={nickname}
+        shortId={shortHexId(user.id)}
+        streakDays={streakDays}
+      />
+      <DailyQuest complete={questComplete} />
       <ScoreBoard score={score} />
+      <Achievements achievements={achievements} />
       <DashboardContent
         dogs={dogs}
         userId={user.id}
