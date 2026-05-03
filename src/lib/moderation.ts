@@ -1,0 +1,80 @@
+import OpenAI from "openai";
+
+interface ModerationResult {
+  ok: boolean;
+  /** Short reason why the text was rejected, when ok=false. */
+  reason?: string;
+}
+
+/**
+ * Multilingual profanity / offensive-content check for dog names.
+ * Covers English, Russian, Georgian. Uses gpt-5-nano (cheapest OpenAI
+ * chat model, matches the project's existing OCR pattern).
+ *
+ * Fails open on any API/network error so a transient outage doesn't
+ * block legitimate naming. Errors are logged server-side.
+ */
+export async function checkNameForProfanity(
+  rawName: string
+): Promise<ModerationResult> {
+  const name = rawName.trim();
+  if (!name) return { ok: false, reason: "empty" };
+  if (name.length > 50) return { ok: false, reason: "too long" };
+
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    console.warn("[moderation] OPENAI_API_KEY not set — failing open");
+    return { ok: true };
+  }
+
+  const openai = new OpenAI({ apiKey });
+
+  try {
+    const response = await openai.responses.create({
+      model: "gpt-5-nano",
+      input: [
+        {
+          role: "system",
+          content: [
+            {
+              type: "input_text",
+              text:
+                "You are a content filter for dog names submitted by users. " +
+                "The name may be in English, Russian, or Georgian (including " +
+                "transliterations). Reject the name only if it contains " +
+                "profanity, slurs, sexual content, or threats. Be strict but " +
+                "do not reject merely uncommon, foreign, or playful names. " +
+                "Reply with exactly one word: 'OK' if safe, or 'BLOCKED' if not.",
+            },
+          ],
+        },
+        {
+          role: "user",
+          content: [{ type: "input_text", text: name }],
+        },
+      ],
+    });
+
+    let text = "";
+    for (const item of response.output) {
+      if (item.type === "message") {
+        for (const part of item.content) {
+          if (part.type === "output_text") {
+            text += part.text;
+          }
+        }
+      }
+    }
+    const verdict = text.trim().toUpperCase();
+    if (verdict.startsWith("BLOCKED")) {
+      return {
+        ok: false,
+        reason: "Name flagged as inappropriate",
+      };
+    }
+    return { ok: true };
+  } catch (err) {
+    console.error("[moderation] OpenAI error — failing open:", err);
+    return { ok: true };
+  }
+}

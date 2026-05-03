@@ -70,9 +70,22 @@ export function DogDetails({
             also known as {altNames.join(", ")}
           </p>
         )}
-        <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-1">
-          {dog.ear_tag_id ? `ear_tag · ${dog.ear_tag_id}` : "no ear tag"} · first
-          seen {createdStr}
+        {dog.ear_tag_id ? (
+          <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-rule-2 bg-card px-2.5 py-1.5">
+            <span className="font-mono text-[9px] tracking-[0.22em] uppercase text-muted-foreground">
+              ear_tag
+            </span>
+            <span className="font-mono text-[15px] font-semibold tracking-[0.04em] text-ink">
+              {dog.ear_tag_id}
+            </span>
+          </div>
+        ) : (
+          <div className="mt-2 font-mono text-[11px] tracking-[0.06em] text-muted-foreground">
+            no ear tag
+          </div>
+        )}
+        <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-2">
+          first seen {createdStr}
         </div>
       </div>
 

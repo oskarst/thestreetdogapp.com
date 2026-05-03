@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/hooks/use-user";
 import { Icon } from "@/components/ui/icon";
+
+type Permission = "loading" | "allowed" | "denied";
 
 export default function NameDogPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,47 +19,60 @@ export default function NameDogPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dogImage, setDogImage] = useState<string | null>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [permission, setPermission] = useState<Permission>("loading");
 
   useEffect(() => {
+    if (userLoading) return;
+    if (!user) {
+      setPermission("denied");
+      return;
+    }
     const supabase = createClient();
-    supabase
-      .from("dogs")
-      .select("images")
-      .eq("id", id)
-      .single()
-      .then(({ data }) => {
-        if (data?.images?.[0]) setDogImage(data.images[0]);
-        setImageLoaded(true);
-      });
-  }, [id]);
+    let cancelled = false;
+    (async () => {
+      const [dogRes, sightingRes] = await Promise.all([
+        supabase
+          .from("dogs")
+          .select("images, first_registered_by_id")
+          .eq("id", id)
+          .single(),
+        supabase
+          .from("sightings")
+          .select("id", { count: "exact", head: true })
+          .eq("dog_id", id)
+          .eq("user_id", user.id),
+      ]);
+      if (cancelled) return;
+      if (dogRes.data?.images?.[0]) setDogImage(dogRes.data.images[0]);
+      const isRegistrar = dogRes.data?.first_registered_by_id === user.id;
+      const isSpotter = (sightingRes.count ?? 0) > 0;
+      setPermission(isRegistrar || isSpotter ? "allowed" : "denied");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [id, user, userLoading]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = name.trim();
-    if (!trimmed || !user) return;
+    if (!trimmed) return;
 
     setSubmitting(true);
     setError(null);
 
     try {
-      const supabase = createClient();
-      const { data: dog, error: fetchErr } = await supabase
-        .from("dogs")
-        .select("names")
-        .eq("id", id)
-        .single();
-      if (fetchErr) throw fetchErr;
-
-      const currentNames: string[] = dog?.names ?? [];
-      const updatedNames = [...currentNames, trimmed];
-
-      const { error: updateErr } = await supabase
-        .from("dogs")
-        .update({ names: updatedNames })
-        .eq("id", id);
-      if (updateErr) throw updateErr;
-
+      const res = await fetch(`/api/dogs/${id}/name`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmed }),
+      });
+      const body = (await res.json().catch(() => null)) as
+        | { error?: string }
+        | null;
+      if (!res.ok) {
+        throw new Error(body?.error ?? "Failed to save name");
+      }
       router.push(`/dog/${id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save name");
@@ -64,10 +80,38 @@ export default function NameDogPage() {
     }
   }
 
-  if (userLoading || !imageLoaded) {
+  if (userLoading || permission === "loading") {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <Loader2 className="size-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (permission === "denied") {
+    return (
+      <div className="px-4 py-6 max-w-md mx-auto space-y-5 text-center">
+        <div className="grid place-items-center size-20 rounded-2xl bg-card border border-rule text-muted-foreground mx-auto">
+          <Icon name="paw" size={32} />
+        </div>
+        <div>
+          <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
+            subject_{id.slice(0, 4).toUpperCase()}
+          </div>
+          <h1 className="text-[22px] font-bold tracking-[-0.02em] leading-tight">
+            You can&apos;t name this dog
+          </h1>
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+            Only the dog&apos;s registrar or someone who has spotted it can add
+            a name.
+          </p>
+        </div>
+        <Link
+          href={`/dog/${id}`}
+          className="inline-flex w-full items-center justify-center px-4 py-3 rounded-xl border border-rule-2 bg-card text-sm font-medium text-ink hover:bg-muted"
+        >
+          Back to subject
+        </Link>
       </div>
     );
   }
