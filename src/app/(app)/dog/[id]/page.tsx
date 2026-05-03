@@ -27,14 +27,25 @@ export default async function DogProfilePage({
   const dog = await getDogById(id);
   if (!dog) notFound();
 
+  // Each sub-query is allowed to fail independently — a missing legacy
+  // profile or a flaky RPC shouldn't 500 the whole detail page.
+  const safe = async <T,>(p: Promise<T>, label: string, fallback: T): Promise<T> => {
+    try {
+      return await p;
+    } catch (err) {
+      console.error(`[dog/${id}] ${label} failed:`, err);
+      return fallback;
+    }
+  };
+
   const [sightings, favorited, registeredByProfile, totalCatchers] =
     await Promise.all([
-      getSightingsForDog(id),
-      isFavorite(user.id, id),
+      safe(getSightingsForDog(id), "getSightingsForDog", []),
+      safe(isFavorite(user.id, id), "isFavorite", false),
       dog.first_registered_by_id
-        ? getProfile(dog.first_registered_by_id)
+        ? safe(getProfile(dog.first_registered_by_id), "getProfile", null)
         : null,
-      countDogCatchers(id),
+      safe(countDogCatchers(id), "countDogCatchers", 0),
     ]);
 
   const caughtByYou = sightings.some((s) => s.is_mine);

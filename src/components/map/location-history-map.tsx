@@ -31,11 +31,15 @@ function LocationHistoryMapInner({ locations }: LocationHistoryMapProps) {
       .attribution({ prefix: '<a href="https://leafletjs.com">Leaflet</a>' })
       .addTo(map);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 19,
-    }).addTo(map);
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: "abcd",
+        maxZoom: 19,
+      }
+    ).addTo(map);
 
     // Fix default marker icon — use local copies in /public/leaflet/ instead
     // of unpkg.com so the page works offline and the CSP doesn't have to

@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v8";
+const CACHE_NAME = "streetdog-v9";
 
 const MIME_EXT = {
   "image/jpeg": "jpg",
