@@ -1,5 +1,3 @@
-"use client";
-
 import { Icon } from "@/components/ui/icon";
 import { deriveLevel } from "@/lib/dashboard";
 import type { ScoreResult } from "@/types/database";

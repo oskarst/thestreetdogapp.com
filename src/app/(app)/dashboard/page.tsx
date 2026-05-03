@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
 import { getDogs } from "@/lib/db/dogs";
 import { getUserFavorites } from "@/lib/db/favorites";
 import { getUserSightings } from "@/lib/db/sightings";
-import { getProfile, getUserScore } from "@/lib/db/users";
+import { getUserScore } from "@/lib/db/users";
 import { DashboardHero } from "@/components/dog/dashboard-hero";
 import { DailyQuest } from "@/components/dog/daily-quest";
 import { StreakBlock } from "@/components/dog/streak-block";
@@ -21,11 +21,7 @@ import {
 import type { ScoreResult } from "@/types/database";
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
 
   const [dogs, favoriteIds, sightings, score, profile] = await Promise.all([
@@ -43,7 +39,7 @@ export default async function DashboardPage() {
         total_score: 0,
       })
     ),
-    getProfile(user.id),
+    getCurrentProfile(),
   ]);
 
   const caughtDogIds = new Set(sightings.map((s) => s.dog_id));

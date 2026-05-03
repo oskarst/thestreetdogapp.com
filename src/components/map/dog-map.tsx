@@ -6,26 +6,26 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet.markercluster";
-import type { DogRow } from "@/types/database";
+import type { DogMarker } from "@/types/database";
 import { MapSidePanel } from "./map-side-panel";
 
-// Fix default Leaflet marker icon issue in Next.js
+// Use the local marker assets that already ship with the PWA — drops the
+// unpkg.com runtime dep and saves a DNS lookup on cold start.
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconRetinaUrl: "/leaflet/marker-icon-2x.png",
+  iconUrl: "/leaflet/marker-icon.png",
+  shadowUrl: "/leaflet/marker-shadow.png",
 });
 
 interface DogMapProps {
-  dogs: DogRow[];
+  dogs: DogMarker[];
 }
 
 const TBILISI_CENTER: [number, number] = [41.7151, 44.8271];
 const DEFAULT_ZOOM = 13;
 
-function createDogIcon(dog: DogRow): L.DivIcon {
+function createDogIcon(dog: DogMarker): L.DivIcon {
   const initial = dog.names?.[0]?.[0]?.toUpperCase() ?? "🐾";
   return L.divIcon({
     html: `<div style="
@@ -53,12 +53,10 @@ export default function DogMap({ dogs }: DogMapProps) {
   const mapInstanceRef = useRef<L.Map | null>(null);
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
   const hasFitBoundsRef = useRef(false);
-  const [selectedDog, setSelectedDog] = useState<DogRow | null>(null);
+  const [selectedDog, setSelectedDog] = useState<DogMarker | null>(null);
 
   const handleClose = useCallback(() => setSelectedDog(null), []);
 
-  // Init the map exactly once — leaflet has its own DOM lifecycle and we
-  // don't want to tear it down on every dogs change.
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
@@ -115,8 +113,6 @@ export default function DogMap({ dogs }: DogMapProps) {
     };
   }, []);
 
-  // Re-render markers whenever dogs changes. Replaces the cluster's children
-  // wholesale — cheap, leaflet handles diffing internally.
   useEffect(() => {
     const map = mapInstanceRef.current;
     const clusterGroup = clusterGroupRef.current;
@@ -124,12 +120,8 @@ export default function DogMap({ dogs }: DogMapProps) {
 
     clusterGroup.clearLayers();
 
-    const dogsWithCoords = dogs.filter(
-      (d) => d.last_latitude != null && d.last_longitude != null
-    );
-
-    const markers = dogsWithCoords.map((dog) => {
-      const marker = L.marker([dog.last_latitude!, dog.last_longitude!], {
+    const markers = dogs.map((dog) => {
+      const marker = L.marker([dog.last_latitude, dog.last_longitude], {
         icon: createDogIcon(dog),
         title: dog.names?.[0] ?? "Unnamed Dog",
       });
@@ -139,11 +131,9 @@ export default function DogMap({ dogs }: DogMapProps) {
 
     if (markers.length > 0) clusterGroup.addLayers(markers);
 
-    // Fit bounds on the first non-empty render only — re-fitting on every
-    // dogs change would be jarring once the user has panned/zoomed.
-    if (!hasFitBoundsRef.current && dogsWithCoords.length > 0) {
+    if (!hasFitBoundsRef.current && dogs.length > 0) {
       const bounds = L.latLngBounds(
-        dogsWithCoords.map((d) => [d.last_latitude!, d.last_longitude!])
+        dogs.map((d) => [d.last_latitude, d.last_longitude])
       );
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
       hasFitBoundsRef.current = true;

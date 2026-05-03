@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import type { DogRow } from "@/types/database";
+import type { DogMarker } from "@/types/database";
 
 interface MapSidePanelProps {
-  dog: DogRow | null;
+  dog: DogMarker | null;
   onClose: () => void;
 }
 

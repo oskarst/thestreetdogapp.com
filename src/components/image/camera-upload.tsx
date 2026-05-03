@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Camera } from "lucide-react";
 
 interface CameraUploadProps {
@@ -18,6 +18,20 @@ export function CameraUpload({
 }: CameraUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Build the preview URL once per File and revoke it when the file
+  // changes / the component unmounts. Without this, the previous
+  // implementation called URL.createObjectURL on every render — leaking
+  // a blob URL each time.
+  const previewUrl = useMemo(
+    () => (value ? URL.createObjectURL(value) : null),
+    [value]
+  );
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
   return (
     <div>
       <button
@@ -25,9 +39,9 @@ export function CameraUpload({
         onClick={() => inputRef.current?.click()}
         className="w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/30 p-6 transition-colors hover:border-primary/50 hover:bg-muted/50 active:scale-[0.98]"
       >
-        {value ? (
+        {previewUrl ? (
           <img
-            src={URL.createObjectURL(value)}
+            src={previewUrl}
             alt="Preview"
             className="h-40 w-auto rounded-lg object-cover"
           />

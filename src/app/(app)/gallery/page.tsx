@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/auth-cache";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
 import { GalleryFilters } from "@/components/dog/gallery-filters";
@@ -19,9 +20,7 @@ async function getDogsWithImages(): Promise<DogListRow[]> {
 
 export default async function GalleryPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   const userId = user?.id ?? "";
 
   const [dogs, sightingsRes, favsRes] = await Promise.all([

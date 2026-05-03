@@ -1,5 +1,3 @@
-"use client";
-
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
 import type { Achievement } from "@/lib/dashboard";

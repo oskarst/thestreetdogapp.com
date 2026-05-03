@@ -57,9 +57,45 @@ export function openDB(): Promise<IDBDatabase> {
   });
 }
 
+export class QuotaExceededError extends Error {
+  constructor(
+    public used: number,
+    public quota: number
+  ) {
+    super(
+      `Local storage almost full (${Math.round(
+        (used / Math.max(quota, 1)) * 100
+      )}%). Sync before adding more offline catches.`
+    );
+    this.name = "QuotaExceededError";
+  }
+}
+
+/**
+ * Bail before writing if the browser's storage estimate is within ~10% of
+ * its quota. Without this, IndexedDB can OOM silently and Safari may evict
+ * the DB without warning. Browsers without `navigator.storage.estimate`
+ * are treated as ok (no signal to act on).
+ */
+async function ensureQuotaAvailable(): Promise<void> {
+  if (typeof navigator === "undefined") return;
+  const storage = navigator.storage;
+  if (!storage?.estimate) return;
+  try {
+    const { usage = 0, quota = 0 } = await storage.estimate();
+    if (quota > 0 && usage / quota > 0.9) {
+      throw new QuotaExceededError(usage, quota);
+    }
+  } catch (err) {
+    if (err instanceof QuotaExceededError) throw err;
+    // estimate() throwing is non-fatal — let the write attempt anyway.
+  }
+}
+
 export async function saveOfflineDog(
   entry: Omit<OfflineDogEntry, "id">
 ): Promise<number> {
+  await ensureQuotaAvailable();
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, "readwrite");

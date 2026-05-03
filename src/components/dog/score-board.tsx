@@ -1,6 +1,4 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { SectionLabel } from "@/components/ui/section-label";
 import type { ScoreResult } from "@/types/database";
 
@@ -12,8 +10,8 @@ interface ScoreBoardProps {
  * Dog Spotting Stats — three trading-card-style tiles in mono with
  * Pioneers (×10), Trackers (×5), Spottings (×1) and points contributions.
  */
-export function ScoreBoard({ score }: ScoreBoardProps) {
-  const t = useTranslations("dashboard");
+export async function ScoreBoard({ score }: ScoreBoardProps) {
+  const t = await getTranslations("dashboard");
 
   const stats = [
     {

@@ -1,32 +1,23 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { TopNav } from "@/components/nav/top-nav";
 import { BottomTabs } from "@/components/nav/bottom-tabs";
 import { FloatingAddButton } from "@/components/nav/floating-add-button";
 import { AuthListener } from "@/components/auth/auth-listener";
 import { PrecachePages } from "@/components/pwa/sw-register";
 import { OfflineBanner } from "@/components/pwa/offline-banner";
+import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
 
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
+  const [user, profile] = await Promise.all([
+    getCurrentUser(),
+    getCurrentProfile(),
+  ]);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("nickname, role")
-    .eq("id", user.id)
-    .single();
+  if (!user) redirect("/login");
 
   const userData = {
     id: user.id,

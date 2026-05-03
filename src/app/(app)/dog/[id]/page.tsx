@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { PenLine } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/auth-cache";
 import { getDogById } from "@/lib/db/dogs";
 import { getSightingsForDog } from "@/lib/db/sightings";
 import { isFavorite } from "@/lib/db/favorites";
@@ -21,10 +21,7 @@ export default async function DogProfilePage({
 }) {
   const { id } = await params;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
 
   const dog = await getDogById(id);

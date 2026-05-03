@@ -93,6 +93,23 @@ export interface DogListRow {
 export const DOG_LIST_COLUMNS =
   "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id";
 
+/**
+ * Slim projection for the map view — just enough to place markers and
+ * render the side panel without re-fetching.
+ */
+export interface DogMarker {
+  id: string;
+  ear_tag_id: string | null;
+  names: string[];
+  images: string[];
+  last_latitude: number;
+  last_longitude: number;
+  last_sighting_date: string | null;
+}
+
+export const DOG_MARKER_COLUMNS =
+  "id,ear_tag_id,names,images,last_latitude,last_longitude,last_sighting_date";
+
 export interface DogInsert {
   id?: string;
   ear_tag_id?: string | null;

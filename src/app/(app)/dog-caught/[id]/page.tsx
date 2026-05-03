@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/auth-cache";
 import { getDogById } from "@/lib/db/dogs";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
@@ -25,10 +25,7 @@ export default async function DogCaughtPage({
   const { points: pointsStr, catchType = "repeat" } = await searchParams;
   const points = parseInt(pointsStr ?? "1", 10);
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
 
   const dog = await getDogById(id).catch(() => null);

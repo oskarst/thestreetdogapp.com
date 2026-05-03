@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v5";
+const CACHE_NAME = "streetdog-v6";
 
 const MIME_EXT = {
   "image/jpeg": "jpg",
@@ -146,7 +146,20 @@ self.addEventListener("fetch", (event) => {
           caches.match(event.request).then((cached) => {
             // Never serve cached redirects — Safari throws on SW redirect responses
             if (cached && cached.redirected) return caches.match("/offline.html");
-            return cached || caches.match("/offline.html");
+            // Don't serve cached HTML older than 24h — its referenced
+            // chunk hashes may have been replaced by a deploy in the
+            // meantime, leading to runtime 404s on those chunks.
+            if (cached) {
+              const dateHeader = cached.headers.get("date");
+              if (dateHeader) {
+                const ageMs = Date.now() - new Date(dateHeader).getTime();
+                if (ageMs > 24 * 60 * 60 * 1000) {
+                  return caches.match("/offline.html");
+                }
+              }
+              return cached;
+            }
+            return caches.match("/offline.html");
           })
         )
     );
