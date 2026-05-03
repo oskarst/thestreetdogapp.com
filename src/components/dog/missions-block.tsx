@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SectionLabel } from "@/components/ui/section-label";
 import { getMissionsView, PARENT_COLORS } from "@/lib/missions";
 import { MissionsActiveActions } from "@/components/dog/missions-active-actions";
+import { cn } from "@/lib/utils";
 
 function localizedParent(
   locale: string,
@@ -48,66 +49,61 @@ export async function MissionsBlock() {
       </SectionLabel>
 
       {active ? (
-        <div
-          className="relative rounded-2xl bg-card p-4 overflow-hidden"
-          style={{
-            border: `1px solid ${PARENT_COLORS[active.colorIndex] ?? "var(--ink)"}`,
-            boxShadow: `0 8px 24px -10px ${PARENT_COLORS[active.colorIndex] ?? "rgba(26,22,18,0.4)"}66, 0 2px 8px rgba(0,0,0,0.06)`,
-          }}
-        >
-          {/* Coloured accent strip on the left edge */}
-          <span
-            aria-hidden
-            className="absolute left-0 top-0 bottom-0 w-1"
-            style={{ background: PARENT_COLORS[active.colorIndex] ?? "var(--ink)" }}
-          />
-          <div className="flex items-baseline justify-between gap-2 mb-2 pl-1">
-            <div className="flex-1 min-w-0">
-              <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground flex items-center gap-1.5">
-                <span
-                  className="size-1.5 rounded-full"
-                  style={{
-                    background:
-                      PARENT_COLORS[active.colorIndex] ?? "var(--green-brand)",
-                    animation: "pulse-dot 1.6s ease-in-out infinite",
-                  }}
-                />
-                {t("activeLabel")}
+        <div className="rounded-2xl border border-[var(--green-brand)]/40 bg-green-soft p-4">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="relative shrink-0">
+              <div
+                className="size-14 rounded-full grid place-items-center bg-[var(--green-brand)] text-white"
+                style={{ boxShadow: "0 6px 14px rgba(34,197,94,0.32)" }}
+              >
+                <span className="text-2xl leading-none">🧭</span>
               </div>
-              <div className="text-[18px] font-semibold leading-tight truncate mt-0.5">
+              <span
+                className="absolute -bottom-1 -right-1 size-4 rounded-full border-2 border-green-soft"
+                style={{
+                  background:
+                    PARENT_COLORS[active.colorIndex] ?? "var(--green-deep)",
+                }}
+              />
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2 leading-none">
+                <span className="font-mono text-[40px] font-medium tracking-[-0.04em] text-[var(--green-deep)]">
+                  {active.progress}
+                </span>
+                <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--green-deep)]/80">
+                  / {active.target} subjects
+                </span>
+              </div>
+              <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-[var(--green-deep)]/80 mt-1.5 truncate">
                 {activeLabel}
               </div>
+              <div className="flex items-center gap-1 mt-2">
+                {Array.from({ length: active.target }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      "h-1.5 rounded-full flex-1",
+                      i < active.progress
+                        ? "bg-[var(--green-brand)]"
+                        : "bg-[var(--green-brand)]/20"
+                    )}
+                  />
+                ))}
+              </div>
+              <div className="font-mono text-[10px] tracking-[0.06em] text-[var(--green-deep)]/80 mt-2 flex items-center justify-between gap-2">
+                <span>
+                  {active.awardsToday >= active.dailyCap
+                    ? t("dailyCapReached", { cap: active.dailyCap })
+                    : t("dailyCounter", {
+                        today: active.awardsToday,
+                        cap: active.dailyCap,
+                      })}
+                </span>
+                <span>{t("completionReward", { xp: active.completionXp })}</span>
+              </div>
             </div>
-            <span className="font-mono text-[12px] tracking-[0.04em] text-muted-foreground shrink-0">
-              <b className="text-ink font-medium text-[16px]">{active.progress}</b>{" "}
-              / {active.target}
-            </span>
-          </div>
-
-          <div className="relative h-1.5 bg-rule-2 rounded overflow-hidden mb-3">
-            <div
-              className="absolute inset-y-0 left-0 rounded transition-all"
-              style={{
-                width: `${Math.min(100, (active.progress / active.target) * 100)}%`,
-                background:
-                  PARENT_COLORS[active.colorIndex] ?? "var(--green-brand)",
-                boxShadow: `0 0 8px ${PARENT_COLORS[active.colorIndex] ?? "var(--green-brand)"}88`,
-              }}
-            />
-          </div>
-
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="font-mono text-[10px] tracking-[0.06em] text-muted-foreground">
-              {active.awardsToday >= active.dailyCap
-                ? t("dailyCapReached", { cap: active.dailyCap })
-                : t("dailyCounter", {
-                    today: active.awardsToday,
-                    cap: active.dailyCap,
-                  })}
-            </span>
-            <span className="font-mono text-[10px] tracking-[0.06em] text-amber-brand">
-              {t("completionReward", { xp: active.completionXp })}
-            </span>
           </div>
 
           <MissionsActiveActions slug={active.slug} />
