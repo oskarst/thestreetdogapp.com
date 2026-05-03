@@ -34,7 +34,7 @@ function timeAgo(dateStr: string | null): string {
 
 export function DogCard({ dog, userId, isFavorited, isCaught }: DogCardProps) {
   const router = useRouter();
-  const name = dog.names?.[0] ?? "Unknown Dog";
+  const name = dog.names?.[0] ?? "Unnamed Dog";
   const imageUrl = dog.images?.[0] ?? null;
   const uncaught = !isCaught;
 

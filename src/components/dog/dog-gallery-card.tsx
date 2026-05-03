@@ -20,7 +20,7 @@ function relativeDay(dateStr: string): string {
 }
 
 export function DogGalleryCard({ dog }: DogGalleryCardProps) {
-  const name = dog.names?.[0] ?? "Unknown Dog";
+  const name = dog.names?.[0] ?? "Unnamed Dog";
   const imageUrl = dog.images?.[0] ?? null;
 
   return (

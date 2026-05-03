@@ -39,7 +39,7 @@ export function DogDetails({
   registeredByNickname,
   caughtByYou,
 }: DogDetailsProps) {
-  const name = dog.names?.[0] ?? "Unknown Dog";
+  const name = dog.names?.[0] ?? "Unnamed Dog";
   const altNames = dog.names?.slice(1) ?? [];
   const created = new Date(dog.created_at);
   const createdStr = `${created.getFullYear()}.${String(

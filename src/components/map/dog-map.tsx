@@ -106,7 +106,7 @@ export default function DogMap({ dogs }: DogMapProps) {
     dogsWithCoords.forEach((dog) => {
       const marker = L.marker([dog.last_latitude!, dog.last_longitude!], {
         icon: createDogIcon(dog),
-        title: dog.names?.[0] ?? "Unknown Dog",
+        title: dog.names?.[0] ?? "Unnamed Dog",
       });
 
       marker.on("click", () => {

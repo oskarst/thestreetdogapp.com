@@ -86,7 +86,7 @@ export function MapSidePanel({ dog, onClose }: MapSidePanelProps) {
 
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-lg leading-tight truncate">
-                  {dog.names?.[0] ?? "Unknown Dog"}
+                  {dog.names?.[0] ?? "Unnamed Dog"}
                 </h3>
 
                 {dog.ear_tag_id && (

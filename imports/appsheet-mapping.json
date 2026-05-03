@@ -1,0 +1,724 @@
+{
+  "15840292": {
+    "dog_id": "b1e3be17-ad4f-4461-a617-6de12a5b2bb5",
+    "photo_gallery": "Street Dogs Table_Images/15840292.Photo Gallery.190348.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:07:07.718Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/15840292.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/15840292.jpg",
+    "image_uploaded": true
+  },
+  "44630934": {
+    "dog_id": "bd52e55a-5f0f-4f72-9509-b510130b2722",
+    "photo_gallery": "Street Dogs Table_Images/44630934.Photo Gallery.183806.jpg",
+    "ear_tag_id": "00686",
+    "imported_at": "2026-05-03T09:06:59.557Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/44630934.jpg",
+    "image_uploaded": true
+  },
+  "6b6615a7": {
+    "dog_id": "be75919e-22de-4c0d-a3c1-fc94e7c1cdd7",
+    "photo_gallery": "Dogs_Images/6b6615a7.Photo Gallery.185513.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:42.369Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6b6615a7.jpg",
+    "image_uploaded": true
+  },
+  "cc9765a1": {
+    "dog_id": "0c64076d-2ac4-4aef-a866-1905d3f6b872",
+    "photo_gallery": "Dogs_Images/cc9765a1.Photo Gallery.185525.jpg",
+    "ear_tag_id": "8628",
+    "imported_at": "2026-05-03T09:06:42.711Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/cc9765a1.jpg",
+    "image_uploaded": true
+  },
+  "115772ac": {
+    "dog_id": "4230aeb9-354a-407e-80e2-2568f8faaa1a",
+    "photo_gallery": "Dogs_Images/115772ac.Photo Gallery.185647.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:43.024Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/115772ac.jpg",
+    "image_uploaded": true
+  },
+  "1463c4dc": {
+    "dog_id": "5b4746c3-ec37-42a7-bd57-962f08d84185",
+    "photo_gallery": "Dogs_Images/1463c4dc.Photo Gallery.185901.jpg",
+    "ear_tag_id": "00814",
+    "imported_at": "2026-05-03T09:06:43.323Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/1463c4dc.jpg",
+    "image_uploaded": true
+  },
+  "d15bde6a": {
+    "dog_id": "6a6e0929-9da4-4b2d-a129-1e9bf4486746",
+    "photo_gallery": "Street Dogs Table_Images/d15bde6a.Photo Gallery.095746.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:43.605Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d15bde6a.jpg",
+    "image_uploaded": true
+  },
+  "0ae35b8d": {
+    "dog_id": "a61c6be6-fb61-40fd-9755-27e195ead736",
+    "photo_gallery": "Street Dogs Table_Images/0ae35b8d.Photo Gallery.095850.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:44.076Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/0ae35b8d.jpg",
+    "image_uploaded": true
+  },
+  "6e2490fa": {
+    "dog_id": "335f4054-a169-420b-9213-9931bea6fff6",
+    "photo_gallery": "Street Dogs Table_Images/6e2490fa.Photo Gallery.101623.jpg",
+    "ear_tag_id": "00136",
+    "imported_at": "2026-05-03T09:06:44.339Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6e2490fa.jpg",
+    "image_uploaded": true
+  },
+  "72f83fa9": {
+    "dog_id": "59da678b-d91b-4cd9-9aae-a4de0ef37342",
+    "photo_gallery": "Street Dogs Table_Images/72f83fa9.Photo Gallery.101830.jpg",
+    "ear_tag_id": "13868",
+    "imported_at": "2026-05-03T09:06:44.601Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/72f83fa9.jpg",
+    "image_uploaded": true
+  },
+  "c8155a82": {
+    "dog_id": "31372d7f-4586-41cf-b76f-a1fb1f8beda6",
+    "photo_gallery": "Street Dogs Table_Images/c8155a82.Photo Gallery.101952.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:44.865Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/c8155a82.jpg",
+    "image_uploaded": true
+  },
+  "0977abfe": {
+    "dog_id": "c2f5f7f9-c2ee-41d8-89b3-46a0aa4beb9e",
+    "photo_gallery": "Street Dogs Table_Images/0977abfe.Photo Gallery.203718.jpg",
+    "ear_tag_id": "13449",
+    "imported_at": "2026-05-03T09:06:45.130Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/0977abfe.jpg",
+    "image_uploaded": true
+  },
+  "6200de81": {
+    "dog_id": "15e6f70a-204b-4479-a1e8-94f69e754a5e",
+    "photo_gallery": "Street Dogs Table_Images/6200de81.Photo Gallery.105944.jpg",
+    "ear_tag_id": "09304",
+    "imported_at": "2026-05-03T09:06:45.361Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6200de81.jpg",
+    "image_uploaded": true
+  },
+  "3d44642c": {
+    "dog_id": "bd52e55a-5f0f-4f72-9509-b510130b2722",
+    "photo_gallery": "Street Dogs Table_Images/3d44642c.Photo Gallery.195846.jpg",
+    "ear_tag_id": "00686",
+    "imported_at": "2026-05-03T09:06:45.588Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/3d44642c.jpg",
+    "image_uploaded": true
+  },
+  "4abf4e7e": {
+    "dog_id": "de8a653e-cb62-4751-8bbf-c0fc235ce968",
+    "photo_gallery": "Street Dogs Table_Images/4abf4e7e.Photo Gallery.104704.jpg",
+    "ear_tag_id": "20971",
+    "imported_at": "2026-05-03T09:06:45.815Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/4abf4e7e.jpg",
+    "image_uploaded": true
+  },
+  "30e1d9dd": {
+    "dog_id": "7dbae47a-d870-42d6-a9ef-3e41ac6797f8",
+    "photo_gallery": "Street Dogs Table_Images/30e1d9dd.Photo Gallery.105008.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:46.030Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/30e1d9dd.jpg",
+    "image_uploaded": true
+  },
+  "8a14af13": {
+    "dog_id": "27e41595-f1dd-4408-82c2-452a470d5cdb",
+    "photo_gallery": "Street Dogs Table_Images/8a14af13.Photo Gallery.133917.jpg",
+    "ear_tag_id": "Not visible",
+    "imported_at": "2026-05-03T09:06:46.244Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/8a14af13.jpg",
+    "image_uploaded": true
+  },
+  "aa8888e3": {
+    "dog_id": "474bd3e7-2224-4cb7-8478-b4fa43282007",
+    "photo_gallery": "Street Dogs Table_Images/aa8888e3.Photo Gallery.160734.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:46.454Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/aa8888e3.jpg",
+    "image_uploaded": true
+  },
+  "f5f41b3f": {
+    "dog_id": "85d5cf14-fd0f-4209-af40-fd959dd3da65",
+    "photo_gallery": "Street Dogs Table_Images/f5f41b3f.Photo Gallery.202138.jpg",
+    "ear_tag_id": "17268",
+    "imported_at": "2026-05-03T09:06:46.726Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/f5f41b3f.jpg",
+    "image_uploaded": true
+  },
+  "6ed1c9bd": {
+    "dog_id": "599d1512-be0e-4274-b3e0-e34b25e6bc19",
+    "photo_gallery": "Street Dogs Table_Images/6ed1c9bd.Photo Gallery.203445.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:46.954Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6ed1c9bd.jpg",
+    "image_uploaded": true
+  },
+  "e8c81716": {
+    "dog_id": "6e5e4296-2737-489b-8e8b-fd768ae8e87a",
+    "photo_gallery": "Street Dogs Table_Images/e8c81716.Photo Gallery.131612.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:47.163Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/e8c81716.jpg",
+    "image_uploaded": true
+  },
+  "33c84976": {
+    "dog_id": "15e6f70a-204b-4479-a1e8-94f69e754a5e",
+    "photo_gallery": "Street Dogs Table_Images/33c84976.Photo Gallery.131942.jpg",
+    "ear_tag_id": "09304",
+    "imported_at": "2026-05-03T09:06:47.854Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/33c84976.jpg",
+    "image_uploaded": true
+  },
+  "b811d798": {
+    "dog_id": "ac9c25a1-3026-48d7-9669-598c02d6735d",
+    "photo_gallery": "Street Dogs Table_Images/b811d798.Photo Gallery.095011.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:48.073Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/b811d798.jpg",
+    "image_uploaded": true
+  },
+  "6cba9416": {
+    "dog_id": "6c877b76-4259-4150-948b-9f86b5650d08",
+    "photo_gallery": "Street Dogs Table_Images/6cba9416.Photo Gallery.171420.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:48.386Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6cba9416.jpg",
+    "image_uploaded": true
+  },
+  "952ad0c3": {
+    "dog_id": "3e3cc22f-4311-4702-b675-c5b41d68fcc0",
+    "photo_gallery": "Street Dogs Table_Images/952ad0c3.Photo Gallery.075508.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:48.638Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/952ad0c3.jpg",
+    "image_uploaded": true
+  },
+  "4ea81195": {
+    "dog_id": "50c62114-d84f-4b5c-823f-32577ed3bcd0",
+    "photo_gallery": "Street Dogs Table_Images/4ea81195.Photo Gallery.081212.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:48.873Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/4ea81195.jpg",
+    "image_uploaded": true
+  },
+  "270a26c0": {
+    "dog_id": "1e4aac5c-e9cf-454c-b97b-8c7cdb523f6a",
+    "photo_gallery": "Street Dogs Table_Images/270a26c0.Photo Gallery.081246.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:49.095Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/270a26c0.jpg",
+    "image_uploaded": true
+  },
+  "5822a042": {
+    "dog_id": "3fd13d44-71b4-4728-ac79-c01bb4277a0d",
+    "photo_gallery": "Street Dogs Table_Images/5822a042.Photo Gallery.082202.jpg",
+    "ear_tag_id": "22593",
+    "imported_at": "2026-05-03T09:06:49.339Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/5822a042.jpg",
+    "image_uploaded": true
+  },
+  "70c2a13b": {
+    "dog_id": "b3fa7f64-810b-4da2-91a8-fbda4c883d46",
+    "photo_gallery": "Street Dogs Table_Images/70c2a13b.Photo Gallery.083744.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:49.549Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/70c2a13b.jpg",
+    "image_uploaded": true
+  },
+  "4ddc79a6": {
+    "dog_id": "af8e24eb-7716-4ad2-b6d6-ae516ec0d43f",
+    "photo_gallery": "Street Dogs Table_Images/4ddc79a6.Photo Gallery.152549.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:49.778Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/4ddc79a6.jpg",
+    "image_uploaded": true
+  },
+  "99f5c699": {
+    "dog_id": "bbbd29c6-1a6f-41da-a734-b61c622d6362",
+    "photo_gallery": "Street Dogs Table_Images/99f5c699.Photo Gallery.152906.jpg",
+    "ear_tag_id": "24402",
+    "imported_at": "2026-05-03T09:06:49.988Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/99f5c699.jpg",
+    "image_uploaded": true
+  },
+  "0d63a2be": {
+    "dog_id": "7a57dc86-2fe2-4b2f-a1a9-9889da3dc336",
+    "photo_gallery": "Street Dogs Table_Images/0d63a2be.Photo Gallery.154012.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:50.238Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/0d63a2be.jpg",
+    "image_uploaded": true
+  },
+  "d4c79ad3": {
+    "dog_id": "3fd13d44-71b4-4728-ac79-c01bb4277a0d",
+    "photo_gallery": "Street Dogs Table_Images/d4c79ad3.Photo Gallery.173203.jpg",
+    "ear_tag_id": "22593",
+    "imported_at": "2026-05-03T09:06:51.036Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d4c79ad3.jpg",
+    "image_uploaded": true
+  },
+  "89ab36cc": {
+    "dog_id": "9e9a9092-efce-4ec2-885c-59352d123ac6",
+    "photo_gallery": "Street Dogs Table_Images/89ab36cc.Photo Gallery.140146.jpg",
+    "ear_tag_id": "21324",
+    "imported_at": "2026-05-03T09:06:51.513Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/89ab36cc.jpg",
+    "image_uploaded": true
+  },
+  "9edfeef4": {
+    "dog_id": "d05ddf15-a545-4326-b087-9663530061b2",
+    "photo_gallery": "Street Dogs Table_Images/9edfeef4.Photo Gallery.112058.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:51.722Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/9edfeef4.jpg",
+    "image_uploaded": true
+  },
+  "983e9d9a": {
+    "dog_id": "ab84acee-f08d-49a9-ab62-f4f6d39f232e",
+    "photo_gallery": "Street Dogs Table_Images/983e9d9a.Photo Gallery.134922.jpg",
+    "ear_tag_id": "31824",
+    "imported_at": "2026-05-03T09:06:51.992Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/983e9d9a.jpg",
+    "image_uploaded": true
+  },
+  "6bdfeb8f": {
+    "dog_id": "53af2992-cd8e-4e1d-a258-6c67cf1115c0",
+    "photo_gallery": "Street Dogs Table_Images/6bdfeb8f.Photo Gallery.145858.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:52.422Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6bdfeb8f.jpg",
+    "image_uploaded": true
+  },
+  "47fc62ba": {
+    "dog_id": "6aa31a04-d700-46a5-b28d-42071a74dd71",
+    "photo_gallery": "Street Dogs Table_Images/47fc62ba.Photo Gallery.075115.jpg",
+    "ear_tag_id": "22084",
+    "imported_at": "2026-05-03T09:06:52.636Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/47fc62ba.jpg",
+    "image_uploaded": true
+  },
+  "d83d2fb0": {
+    "dog_id": "6f66dc66-a168-4a89-8f59-7e11ea5a8450",
+    "photo_gallery": "Street Dogs Table_Images/d83d2fb0.Photo Gallery.101922.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:52.844Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d83d2fb0.jpg",
+    "image_uploaded": true
+  },
+  "655d4ed9": {
+    "dog_id": "7663a543-a5f1-43f5-bdcd-f23f422c9799",
+    "photo_gallery": "Street Dogs Table_Images/655d4ed9.Photo Gallery.132527.jpg",
+    "ear_tag_id": "76015",
+    "imported_at": "2026-05-03T09:06:53.072Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/655d4ed9.jpg",
+    "image_uploaded": true
+  },
+  "0849ddfe": {
+    "dog_id": "037a2771-7d90-4532-ad91-3680a53a218d",
+    "photo_gallery": "Street Dogs Table_Images/0849ddfe.Photo Gallery.043159.jpg",
+    "ear_tag_id": "14319",
+    "imported_at": "2026-05-03T09:06:53.282Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/0849ddfe.jpg",
+    "image_uploaded": true
+  },
+  "d9ef680d": {
+    "dog_id": "4d68a0a8-8360-41cc-9624-301efeb17413",
+    "photo_gallery": "Street Dogs Table_Images/d9ef680d.Photo Gallery.051810.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:53.493Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d9ef680d.jpg",
+    "image_uploaded": true
+  },
+  "9d960987": {
+    "dog_id": "e83e03ef-c53b-4904-b79e-84c646079338",
+    "photo_gallery": "Street Dogs Table_Images/9d960987.Photo Gallery.051230.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:53.709Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/9d960987.jpg",
+    "image_uploaded": true
+  },
+  "5b010ad4": {
+    "dog_id": "186baa4b-7294-46de-a6a2-58a88308d9de",
+    "photo_gallery": "Street Dogs Table_Images/5b010ad4.Photo Gallery.133004.jpg",
+    "ear_tag_id": "29013",
+    "imported_at": "2026-05-03T09:06:53.924Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/5b010ad4.jpg",
+    "image_uploaded": true
+  },
+  "f69d8a3d": {
+    "dog_id": "15e6f70a-204b-4479-a1e8-94f69e754a5e",
+    "photo_gallery": "Street Dogs Table_Images/f69d8a3d.Photo Gallery.133653.jpg",
+    "ear_tag_id": "09304",
+    "imported_at": "2026-05-03T09:06:54.582Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/f69d8a3d.jpg",
+    "image_uploaded": true
+  },
+  "c1d921f0": {
+    "dog_id": "97849042-819d-4030-b036-ecea26c63225",
+    "photo_gallery": "Street Dogs Table_Images/c1d921f0.Photo Gallery.162404.jpg",
+    "ear_tag_id": "24902",
+    "imported_at": "2026-05-03T09:06:54.818Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/c1d921f0.jpg",
+    "image_uploaded": true
+  },
+  "a0cb9829": {
+    "dog_id": "ed97dc7e-b50e-40f1-9457-4dedf689c875",
+    "photo_gallery": "Street Dogs Table_Images/a0cb9829.Photo Gallery.043027.jpg",
+    "ear_tag_id": "23962",
+    "imported_at": "2026-05-03T09:06:55.053Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/a0cb9829.jpg",
+    "image_uploaded": true
+  },
+  "301a030a": {
+    "dog_id": "7c747ff7-188d-48a8-aa10-47924bbfd4aa",
+    "photo_gallery": "Street Dogs Table_Images/301a030a.Photo Gallery.122120.jpg",
+    "ear_tag_id": "28513",
+    "imported_at": "2026-05-03T09:06:55.262Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/301a030a.jpg",
+    "image_uploaded": true
+  },
+  "9f77ba4b": {
+    "dog_id": "d8e6a9f9-34c8-409a-b77d-83aa91b8819b",
+    "photo_gallery": "Street Dogs Table_Images/9f77ba4b.Photo Gallery.053044.jpg",
+    "ear_tag_id": "07896",
+    "imported_at": "2026-05-03T09:06:55.475Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/9f77ba4b.jpg",
+    "image_uploaded": true
+  },
+  "6b113bca": {
+    "dog_id": "c2f5f7f9-c2ee-41d8-89b3-46a0aa4beb9e",
+    "photo_gallery": "Street Dogs Table_Images/6b113bca.Photo Gallery.065601.jpg",
+    "ear_tag_id": "13449",
+    "imported_at": "2026-05-03T09:06:56.110Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6b113bca.jpg",
+    "image_uploaded": true
+  },
+  "56fe61c4": {
+    "dog_id": "85d5cf14-fd0f-4209-af40-fd959dd3da65",
+    "photo_gallery": "Street Dogs Table_Images/56fe61c4.Photo Gallery.065800.jpg",
+    "ear_tag_id": "17268",
+    "imported_at": "2026-05-03T09:06:56.789Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/56fe61c4.jpg",
+    "image_uploaded": true
+  },
+  "e6617156": {
+    "dog_id": "b8a7a978-2d7d-4f71-b704-cd23e7fcd81b",
+    "photo_gallery": "Street Dogs Table_Images/e6617156.Photo Gallery.090308.jpg",
+    "ear_tag_id": "082628",
+    "imported_at": "2026-05-03T09:06:56.997Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/e6617156.jpg",
+    "image_uploaded": true
+  },
+  "13d7e318": {
+    "dog_id": "59da678b-d91b-4cd9-9aae-a4de0ef37342",
+    "photo_gallery": "Street Dogs Table_Images/13d7e318.Photo Gallery.192705.jpg",
+    "ear_tag_id": "13868",
+    "imported_at": "2026-05-03T09:06:57.868Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/13d7e318.jpg",
+    "image_uploaded": true
+  },
+  "cfb48c5b": {
+    "dog_id": "de8a653e-cb62-4751-8bbf-c0fc235ce968",
+    "photo_gallery": "Street Dogs Table_Images/cfb48c5b.Photo Gallery.082706.jpg",
+    "ear_tag_id": "20971",
+    "imported_at": "2026-05-03T09:06:58.500Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/cfb48c5b.jpg",
+    "image_uploaded": true
+  },
+  "ae043312": {
+    "dog_id": "f4d6de64-8450-42ba-a6fe-0979606f4475",
+    "photo_gallery": "Street Dogs Table_Images/ae043312.Photo Gallery.082756.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:06:58.708Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/ae043312.jpg",
+    "image_uploaded": true
+  },
+  "7c950274": {
+    "dog_id": "bc93ee2b-f10a-43fe-88c5-967329941b34",
+    "photo_gallery": "Street Dogs Table_Images/7c950274.Photo Gallery.180348.jpg",
+    "ear_tag_id": "12297",
+    "imported_at": "2026-05-03T09:06:58.917Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/7c950274.jpg",
+    "image_uploaded": true
+  },
+  "318db9e7": {
+    "dog_id": "dcd04d91-1615-49f5-b285-c984973b100a",
+    "photo_gallery": "Street Dogs Table_Images/318db9e7.Photo Gallery.105337.jpg",
+    "ear_tag_id": "73449",
+    "imported_at": "2026-05-03T09:06:59.767Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/318db9e7.jpg",
+    "image_uploaded": true
+  },
+  "6064e4b5": {
+    "dog_id": "a47ee69e-a4dc-4fc9-a611-d6960c61079e",
+    "photo_gallery": "Street Dogs Table_Images/6064e4b5.Photo Gallery.063920.jpg",
+    "ear_tag_id": "23074",
+    "imported_at": "2026-05-03T09:06:59.979Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6064e4b5.jpg",
+    "image_uploaded": true
+  },
+  "e2127564": {
+    "dog_id": "6677a6d1-0747-4b75-ad00-8273b780008d",
+    "photo_gallery": "Street Dogs Table_Images/e2127564.Photo Gallery.192502.jpg",
+    "ear_tag_id": "30168",
+    "imported_at": "2026-05-03T09:07:00.227Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/e2127564.jpg",
+    "image_uploaded": true
+  },
+  "6357aca2": {
+    "dog_id": "f7fc35f5-400e-4f6a-a960-33be02c81cac",
+    "photo_gallery": "Street Dogs Table_Images/6357aca2.Photo Gallery.150716.jpg",
+    "ear_tag_id": "05901",
+    "imported_at": "2026-05-03T09:07:00.456Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6357aca2.jpg",
+    "image_uploaded": true
+  },
+  "d88494b9": {
+    "dog_id": "81d07b47-c441-4067-8a61-e4066c01d29d",
+    "photo_gallery": "Street Dogs Table_Images/d88494b9.Photo Gallery.104130.jpg",
+    "ear_tag_id": "41389",
+    "imported_at": "2026-05-03T09:07:00.666Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d88494b9.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/d88494b9.jpg",
+    "image_uploaded": true
+  },
+  "ef439888": {
+    "dog_id": "9e70836c-033b-45d2-bfc9-12240721a196",
+    "photo_gallery": "Street Dogs Table_Images/ef439888.Photo Gallery.105105.jpg",
+    "ear_tag_id": "045556",
+    "imported_at": "2026-05-03T09:07:00.874Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/ef439888.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/ef439888.jpg",
+    "image_uploaded": true
+  },
+  "8f8e53c3": {
+    "dog_id": "24f2dd0f-8900-41d7-9704-3cd89bf6f628",
+    "photo_gallery": "Street Dogs Table_Images/8f8e53c3.Photo Gallery.111728.jpg",
+    "ear_tag_id": "00646",
+    "imported_at": "2026-05-03T09:07:01.082Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/8f8e53c3.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/8f8e53c3.jpg",
+    "image_uploaded": true
+  },
+  "d93a2734": {
+    "dog_id": "386b2199-6243-4ef2-9e9d-c9ecefd80501",
+    "photo_gallery": "Street Dogs Table_Images/d93a2734.Photo Gallery.112142.jpg",
+    "ear_tag_id": "00089",
+    "imported_at": "2026-05-03T09:07:01.295Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d93a2734.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/d93a2734.jpg",
+    "image_uploaded": true
+  },
+  "78a7e6a4": {
+    "dog_id": "97849042-819d-4030-b036-ecea26c63225",
+    "photo_gallery": "Street Dogs Table_Images/78a7e6a4.Photo Gallery.112334.jpg",
+    "ear_tag_id": "24902",
+    "imported_at": "2026-05-03T09:07:01.931Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/78a7e6a4.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/78a7e6a4.jpg",
+    "image_uploaded": true
+  },
+  "a0bd4888": {
+    "dog_id": "06371616-a786-46b7-85be-04a5f1e95d30",
+    "photo_gallery": "Street Dogs Table_Images/a0bd4888.Photo Gallery.112534.jpg",
+    "ear_tag_id": "15588",
+    "imported_at": "2026-05-03T09:07:02.148Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/a0bd4888.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/a0bd4888.jpg",
+    "image_uploaded": true
+  },
+  "c2a9043e": {
+    "dog_id": "d2f5d54a-252c-4fbf-bcbd-c04f0aa8e88e",
+    "photo_gallery": "Street Dogs Table_Images/c2a9043e.Photo Gallery.112712.jpg",
+    "ear_tag_id": "39506",
+    "imported_at": "2026-05-03T09:07:02.356Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/c2a9043e.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/c2a9043e.jpg",
+    "image_uploaded": true
+  },
+  "1722a919": {
+    "dog_id": "9e70836c-033b-45d2-bfc9-12240721a196",
+    "photo_gallery": "Street Dogs Table_Images/1722a919.Photo Gallery.113107.jpg",
+    "ear_tag_id": "045556",
+    "imported_at": "2026-05-03T09:07:02.979Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/1722a919.jpg",
+    "image_uploaded": true
+  },
+  "d62daa8b": {
+    "dog_id": "24f2dd0f-8900-41d7-9704-3cd89bf6f628",
+    "photo_gallery": "Street Dogs Table_Images/d62daa8b.Photo Gallery.113525.jpg",
+    "ear_tag_id": "00646",
+    "imported_at": "2026-05-03T09:07:03.604Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d62daa8b.jpg",
+    "image_uploaded": true
+  },
+  "dd02eaba": {
+    "dog_id": "b9526fcc-f274-4149-ae19-4e0a858411c4",
+    "photo_gallery": "Street Dogs Table_Images/dd02eaba.Photo Gallery.113354.jpg",
+    "ear_tag_id": "28040",
+    "imported_at": "2026-05-03T09:07:03.813Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/dd02eaba.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/dd02eaba.jpg",
+    "image_uploaded": true
+  },
+  "d0c56750": {
+    "dog_id": "6ebc31ad-2878-4a44-84fc-3ede3d12a1e2",
+    "photo_gallery": "Street Dogs Table_Images/d0c56750.Photo Gallery.130325.jpg",
+    "ear_tag_id": "046602",
+    "imported_at": "2026-05-03T09:07:04.021Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d0c56750.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/d0c56750.jpg",
+    "image_uploaded": true
+  },
+  "895932b4": {
+    "dog_id": "9ed8840d-533a-4db8-95a6-c4143d853e74",
+    "photo_gallery": "Street Dogs Table_Images/895932b4.Photo Gallery.105745.jpg",
+    "ear_tag_id": "5675",
+    "imported_at": "2026-05-03T09:07:04.229Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/895932b4.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/895932b4.jpg",
+    "image_uploaded": true
+  },
+  "41a5f54f": {
+    "dog_id": "acc8134f-fbbd-44bd-8b39-98c5cb97caad",
+    "photo_gallery": "Street Dogs Table_Images/41a5f54f.Photo Gallery.175603.jpg",
+    "ear_tag_id": "32520",
+    "imported_at": "2026-05-03T09:07:04.491Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/41a5f54f.jpg",
+    "image_uploaded": true
+  },
+  "f416a232": {
+    "dog_id": "cc6ac662-bc01-4d9a-94a9-bbf262323e44",
+    "photo_gallery": "Street Dogs Table_Images/f416a232.Photo Gallery.155737.jpg",
+    "ear_tag_id": "35552",
+    "imported_at": "2026-05-03T09:07:04.830Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/f416a232.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/f416a232.jpg",
+    "image_uploaded": true
+  },
+  "8778ea6e": {
+    "dog_id": "64f53f3a-26c2-4c5c-bdcd-6a16f873a930",
+    "photo_gallery": "Street Dogs Table_Images/8778ea6e.Photo Gallery.160202.jpg",
+    "ear_tag_id": "36249",
+    "imported_at": "2026-05-03T09:07:05.056Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/8778ea6e.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/8778ea6e.jpg",
+    "image_uploaded": true
+  },
+  "30eba7d6": {
+    "dog_id": "7e937984-0ab1-4683-9dbf-868612cf9e71",
+    "photo_gallery": "Street Dogs Table_Images/30eba7d6.Photo Gallery.093812.jpg",
+    "ear_tag_id": "22536",
+    "imported_at": "2026-05-03T09:07:05.269Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/30eba7d6.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/30eba7d6.jpg",
+    "image_uploaded": true
+  },
+  "5d582ce4": {
+    "dog_id": "3ff739c8-9d73-441c-be95-1ccc04cee669",
+    "photo_gallery": "Street Dogs Table_Images/5d582ce4.Photo Gallery.120940.jpg",
+    "ear_tag_id": "1001",
+    "imported_at": "2026-05-03T09:07:05.482Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/5d582ce4.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/5d582ce4.jpg",
+    "image_uploaded": true
+  },
+  "96e8e64c": {
+    "dog_id": "00284139-dc53-46dc-bcd4-d33b65b8e703",
+    "photo_gallery": "Street Dogs Table_Images/96e8e64c.Photo Gallery.085621.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:07:05.693Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/96e8e64c.jpg",
+    "image_uploaded": true
+  },
+  "ff409c58": {
+    "dog_id": "d9aae4be-2b12-4a11-8836-d9a003c21792",
+    "photo_gallery": "Street Dogs Table_Images/ff409c58.Photo Gallery.061622.jpg",
+    "ear_tag_id": "900646",
+    "imported_at": "2026-05-03T09:07:05.900Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/ff409c58.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/ff409c58.jpg",
+    "image_uploaded": true
+  },
+  "2b5f76f9": {
+    "dog_id": "24b08a80-1756-4673-9756-1cc89797ba9e",
+    "photo_gallery": "Street Dogs Table_Images/2b5f76f9.Photo Gallery.044239.jpg",
+    "ear_tag_id": "35502",
+    "imported_at": "2026-05-03T09:07:06.113Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/2b5f76f9.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/2b5f76f9.jpg",
+    "image_uploaded": true
+  },
+  "aacdda63": {
+    "dog_id": "d2f5d54a-252c-4fbf-bcbd-c04f0aa8e88e",
+    "photo_gallery": "Street Dogs Table_Images/aacdda63.Photo Gallery.130215.jpg",
+    "ear_tag_id": "39506",
+    "imported_at": "2026-05-03T09:07:06.738Z",
+    "merged_with_existing": true,
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/aacdda63.jpg",
+    "image_uploaded": true
+  },
+  "d421bccf": {
+    "dog_id": "80e2ce1a-4cbb-41d7-adc1-7fe3d30a082b",
+    "photo_gallery": "Street Dogs Table_Images/d421bccf.Photo Gallery.160317.jpg",
+    "ear_tag_id": "26703",
+    "imported_at": "2026-05-03T09:07:07.298Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/d421bccf.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/d421bccf.jpg",
+    "image_uploaded": true
+  },
+  "43e800fb": {
+    "dog_id": "b2457af4-c6ec-4101-99fe-f960b3f3e45a",
+    "photo_gallery": "Street Dogs Table_Images/43e800fb.Photo Gallery.081246.jpg",
+    "ear_tag_id": "39537",
+    "imported_at": "2026-05-03T09:07:07.509Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/43e800fb.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/43e800fb.jpg",
+    "image_uploaded": true
+  },
+  "90829e4c": {
+    "dog_id": "86a0bdca-1f43-4716-9c13-1794a341de56",
+    "photo_gallery": "Street Dogs Table_Images/90829e4c.Photo Gallery.040758.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:07:07.931Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/90829e4c.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/90829e4c.jpg",
+    "image_uploaded": true
+  },
+  "02a025ee": {
+    "dog_id": "1bfa2e95-d761-4feb-94d6-baba065de0d9",
+    "photo_gallery": "Street Dogs Table_Images/02a025ee.Photo Gallery.040949.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:07:08.138Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/02a025ee.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/02a025ee.jpg",
+    "image_uploaded": true
+  },
+  "6fe72d37": {
+    "dog_id": "4d9ff9ac-5cdb-49b3-bbc6-41a24b4faad2",
+    "photo_gallery": "Street Dogs Table_Images/6fe72d37.Photo Gallery.184918.jpg",
+    "ear_tag_id": null,
+    "imported_at": "2026-05-03T09:07:08.348Z",
+    "uploaded_gallery_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/dogs/legacy/6fe72d37.jpg",
+    "uploaded_ear_tag_url": "https://cdfintysiouqfuzcwwck.supabase.co/storage/v1/object/public/ear-tags/legacy/6fe72d37.jpg",
+    "image_uploaded": true
+  }
+}
