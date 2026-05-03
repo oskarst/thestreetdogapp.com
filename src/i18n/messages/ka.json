@@ -266,6 +266,8 @@
     "pickerBlocked": "ჯერ მიმდინარე მისია დაასრულე",
     "pickerSubtitle": "ერთ უბანში 20 ძაღლი დააფიქსირე. თითოეულში მზარდი XP.",
     "pickerSubtitleMap": "შეეხე ფერად უბანს რუკაზე, რომ დაიწყო.",
+    "modalAbort": "გაუქმება",
+    "modalConfirm": "დადასტურება",
     "dailyCounter": "{today} / {cap} ბონუს ძაღლი დღეს",
     "dailyCapReached": "დღიური ლიმიტი ამოიწურა — განახლდება ხვალ",
     "completionReward": "+{xp} XP დასრულებისას",

@@ -16,6 +16,7 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet.markercluster";
 import type { DogMarker } from "@/types/database";
 import { MapSidePanel } from "./map-side-panel";
+import { MissionConfirmModal } from "./mission-confirm-modal";
 import { createClient } from "@/lib/supabase/client";
 
 interface MissionContext {
@@ -132,6 +133,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
   const pickerLayerRef = useRef<L.LayerGroup | null>(null);
   const [picking, startPicking] = useTransition();
   const [pickerError, setPickerError] = useState<string | null>(null);
+  const [pendingPick, setPendingPick] = useState<PickerChunk | null>(null);
 
   function handlePickChunk(slug: string) {
     if (!picker || picker.hasActive) return;
@@ -288,7 +290,12 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       });
 
       if (interactive) {
-        polygon.on("click", () => handlePickChunk(c.slug));
+        // Tap → open the Alien-style confirmation modal. The actual
+        // start_mission RPC fires from the modal's CONFIRM button.
+        polygon.on("click", () => {
+          setPickerError(null);
+          setPendingPick(c);
+        });
       }
       polygon.addTo(layer);
     }
@@ -400,16 +407,6 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
                   picker.hasActive ? "pickerBlocked" : "pickerPrompt"
                 )}
               </div>
-              {pickerError && (
-                <div className="font-mono text-[10px] tracking-[0.04em] text-destructive mt-1">
-                  {pickerError.replace(/_/g, " ")}
-                </div>
-              )}
-              {picking && (
-                <div className="font-mono text-[10px] tracking-[0.04em] text-muted-foreground mt-1">
-                  …
-                </div>
-              )}
             </div>
             <button
               onClick={() => router.push("/dashboard")}
@@ -420,6 +417,24 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Alien terminal — mission confirmation modal */}
+      {pendingPick && (
+        <MissionConfirmModal
+          chunk={pendingPick}
+          locale={picker?.locale ?? "en"}
+          color={picker?.colors[pendingPick.colorIndex] ?? "#22c55e"}
+          loading={picking}
+          error={pickerError}
+          onCancel={() => {
+            setPendingPick(null);
+            setPickerError(null);
+          }}
+          onConfirm={() => {
+            handlePickChunk(pendingPick.slug);
+          }}
+        />
       )}
 
       {mission && (

@@ -266,6 +266,8 @@
     "pickerBlocked": "Finish your active mission first",
     "pickerSubtitle": "Spot 20 dogs in one chunk. Each earns escalating XP.",
     "pickerSubtitleMap": "Tap a coloured chunk on the map to begin.",
+    "modalAbort": "Abort",
+    "modalConfirm": "Confirm",
     "dailyCounter": "{today} / {cap} bonus dogs today",
     "dailyCapReached": "Daily cap reached — resumes tomorrow",
     "completionReward": "+{xp} XP on completion",
