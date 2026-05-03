@@ -6,6 +6,7 @@ import { getUserSightings } from "@/lib/db/sightings";
 import { getProfile, getUserScore } from "@/lib/db/users";
 import { DashboardHero } from "@/components/dog/dashboard-hero";
 import { DailyQuest } from "@/components/dog/daily-quest";
+import { StreakBlock } from "@/components/dog/streak-block";
 import { ScoreBoard } from "@/components/dog/score-board";
 import { Achievements } from "@/components/dog/achievements";
 import { DashboardContent } from "@/components/dog/dashboard-content";
@@ -13,6 +14,7 @@ import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import {
   deriveStreak,
   isDailyQuestComplete,
+  isDailyQuestClaimedToday,
   deriveAchievements,
   shortHexId,
 } from "@/lib/dashboard";
@@ -47,6 +49,9 @@ export default async function DashboardPage() {
   const caughtDogIds = new Set(sightings.map((s) => s.dog_id));
   const streakDays = deriveStreak(sightings);
   const questComplete = isDailyQuestComplete(sightings);
+  const questClaimedToday = isDailyQuestClaimedToday(
+    profile?.quest_last_claimed_date
+  );
   const achievements = deriveAchievements({
     newDogs: score.new_dogs,
     uniqueDogs: score.unique_dogs,
@@ -66,7 +71,10 @@ export default async function DashboardPage() {
         shortId={shortHexId(user.id)}
         streakDays={streakDays}
       />
-      <DailyQuest complete={questComplete} />
+      <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
+      {streakDays > 0 && (
+        <StreakBlock days={streakDays} todayLocked={questComplete} />
+      )}
       <ScoreBoard score={score} />
       <Achievements achievements={achievements} />
       <DashboardContent

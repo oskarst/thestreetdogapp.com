@@ -46,6 +46,24 @@ export function isDailyQuestComplete(sightings: SightingRow[]): boolean {
   return sightings.some((s) => startOfDayMs(s.timestamp) === today);
 }
 
+/**
+ * Whether the +5 quest XP has already been awarded for today.
+ * The profile column is a YYYY-MM-DD date string; compare to today's local date.
+ */
+export function isDailyQuestClaimedToday(
+  questLastClaimedDate: string | null | undefined
+): boolean {
+  if (!questLastClaimedDate) return false;
+  const today = new Date();
+  const todayStr =
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(today.getDate()).padStart(2, "0");
+  return questLastClaimedDate === todayStr;
+}
+
 export interface Achievement {
   id: string;
   name: string;

@@ -30,6 +30,10 @@ export interface ProfileRow {
   last_activity: string;
   created_at: string;
   updated_at: string;
+  /** Scoring v2: date string YYYY-MM-DD when daily quest was last claimed. */
+  quest_last_claimed_date: string | null;
+  /** Scoring v2: cumulative XP from daily-quest claims. */
+  quest_bonus_total: number;
 }
 
 export interface ProfileInsert {
@@ -201,8 +205,13 @@ export interface ScoreResult {
   unique_dogs: number;
   unique_dogs_points: number;
   total_catches: number;
+  /** Capped at 5 per (dog, day). May be < total_catches if user farms. */
   total_catches_points: number;
   total_score: number;
+  // Scoring v2 fields — undefined when older RPC is still deployed.
+  ear_tag_bonus_count?: number;
+  ear_tag_bonus_points?: number;
+  quest_bonus_points?: number;
 }
 
 // -- Supabase Database interface --
