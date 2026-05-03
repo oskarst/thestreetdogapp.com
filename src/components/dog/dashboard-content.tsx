@@ -6,7 +6,7 @@ import { DogCard } from "@/components/dog/dog-card";
 import { cn } from "@/lib/utils";
 import type { DogRow } from "@/types/database";
 
-type FilterTab = "all" | "first_caught" | "my_catches" | "favorites";
+type FilterTab = "all" | "first_spotted" | "my_spottings" | "favorites";
 
 interface DashboardContentProps {
   dogs: DogRow[];
@@ -28,16 +28,16 @@ export function DashboardContent({
 
   const tabs: { value: FilterTab; label: string }[] = [
     { value: "all", label: t("allDogs") },
-    { value: "first_caught", label: t("firstCaught") },
-    { value: "my_catches", label: t("myCatches") },
+    { value: "first_spotted", label: t("firstSpotted") },
+    { value: "my_spottings", label: t("mySpottings") },
     { value: "favorites", label: t("favorites") },
   ];
 
   const filteredDogs = useMemo(() => {
     switch (activeTab) {
-      case "first_caught":
+      case "first_spotted":
         return dogs.filter((d) => d.first_registered_by_id === userId);
-      case "my_catches":
+      case "my_spottings":
         return dogs.filter((d) => caughtSet.has(d.id));
       case "favorites":
         return dogs.filter((d) => favoriteSet.has(d.id));
