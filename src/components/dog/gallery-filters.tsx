@@ -3,12 +3,12 @@
 import { useMemo, useState } from "react";
 import { DogGalleryCard } from "@/components/dog/dog-gallery-card";
 import { cn } from "@/lib/utils";
-import type { DogRow } from "@/types/database";
+import type { DogListRow } from "@/types/database";
 
 type Filter = "all" | "caught" | "uncaught" | "favorites";
 
 interface GalleryFiltersProps {
-  dogs: DogRow[];
+  dogs: DogListRow[];
   caughtIds: string[];
   favIds: string[];
 }

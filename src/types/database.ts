@@ -76,6 +76,23 @@ export interface DogRow {
   updated_at: string;
 }
 
+/**
+ * Slim projection of `dogs` for list/gallery views — only the columns the
+ * cards actually render. Keeps the wire payload lean on cellular.
+ */
+export interface DogListRow {
+  id: string;
+  ear_tag_id: string | null;
+  names: string[];
+  images: string[];
+  last_sighting_date: string | null;
+  created_at: string;
+  first_registered_by_id: string | null;
+}
+
+export const DOG_LIST_COLUMNS =
+  "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id";
+
 export interface DogInsert {
   id?: string;
   ear_tag_id?: string | null;

@@ -1,20 +1,20 @@
 import { createClient } from "@/lib/supabase/server";
-import { DogGalleryCard } from "@/components/dog/dog-gallery-card";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
 import { GalleryFilters } from "@/components/dog/gallery-filters";
-import type { DogRow } from "@/types/database";
+import { DOG_LIST_COLUMNS } from "@/types/database";
+import type { DogListRow } from "@/types/database";
 
-async function getDogsWithImages(): Promise<DogRow[]> {
+async function getDogsWithImages(): Promise<DogListRow[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("dogs")
-    .select("*")
+    .select(DOG_LIST_COLUMNS)
     .not("images", "eq", "{}")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []) as DogListRow[];
 }
 
 export default async function GalleryPage() {

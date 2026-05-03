@@ -51,10 +51,14 @@ function createDogIcon(dog: DogRow): L.DivIcon {
 export default function DogMap({ dogs }: DogMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
+  const hasFitBoundsRef = useRef(false);
   const [selectedDog, setSelectedDog] = useState<DogRow | null>(null);
 
   const handleClose = useCallback(() => setSelectedDog(null), []);
 
+  // Init the map exactly once — leaflet has its own DOM lifecycle and we
+  // don't want to tear it down on every dogs change.
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
@@ -98,42 +102,53 @@ export default function DogMap({ dogs }: DogMapProps) {
       zoomToBoundsOnClick: true,
       maxClusterRadius: 80,
     });
+    map.addLayer(clusterGroup);
+
+    mapInstanceRef.current = map;
+    clusterGroupRef.current = clusterGroup;
+
+    return () => {
+      map.remove();
+      mapInstanceRef.current = null;
+      clusterGroupRef.current = null;
+      hasFitBoundsRef.current = false;
+    };
+  }, []);
+
+  // Re-render markers whenever dogs changes. Replaces the cluster's children
+  // wholesale — cheap, leaflet handles diffing internally.
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const clusterGroup = clusterGroupRef.current;
+    if (!map || !clusterGroup) return;
+
+    clusterGroup.clearLayers();
 
     const dogsWithCoords = dogs.filter(
       (d) => d.last_latitude != null && d.last_longitude != null
     );
 
-    dogsWithCoords.forEach((dog) => {
+    const markers = dogsWithCoords.map((dog) => {
       const marker = L.marker([dog.last_latitude!, dog.last_longitude!], {
         icon: createDogIcon(dog),
         title: dog.names?.[0] ?? "Unnamed Dog",
       });
-
-      marker.on("click", () => {
-        setSelectedDog(dog);
-      });
-
-      clusterGroup.addLayer(marker);
+      marker.on("click", () => setSelectedDog(dog));
+      return marker;
     });
 
-    map.addLayer(clusterGroup);
+    if (markers.length > 0) clusterGroup.addLayers(markers);
 
-    if (dogsWithCoords.length > 0) {
+    // Fit bounds on the first non-empty render only — re-fitting on every
+    // dogs change would be jarring once the user has panned/zoomed.
+    if (!hasFitBoundsRef.current && dogsWithCoords.length > 0) {
       const bounds = L.latLngBounds(
         dogsWithCoords.map((d) => [d.last_latitude!, d.last_longitude!])
       );
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
+      hasFitBoundsRef.current = true;
     }
-
-    mapInstanceRef.current = map;
-
-    return () => {
-      map.remove();
-      mapInstanceRef.current = null;
-    };
-    // Only run once on mount - dogs won't change after initial load
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dogs]);
 
   return (
     <>

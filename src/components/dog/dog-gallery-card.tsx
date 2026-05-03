@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@/components/ui/icon";
-import type { DogRow } from "@/types/database";
+import type { DogListRow } from "@/types/database";
 
 interface DogGalleryCardProps {
-  dog: DogRow;
+  dog: DogListRow;
 }
 
 function relativeDay(dateStr: string): string {

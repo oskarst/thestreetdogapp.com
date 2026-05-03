@@ -1,14 +1,25 @@
 import { createClient } from "@/lib/supabase/server";
-import type { DogRow, DogInsert, DogUpdate } from "@/types/database";
+import type {
+  DogRow,
+  DogListRow,
+  DogInsert,
+  DogUpdate,
+} from "@/types/database";
+import { DOG_LIST_COLUMNS } from "@/types/database";
 
+/**
+ * List view: returns slim DogListRow projections — drops ear_tag_image,
+ * last_lat/lng, character/size/gender/age, updated_at since the listing
+ * cards don't render any of those.
+ */
 export async function getDogs(filters?: {
   userId?: string;
   favoriteIds?: string[];
-}): Promise<DogRow[]> {
+}): Promise<DogListRow[]> {
   const supabase = await createClient();
   let query = supabase
     .from("dogs")
-    .select("*")
+    .select(DOG_LIST_COLUMNS)
     .order("last_sighting_date", { ascending: false, nullsFirst: false });
 
   if (filters?.userId) {
@@ -20,7 +31,7 @@ export async function getDogs(filters?: {
 
   const { data, error } = await query;
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []) as DogListRow[];
 }
 
 export async function getDogById(id: string): Promise<DogRow | null> {

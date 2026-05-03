@@ -6,10 +6,10 @@ import Image from "next/image";
 import { MapPin, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FavoriteButton } from "@/components/dog/favorite-button";
-import type { DogRow } from "@/types/database";
+import type { DogListRow } from "@/types/database";
 
 interface DogCardProps {
-  dog: DogRow;
+  dog: DogListRow;
   userId: string;
   isFavorited: boolean;
   isCaught: boolean;

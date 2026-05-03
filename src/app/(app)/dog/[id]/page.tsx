@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PenLine } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getDogById } from "@/lib/db/dogs";
-import { getSightingsForDog, getRecentSightings } from "@/lib/db/sightings";
+import { getSightingsForDog } from "@/lib/db/sightings";
 import { isFavorite } from "@/lib/db/favorites";
 import { getProfile } from "@/lib/db/users";
 import { DogImageCarousel } from "@/components/dog/dog-image-carousel";
@@ -30,18 +30,24 @@ export default async function DogProfilePage({
   const dog = await getDogById(id);
   if (!dog) notFound();
 
-  const [sightings, recentSightings, favorited, registeredByProfile] =
-    await Promise.all([
-      getSightingsForDog(id),
-      getRecentSightings(id, 24),
-      isFavorite(user.id, id),
-      dog.first_registered_by_id
-        ? getProfile(dog.first_registered_by_id)
-        : null,
-    ]);
+  const [sightings, favorited, registeredByProfile] = await Promise.all([
+    getSightingsForDog(id),
+    isFavorite(user.id, id),
+    dog.first_registered_by_id
+      ? getProfile(dog.first_registered_by_id)
+      : null,
+  ]);
 
   const caughtByYou = sightings.some((s) => s.user_id === user.id);
   const totalCatchers = new Set(sightings.map((s) => s.user_id)).size;
+
+  // Derive last-24h subset from the same fetched list — saves a second
+  // round-trip to /sightings for a query whose rows fully overlap the
+  // ones we already have.
+  const dayAgoMs = Date.now() - 24 * 60 * 60 * 1000;
+  const recentSightings = sightings.filter(
+    (s) => new Date(s.timestamp).getTime() >= dayAgoMs
+  );
 
   const locations = sightings.map((s) => ({
     latitude: s.latitude,

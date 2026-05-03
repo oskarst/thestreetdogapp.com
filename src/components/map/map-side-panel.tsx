@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import type { DogRow } from "@/types/database";
 
 interface MapSidePanelProps {
@@ -71,11 +72,15 @@ export function MapSidePanel({ dog, onClose }: MapSidePanelProps) {
             <div className="flex gap-3 items-start">
               {/* Thumbnail */}
               {dog.images && dog.images.length > 0 ? (
-                <img
-                  src={dog.images[0]}
-                  alt={dog.names?.[0] ?? "Dog"}
-                  className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
-                />
+                <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-muted">
+                  <Image
+                    src={dog.images[0]}
+                    alt={dog.names?.[0] ?? "Dog"}
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
+                </div>
               ) : (
                 <div className="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
                   <span className="text-2xl text-gray-400">

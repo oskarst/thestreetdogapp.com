@@ -5,15 +5,22 @@ export interface SightingWithUser extends SightingRow {
   profiles: { nickname: string | null } | null;
 }
 
+/**
+ * Most recent sightings for a dog. Caps at `limit` rows (default 100) to
+ * keep the dog detail page fast as historical data grows. The composite
+ * index (dog_id, timestamp DESC) makes this an index-only range scan.
+ */
 export async function getSightingsForDog(
-  dogId: string
+  dogId: string,
+  limit = 100
 ): Promise<SightingWithUser[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("sightings")
     .select("*, profiles:user_id(nickname)")
     .eq("dog_id", dogId)
-    .order("timestamp", { ascending: false });
+    .order("timestamp", { ascending: false })
+    .limit(limit);
 
   if (error) throw error;
   return (data ?? []) as SightingWithUser[];

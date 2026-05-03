@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DogCard } from "@/components/dog/dog-card";
 import { cn } from "@/lib/utils";
-import type { DogRow } from "@/types/database";
+import type { DogListRow } from "@/types/database";
 
 type FilterTab = "all" | "first_spotted" | "my_spottings" | "favorites";
 
 interface DashboardContentProps {
-  dogs: DogRow[];
+  dogs: DogListRow[];
   userId: string;
   favoriteIds: string[];
   caughtDogIds: string[];
