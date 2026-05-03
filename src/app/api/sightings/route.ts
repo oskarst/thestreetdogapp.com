@@ -1,7 +1,74 @@
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const ALLOWED_UPLOAD_MIME = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
+
+/**
+ * Validate and re-encode an uploaded image. Returns a sanitized JPEG
+ * buffer with stripped metadata and clamped dimensions, or an error.
+ *
+ * Re-encoding via sharp is what blocks the "upload SVG/HTML with
+ * image/png MIME → stored XSS via public bucket" vector — non-images
+ * fail at sharp.metadata().
+ */
+async function processUploadedImage(
+  file: File
+): Promise<
+  { ok: true; buffer: Buffer; contentType: string; ext: string }
+  | { ok: false; error: string; status: number }
+> {
+  if (file.size === 0) {
+    return { ok: false, error: "Image is empty.", status: 400 };
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    return {
+      ok: false,
+      error: `Image must be under ${Math.round(MAX_FILE_SIZE / 1024 / 1024)}MB.`,
+      status: 413,
+    };
+  }
+  if (!ALLOWED_UPLOAD_MIME.has(file.type)) {
+    return {
+      ok: false,
+      error: "Image must be JPEG, PNG, or WebP.",
+      status: 400,
+    };
+  }
+  try {
+    const raw = Buffer.from(await file.arrayBuffer());
+    const reEncoded = await sharp(raw)
+      .rotate() // respect EXIF orientation
+      .resize({
+        width: 2048,
+        height: 2048,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .jpeg({ quality: 85 })
+      .toBuffer();
+    return {
+      ok: true,
+      buffer: reEncoded,
+      contentType: "image/jpeg",
+      ext: "jpg",
+    };
+  } catch (err) {
+    console.error("[sightings] image re-encode failed:", err);
+    return {
+      ok: false,
+      error: "Image could not be processed.",
+      status: 400,
+    };
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -29,19 +96,18 @@ export async function POST(request: Request) {
     const notes = (formData.get("notes") as string) || null;
     const clientUuid = (formData.get("clientUuid") as string) || null;
 
-    // Idempotent replay: if this clientUuid was already accepted for this user,
-    // return the existing dogId without re-inserting or re-uploading.
+    // Idempotent replay: if this clientUuid was already accepted for this
+    // user, return the existing dogId without re-inserting. Routes through
+    // the find_my_sighting_by_client_uuid RPC since sightings.user_id is
+    // no longer SELECT-able from the authenticated session client.
     if (clientUuid) {
-      const { data: existing } = await supabase
-        .from("sightings")
-        .select("dog_id")
-        .eq("user_id", user.id)
-        .eq("client_uuid", clientUuid)
-        .maybeSingle();
-
-      if (existing) {
+      const { data: existingDogId } = await supabase.rpc(
+        "find_my_sighting_by_client_uuid",
+        { p_client_uuid: clientUuid }
+      );
+      if (existingDogId) {
         return NextResponse.json({
-          dogId: existing.dog_id,
+          dogId: existingDogId as string,
           points: 0,
           catchType: "repeat" as const,
           duplicate: true,
@@ -69,18 +135,46 @@ export async function POST(request: Request) {
       );
     }
 
+    // Process and validate uploads BEFORE touching storage. sharp() throws
+    // on non-images, so a request claiming image/png with HTML/SVG body is
+    // caught here. Output is normalized JPEG with metadata stripped,
+    // dimensions clamped to 2048×2048.
+    const dogProcessed = await processUploadedImage(dogImageFile);
+    if (!dogProcessed.ok) {
+      return NextResponse.json(
+        { error: dogProcessed.error },
+        { status: dogProcessed.status }
+      );
+    }
+
+    let earTagProcessed:
+      | { buffer: Buffer; contentType: string; ext: string }
+      | null = null;
+    if (earTagImageFile && earTagImageFile.size > 0) {
+      const result = await processUploadedImage(earTagImageFile);
+      if (!result.ok) {
+        return NextResponse.json(
+          { error: result.error },
+          { status: result.status }
+        );
+      }
+      earTagProcessed = {
+        buffer: result.buffer,
+        contentType: result.contentType,
+        ext: result.ext,
+      };
+    }
+
     // Use admin client for storage uploads (server-side)
     const admin = createAdminClient();
 
-    // Upload dog image
-    const dogExt = dogImageFile.name.split(".").pop() ?? "jpg";
-    const dogPath = `${user.id}/${Date.now()}.${dogExt}`;
-    const dogBuffer = Buffer.from(await dogImageFile.arrayBuffer());
-
+    // Upload dog image. Path uses our server-derived ext, never the
+    // client-supplied filename.
+    const dogPath = `${user.id}/${Date.now()}.${dogProcessed.ext}`;
     const { error: dogUploadErr } = await admin.storage
       .from("dogs")
-      .upload(dogPath, dogBuffer, {
-        contentType: dogImageFile.type,
+      .upload(dogPath, dogProcessed.buffer, {
+        contentType: dogProcessed.contentType,
       });
     if (dogUploadErr) throw dogUploadErr;
 
@@ -90,15 +184,12 @@ export async function POST(request: Request) {
 
     // Upload ear tag image if provided
     let earTagImageUrl: string | null = null;
-    if (earTagImageFile && earTagImageFile.size > 0) {
-      const etExt = earTagImageFile.name.split(".").pop() ?? "jpg";
-      const etPath = `${user.id}/${Date.now()}_et.${etExt}`;
-      const etBuffer = Buffer.from(await earTagImageFile.arrayBuffer());
-
+    if (earTagProcessed) {
+      const etPath = `${user.id}/${Date.now()}_et.${earTagProcessed.ext}`;
       const { error: etUploadErr } = await admin.storage
         .from("ear-tags")
-        .upload(etPath, etBuffer, {
-          contentType: earTagImageFile.type,
+        .upload(etPath, earTagProcessed.buffer, {
+          contentType: earTagProcessed.contentType,
         });
       if (etUploadErr) throw etUploadErr;
 

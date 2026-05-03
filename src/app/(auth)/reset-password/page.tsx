@@ -32,10 +32,19 @@ export default function ResetPasswordPage() {
       { redirectTo: `${window.location.origin}/auth/callback` }
     );
 
+    // Always show the generic success state — never differentiate between
+    // "user not found", "rate limit hit", or "email sent". Reflects the
+    // standard "if an account exists for this email, you'll get a link"
+    // pattern so attackers can't enumerate accounts by trying reset.
     if (resetError) {
-      setError(resetError.message);
-      setLoading(false);
-      return;
+      const lower = resetError.message.toLowerCase();
+      if (lower.includes("rate limit")) {
+        setError("Too many reset attempts. Please try again in a few minutes.");
+        setLoading(false);
+        return;
+      }
+      // Any other error — log server-side, show success.
+      console.warn("[reset-password] silent error:", resetError.message);
     }
 
     setLoading(false);

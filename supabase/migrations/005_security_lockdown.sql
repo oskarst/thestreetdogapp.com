@@ -65,7 +65,7 @@ RETURNS TABLE (
     dog_id UUID,
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
-    character public.dog_character,
+    "character" public.dog_character,
     size INTEGER,
     gender public.dog_gender,
     age public.dog_age,

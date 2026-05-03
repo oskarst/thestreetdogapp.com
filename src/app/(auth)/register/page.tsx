@@ -70,12 +70,22 @@ export default function RegisterPage() {
     });
 
     if (error) {
-      const msg = error.message.toLowerCase().includes("rate limit")
-        ? "Too many attempts. Please try again in a few minutes."
-        : error.message;
-      setErrors({ form: msg });
-      setLoading(false);
-      return;
+      // Don't reflect the raw Supabase error: "User already registered"
+      // is the same enumeration vector as login error reflection. Show
+      // the success state regardless — duplicate-email registrations
+      // silently no-op (Supabase still mails the original account if
+      // it exists, which is the right behavior for password reset
+      // attempts disguised as registration).
+      const lower = error.message.toLowerCase();
+      if (lower.includes("rate limit")) {
+        setErrors({
+          form: "Too many attempts. Please try again in a few minutes.",
+        });
+        setLoading(false);
+        return;
+      }
+      // For all other errors, treat as success — Supabase has already
+      // routed the verification email to the right place.
     }
 
     setLoading(false);

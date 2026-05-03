@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { checkNameForProfanity } from "@/lib/moderation";
 
+const MAX_NAME_ATTEMPTS_PER_DAY = 20;
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -30,6 +32,28 @@ export async function POST(
     return NextResponse.json(
       { error: "Name must be 50 characters or fewer" },
       { status: 400 }
+    );
+  }
+
+  // Per-user daily rate limit (atomic, self-resetting). Caps OpenAI
+  // moderation cost an attacker can drive by spamming this endpoint.
+  // The increment runs BEFORE the moderation call so even submissions
+  // that ultimately fail moderation still count toward the daily quota.
+  const { data: attempt, error: rateErr } = await supabase.rpc(
+    "try_increment_name_attempts",
+    { p_max: MAX_NAME_ATTEMPTS_PER_DAY }
+  );
+  if (rateErr) {
+    console.error("[dogs/name] rate-limit rpc failed:", rateErr.message);
+    return NextResponse.json(
+      { error: "Service temporarily unavailable." },
+      { status: 503 }
+    );
+  }
+  if (attempt == null) {
+    return NextResponse.json(
+      { error: "Daily naming limit reached. Try again tomorrow." },
+      { status: 429 }
     );
   }
 

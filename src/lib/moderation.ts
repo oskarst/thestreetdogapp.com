@@ -11,8 +11,9 @@ interface ModerationResult {
  * Covers English, Russian, Georgian. Uses gpt-5-nano (cheapest OpenAI
  * chat model, matches the project's existing OCR pattern).
  *
- * Fails open on any API/network error so a transient outage doesn't
- * block legitimate naming. Errors are logged server-side.
+ * Fails CLOSED on any API/network error — i.e. blocks the name with a
+ * "Try again" reason. The previous fail-open behavior let an attacker
+ * deliberately exhaust the OpenAI key and then submit slurs unchecked.
  */
 export async function checkNameForProfanity(
   rawName: string
@@ -23,8 +24,12 @@ export async function checkNameForProfanity(
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    console.warn("[moderation] OPENAI_API_KEY not set — failing open");
-    return { ok: true };
+    // No key configured — block to fail safe; log so we notice in dev.
+    console.warn("[moderation] OPENAI_API_KEY not set — failing closed");
+    return {
+      ok: false,
+      reason: "Name moderation is temporarily unavailable. Try again later.",
+    };
   }
 
   const openai = new OpenAI({ apiKey });
@@ -74,7 +79,10 @@ export async function checkNameForProfanity(
     }
     return { ok: true };
   } catch (err) {
-    console.error("[moderation] OpenAI error — failing open:", err);
-    return { ok: true };
+    console.error("[moderation] OpenAI error — failing closed:", err);
+    return {
+      ok: false,
+      reason: "Name moderation is temporarily unavailable. Try again later.",
+    };
   }
 }

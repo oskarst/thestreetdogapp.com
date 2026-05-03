@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -19,16 +18,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Rate limit check
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("ocr_usage_count")
-      .eq("id", user.id)
-      .single();
-
-    if (profile && profile.ocr_usage_count > MAX_OCR_USAGE) {
+    // Atomic, self-resetting per-day rate limit. The RPC tries to
+    // increment ocr_usage_count and returns NULL if the cap is hit.
+    // Fixes the read-then-write race + off-by-one in the previous code.
+    const { data: newCount, error: rateErr } = await supabase.rpc(
+      "try_increment_ocr_usage",
+      { p_max: MAX_OCR_USAGE }
+    );
+    if (rateErr) {
+      console.error("[ocr] rate-limit rpc failed:", rateErr.message);
       return NextResponse.json(
-        { error: "OCR daily limit reached. Please enter the ear tag ID manually." },
+        { error: "Service temporarily unavailable." },
+        { status: 503 }
+      );
+    }
+    if (newCount == null) {
+      return NextResponse.json(
+        {
+          error:
+            "OCR daily limit reached. Please enter the ear tag ID manually.",
+        },
         { status: 429 }
       );
     }
@@ -110,12 +119,8 @@ export async function POST(request: Request) {
       });
     }
 
-    // Increment OCR usage count using admin client
-    const admin = createAdminClient();
-    await admin
-      .from("profiles")
-      .update({ ocr_usage_count: (profile?.ocr_usage_count ?? 0) + 1 })
-      .eq("id", user.id);
+    // (Counter was already incremented atomically at the start of the
+    // request. Don't do it again here.)
 
     // Check if a dog with this ear tag already exists
     const { data: existingDog } = await supabase

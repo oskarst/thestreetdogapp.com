@@ -38,7 +38,11 @@ export default function LoginPage() {
     });
 
     if (signInError) {
-      setError(signInError.message);
+      // Generic message — never differentiate between "wrong password",
+      // "no such user", "email not confirmed" etc., to prevent account
+      // enumeration via login error responses. Real reasons are logged
+      // server-side by Supabase.
+      setError("Invalid email or password.");
       setLoading(false);
       return;
     }
