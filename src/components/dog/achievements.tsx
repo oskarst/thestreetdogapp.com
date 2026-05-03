@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
 import type { Achievement } from "@/lib/dashboard";
@@ -7,14 +8,24 @@ interface AchievementsProps {
   achievements: Achievement[];
 }
 
-export function Achievements({ achievements }: AchievementsProps) {
+const ACHIEVEMENT_LABEL_KEY: Record<string, string> = {
+  first_spot: "achFirstSpot",
+  ten_spottings: "achTenSpottings",
+  five_trackers: "achFiveTrackers",
+  five_pioneers: "achFivePioneers",
+  fifty_spottings: "achFiftySpottings",
+  seven_day_streak: "achSevenDayStreak",
+};
+
+export async function Achievements({ achievements }: AchievementsProps) {
+  const t = await getTranslations("dashboard");
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
   const total = achievements.length;
 
   return (
     <section>
-      <SectionLabel meta={`${unlockedCount} / ${total} logged`}>
-        Achievements
+      <SectionLabel meta={t("achievementsLogged", { n: unlockedCount, total })}>
+        {t("achievements")}
       </SectionLabel>
       <div className="grid grid-cols-3 gap-2">
         {achievements.map((ach) => (
@@ -43,12 +54,14 @@ export function Achievements({ achievements }: AchievementsProps) {
                 !ach.unlocked && "text-muted-foreground"
               )}
             >
-              {ach.name}
+              {ACHIEVEMENT_LABEL_KEY[ach.id]
+                ? t(ACHIEVEMENT_LABEL_KEY[ach.id])
+                : ach.name}
             </div>
             <div className="font-mono text-[9px] tracking-[0.16em] uppercase text-muted-foreground mt-1">
               {ach.unlocked
-                ? "unlocked"
-                : `${ach.threshold - ach.progress} to go`}
+                ? t("achievementUnlocked")
+                : t("achievementToGo", { n: ach.threshold - ach.progress })}
             </div>
           </div>
         ))}

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { SectionLabel } from "@/components/ui/section-label";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ interface DailyQuestProps {
  */
 export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
   const router = useRouter();
+  const t = useTranslations("dashboard");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [optimisticClaimed, setOptimisticClaimed] = useState(false);
@@ -37,12 +39,12 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
       const supabase = createClient();
       const { data, error: rpcErr } = await supabase.rpc("claim_daily_quest");
       if (rpcErr) {
-        setError("Couldn't claim — try again in a moment.");
+        setError(t("questClaimError"));
         return;
       }
       const result = data as { ok?: boolean; error?: string } | null;
       if (!result?.ok) {
-        setError(result?.error?.replace(/_/g, " ") ?? "Claim failed.");
+        setError(result?.error?.replace(/_/g, " ") ?? t("questClaimFailed"));
         return;
       }
       setOptimisticClaimed(true);
@@ -52,7 +54,7 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
 
   return (
     <section>
-      <SectionLabel meta="resets 00:00">Daily Directive</SectionLabel>
+      <SectionLabel meta={t("questResetsAt")}>{t("dailyDirective")}</SectionLabel>
       <div className="card-soft p-4 flex items-center gap-3.5">
         <div
           className={cn(
@@ -81,14 +83,14 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
 
         <div className="flex-1 min-w-0">
           <div className="text-[15px] font-semibold leading-tight">
-            Spot 1 dog today
+            {t("spotOneDog")}
           </div>
           <div className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground mt-1">
             {isClaimed
-              ? "1 / 1 logged · claimed · +5 XP"
+              ? t("questClaimed")
               : complete
-                ? "1 / 1 logged · ready to claim"
-                : "0 / 1 logged"}
+                ? t("questReady")
+                : t("questNotMet")}
           </div>
           {error && (
             <div className="font-mono text-[11px] tracking-[0.04em] text-destructive mt-1">
@@ -107,7 +109,7 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
               "transition-transform active:scale-95 disabled:opacity-60"
             )}
           >
-            {pending ? "…" : "Claim +5 XP"}
+            {pending ? "…" : t("claimXp")}
           </button>
         ) : (
           <span

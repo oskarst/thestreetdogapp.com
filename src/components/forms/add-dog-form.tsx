@@ -79,7 +79,7 @@ export function AddDogForm() {
         setScanError(result.error);
       }
     } catch {
-      setScanError("Scan failed. Enter the ear tag ID manually.");
+      setScanError(t("scanFailed"));
     } finally {
       setScanning(false);
     }
@@ -141,7 +141,7 @@ export function AddDogForm() {
         return;
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Failed to save offline"
+          err instanceof Error ? err.message : t("errorSaveOffline")
         );
         setSubmitting(false);
         return;
@@ -169,7 +169,7 @@ export function AddDogForm() {
 
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.error ?? "Something went wrong");
+        throw new Error(body?.error ?? t("errorGeneric"));
       }
 
       const data = await res.json();
@@ -177,7 +177,7 @@ export function AddDogForm() {
         `/dog-caught/${data.dogId}?points=${data.points}&catchType=${data.catchType}`
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to submit");
+      setError(err instanceof Error ? err.message : t("errorSubmit"));
       setSubmitting(false);
     }
   }
@@ -188,9 +188,9 @@ export function AddDogForm() {
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-soft text-amber-brand">
           <WifiOff className="h-8 w-8" />
         </div>
-        <h2 className="text-xl font-bold">Saved Offline</h2>
+        <h2 className="text-xl font-bold">{t("savedOfflineTitle")}</h2>
         <p className="text-sm text-muted-foreground max-w-xs">
-          Your dog catch has been saved and will sync when you reconnect.
+          {t("savedOfflineDesc")}
         </p>
         <OfflineSyncPanel />
       </div>
@@ -206,7 +206,7 @@ export function AddDogForm() {
       )}
 
       <section>
-        <SectionLabel meta="required">{t("dogPhoto")}</SectionLabel>
+        <SectionLabel meta={t("metaRequired")}>{t("dogPhoto")}</SectionLabel>
         <CameraUpload
           label={t("tapDogPhoto")}
           onChange={setDogImage}
@@ -216,7 +216,7 @@ export function AddDogForm() {
       </section>
 
       <section>
-        <SectionLabel meta="optional · ocr">{t("earTag")}</SectionLabel>
+        <SectionLabel meta={t("metaOptionalOcr")}>{t("earTag")}</SectionLabel>
         <div className="space-y-2.5">
           <CameraUpload
             label={t("tapEarTagPhoto")}
@@ -226,7 +226,7 @@ export function AddDogForm() {
           {scanning && (
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
               <Loader2 className="size-3.5 animate-spin" />
-              Scanning ear tag…
+              {t("scanningEarTag")}
             </div>
           )}
           {scanError && (
@@ -236,7 +236,7 @@ export function AddDogForm() {
           )}
           {existingDog && (
             <div className="rounded-lg border border-rule-2 bg-card px-3.5 py-2.5 text-sm">
-              Dog already registered —{" "}
+              {t("dogAlreadyRegistered")}{" "}
               <a
                 href={`/dog/${existingDog.id}`}
                 className="font-medium text-ink underline underline-offset-2"
@@ -256,32 +256,32 @@ export function AddDogForm() {
       </section>
 
       <section>
-        <SectionLabel meta="gps locked">{t("location")}</SectionLabel>
+        <SectionLabel meta={t("metaGpsLocked")}>{t("location")}</SectionLabel>
         <LocationPicker onChange={setLocation} />
       </section>
 
       <section>
-        <SectionLabel meta="pick one">{t("character")}</SectionLabel>
+        <SectionLabel meta={t("metaPickOne")}>{t("character")}</SectionLabel>
         <CharacterPicker value={character} onChange={setCharacter} />
       </section>
 
       <section>
-        <SectionLabel meta="scale 1–10">{t("size")}</SectionLabel>
+        <SectionLabel meta={t("metaScale")}>{t("size")}</SectionLabel>
         <SizeSlider value={size} onChange={setSize} />
       </section>
 
       <section>
-        <SectionLabel meta="pick one">{t("gender")}</SectionLabel>
+        <SectionLabel meta={t("metaPickOne")}>{t("gender")}</SectionLabel>
         <GenderPicker value={gender} onChange={setGender} />
       </section>
 
       <section>
-        <SectionLabel meta="pick one">{t("age")}</SectionLabel>
+        <SectionLabel meta={t("metaPickOne")}>{t("age")}</SectionLabel>
         <AgePicker value={age} onChange={setAge} />
       </section>
 
       <section>
-        <SectionLabel meta="optional">{t("notes")}</SectionLabel>
+        <SectionLabel meta={t("metaOptional")}>{t("notes")}</SectionLabel>
         <textarea
           rows={3}
           placeholder={t("notesPlaceholder")}

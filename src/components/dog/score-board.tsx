@@ -15,19 +15,19 @@ export async function ScoreBoard({ score }: ScoreBoardProps) {
 
   const stats = [
     {
-      label: "Pioneers",
+      label: t("pioneers"),
       mult: "×10",
       count: score.new_dogs,
       points: score.new_dogs_points,
     },
     {
-      label: "Trackers",
+      label: t("trackers"),
       mult: "×5",
       count: score.unique_dogs,
       points: score.unique_dogs_points,
     },
     {
-      label: "Spottings",
+      label: t("spottings"),
       mult: "×1",
       count: score.total_catches,
       points: score.total_catches_points,
@@ -36,8 +36,8 @@ export async function ScoreBoard({ score }: ScoreBoardProps) {
 
   return (
     <section>
-      <SectionLabel meta={`${score.total_score} pt total`}>
-        Dog Spotting Stats
+      <SectionLabel meta={t("ptTotal", { n: score.total_score })}>
+        {t("dogSpottingStats")}
       </SectionLabel>
       <div className="grid grid-cols-3 gap-2">
         {stats.map((stat) => (

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 // Reload the page once when a new service worker takes control. Combined
 // with skipWaiting() + clients.claim() in sw.js, this ensures users see
@@ -53,18 +52,13 @@ export function ServiceWorkerRegister() {
 const PRECACHE_PAGES = ["/dashboard", "/add-dog", "/map", "/gallery"];
 
 export function PrecachePages() {
-  const router = useRouter();
-
   useEffect(() => {
-    // Warm Next's route chunks via the router. Unlike a hidden iframe
-    // this doesn't run the page's effects — no geolocation prompt, no
-    // Supabase round-trips, no double-render — it just fetches the JS
-    // chunks for each route. Once the SW's static-asset cache picks
-    // them up, /add-dog navigates instantly even on a flaky link.
-    PRECACHE_PAGES.forEach((path) => router.prefetch(path));
-
-    // Also tell the SW to fetch+cache each shell HTML response, so
-    // returning to one of these routes online survives a network blip.
+    // Tell the SW to fetch+cache each shell HTML response so returning
+    // to one of these routes online survives a network blip. We *don't*
+    // call router.prefetch here — its RSC fetches hit middleware/auth
+    // and Safari intermittently throws "access control" on the response,
+    // plus the prefetch cache is keyed pre-locale-change and serves
+    // stale-locale UI if the user switches language afterwards.
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.ready.then((registration) => {
         registration.active?.postMessage({
@@ -73,7 +67,7 @@ export function PrecachePages() {
         });
       });
     }
-  }, [router]);
+  }, []);
 
   return null;
 }

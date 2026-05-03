@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Globe } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,7 +16,6 @@ const languages = [
 ] as const;
 
 export function LanguageSwitcher() {
-  const router = useRouter();
   const [current, setCurrent] = useState("en");
 
   useEffect(() => {
@@ -28,8 +26,14 @@ export function LanguageSwitcher() {
   const currentLang = languages.find((l) => l.code === current) ?? languages[0];
 
   function handleSelect(code: string) {
-    document.cookie = `NEXT_LOCALE=${code};path=/;max-age=${60 * 60 * 24 * 365}`;
-    router.refresh();
+    // Set cookie with samesite=lax + secure so Safari ITP keeps it
+    // around. router.refresh() only re-runs server components for the
+    // current route; it leaves Next's prefetch cache (from <Link>
+    // hover/viewport prefetches) untouched, which means the next link
+    // click serves stale-locale RSC. A full reload clears the prefetch
+    // cache, so subsequent navigations pick up the new locale.
+    document.cookie = `NEXT_LOCALE=${code};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax;secure`;
+    window.location.reload();
   }
 
   return (

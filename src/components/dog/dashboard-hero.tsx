@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/ui/icon";
 import { deriveLevel } from "@/lib/dashboard";
 import type { ScoreResult } from "@/types/database";
@@ -13,12 +14,13 @@ interface DashboardHeroProps {
  * Hybrid dashboard hero: operator card + Dog Spotting Level + XP bar.
  * Mirrors the layout in dashboard-preview-hybrid.html.
  */
-export function DashboardHero({
+export async function DashboardHero({
   score,
   nickname,
   shortId,
   streakDays,
 }: DashboardHeroProps) {
+  const t = await getTranslations("dashboard");
   const { level, xpIntoLevel, xpPerLevel, xpToNext, progress } = deriveLevel(
     score.total_score
   );
@@ -44,7 +46,7 @@ export function DashboardHero({
                   animation: "pulse-dot 1.8s ease-in-out infinite",
                 }}
               />
-              ON_DOG_SPOTTING
+              {t("statusOnDuty")}
             </span>
             <span className="text-muted-foreground/60">{shortId}</span>
           </div>
@@ -60,7 +62,7 @@ export function DashboardHero({
       {/* Level + XP */}
       <div className="pt-4">
         <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
-          Dog Spotting Level
+          {t("level")}
         </div>
         <div className="flex items-end gap-4 flex-wrap">
           <div className="font-mono font-medium text-[96px] leading-[0.85] tracking-[-0.04em] text-ink">
@@ -70,9 +72,9 @@ export function DashboardHero({
             <div className="flex justify-between font-mono text-[10px] tracking-[0.06em] uppercase text-muted-foreground mb-1.5 gap-2">
               <span>
                 <b className="text-ink font-medium">{xpIntoLevel}</b> /{" "}
-                {xpPerLevel} xp
+                {xpPerLevel} {t("xp")}
               </span>
-              <span>{xpToNext} to lvl {nextLevel}</span>
+              <span>{t("toLevel", { xp: xpToNext, level: nextLevel })}</span>
             </div>
             <div className="relative h-1 bg-rule-2 rounded overflow-hidden">
               <div

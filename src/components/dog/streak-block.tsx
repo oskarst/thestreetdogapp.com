@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
 import { cn } from "@/lib/utils";
@@ -22,15 +23,19 @@ function nextMilestone(days: number) {
  * milestone (3 / 7 / 14 / 30 / 100 days). Single soft amber tone — same
  * palette as the streak chip in the hero.
  */
-export function StreakBlock({ days, todayLocked = true }: StreakBlockProps) {
+export async function StreakBlock({ days, todayLocked = true }: StreakBlockProps) {
   if (days <= 0) return null;
+  const t = await getTranslations("dashboard");
   const target = nextMilestone(days);
   const pipCount = Math.min(target, 14); // never render more than 14 pips
   const filledFrom = Math.max(0, days - (target - pipCount));
+  const remaining = target - days;
+  const dayWord = days === 1 ? t("streakDay") : t("streakDays");
+  const remainingDayWord = remaining === 1 ? t("streakDay") : t("streakDays");
 
   return (
     <section>
-      <SectionLabel meta={`next: ${target}d`}>Active Streak</SectionLabel>
+      <SectionLabel meta={t("streakNext", { n: target })}>{t("activeStreak")}</SectionLabel>
       <div className="rounded-2xl border border-amber-brand/40 bg-amber-soft p-4 flex items-center gap-4">
         <div className="relative shrink-0">
           <div
@@ -52,7 +57,7 @@ export function StreakBlock({ days, todayLocked = true }: StreakBlockProps) {
               {days}
             </span>
             <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-amber-brand/80">
-              day{days === 1 ? "" : "s"}
+              {dayWord}
             </span>
           </div>
           <div className="flex items-center gap-1 mt-2">
@@ -69,9 +74,9 @@ export function StreakBlock({ days, todayLocked = true }: StreakBlockProps) {
             ))}
           </div>
           <div className="font-mono text-[10px] tracking-[0.06em] text-amber-brand/80 mt-2">
-            {target - days > 0
-              ? `${target - days} day${target - days === 1 ? "" : "s"} to ${target}-day milestone`
-              : "milestone hit"}
+            {remaining > 0
+              ? t("daysToMilestone", { n: remaining, days: remainingDayWord, target })
+              : t("milestoneHit")}
           </div>
         </div>
       </div>
