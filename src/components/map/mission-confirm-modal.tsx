@@ -34,7 +34,6 @@ function localizedParent(c: PickerChunk, locale: string): string {
 function centroid(ring: [number, number][]): [number, number] {
   let lon = 0,
     lat = 0;
-  // GeoJSON polygons close at the start; ignore the duplicate last vertex.
   const n = ring.length - 1;
   for (let i = 0; i < n; i++) {
     lon += ring[i][0];
@@ -44,10 +43,9 @@ function centroid(ring: [number, number][]): [number, number] {
 }
 
 /**
- * Nostromo-style terminal mission confirmation. Black bg, neon accent
- * pulled from the chunk's parent colour, monospace, scan lines.
- * Replaces the old "tap-to-instant-start" with a deliberate confirm step
- * so a stray tap doesn't lock the user into the wrong chunk.
+ * Mission-allocation card. Hybrid design: warm cream surface + ink text
+ * + parent-colour accent strip and button. Lighter overlay than the
+ * Alien-terminal first cut so the map peeks through.
  */
 export function MissionConfirmModal({
   chunk,
@@ -60,7 +58,6 @@ export function MissionConfirmModal({
 }: MissionConfirmModalProps) {
   const t = useTranslations("missions");
 
-  // ESC = abort
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onCancel();
@@ -76,75 +73,49 @@ export function MissionConfirmModal({
   return (
     <div
       className="fixed inset-0 z-[1000] grid place-items-center px-4"
-      style={{
-        background:
-          "radial-gradient(circle at center, rgba(0,0,0,0.85), rgba(0,0,0,0.96))",
-        backdropFilter: "blur(2px)",
-      }}
+      style={{ background: "rgba(0, 0, 0, 0.45)", backdropFilter: "blur(2px)" }}
       onClick={onCancel}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm overflow-hidden"
+        className="relative w-full max-w-sm overflow-hidden rounded-xl"
         style={{
-          background: "#04140a",
+          background: "var(--background)",
+          color: "var(--ink)",
           border: `1px solid ${color}`,
-          borderRadius: 4,
-          boxShadow: `0 0 0 1px rgba(0,0,0,0.6), 0 0 32px ${color}66, inset 0 0 24px ${color}22`,
-          color,
+          boxShadow: `0 8px 32px rgba(0, 0, 0, 0.18), 0 0 0 4px ${color}1a`,
           fontFamily:
             "'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace",
         }}
       >
-        {/* Scan lines */}
+        {/* Coloured top strip with TBILISI · MISSION ALLOC */}
         <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 mix-blend-overlay"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 3px)",
-          }}
-        />
-        {/* Vignette + flicker */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%)",
-            animation: "alien-flicker 4.2s steps(60) infinite",
-          }}
-        />
+          className="px-4 py-2 flex items-center justify-between"
+          style={{ background: color, color: "#fff" }}
+        >
+          <span className="text-[10px] font-medium tracking-[0.32em] uppercase">
+            TBILISI · MISSION ALLOC
+          </span>
+          <span
+            className="size-1.5 rounded-full bg-white"
+            style={{ animation: "pulse-dot 1.6s ease-in-out infinite" }}
+          />
+        </div>
 
-        <div className="relative px-5 pt-4 pb-5">
-          {/* Header bar */}
-          <div className="flex items-center justify-between mb-4 pb-2 border-b border-dashed" style={{ borderColor: `${color}55` }}>
-            <span className="text-[10px] tracking-[0.32em] font-medium">
-              MU-TH-UR ⊳ MISSION ALLOC
-            </span>
-            <span
-              className="size-1.5 rounded-full"
-              style={{
-                background: color,
-                boxShadow: `0 0 8px ${color}`,
-                animation: "pulse-dot 1.4s ease-in-out infinite",
-              }}
-            />
-          </div>
-
-          <div className="text-[10px] tracking-[0.32em] uppercase opacity-70 mb-1">
+        <div className="px-5 py-4">
+          <div className="text-[10px] tracking-[0.32em] uppercase text-muted-foreground mb-1">
             QUADRANT_ID
           </div>
-          <div className="text-2xl font-medium tracking-[0.04em] leading-tight mb-1">
+          <div className="text-2xl font-medium tracking-[0.04em] leading-tight text-ink mb-1">
             {slugUpper}
           </div>
-          <div className="text-[11px] tracking-[0.18em] uppercase opacity-80 mb-4">
+          <div className="text-[11px] tracking-[0.18em] uppercase text-muted-foreground mb-4">
             {parent} · cell #{chunk.index}
           </div>
 
-          <div className="space-y-1.5 mb-5 text-[11px] tracking-[0.06em]">
-            <Row label="LAT" value={lat.toFixed(5)} color={color} />
-            <Row label="LON" value={lon.toFixed(5)} color={color} />
+          <div className="space-y-1.5 mb-5 text-[11px] tracking-[0.06em] text-ink">
+            <Row label="LAT" value={lat.toFixed(5)} />
+            <Row label="LON" value={lon.toFixed(5)} />
             <Row
               label="STATUS"
               value={
@@ -154,17 +125,13 @@ export function MissionConfirmModal({
                     ? "[ACTIVE]"
                     : "[CLEARED]"
               }
-              color={color}
             />
-            <Row label="TARGET" value="20 SUBJECTS" color={color} />
-            <Row label="REWARD" value="+50 XP" color={color} />
+            <Row label="TARGET" value="20 SUBJECTS" />
+            <Row label="REWARD" value="+50 XP" />
           </div>
 
           {error && (
-            <div
-              className="mb-4 px-2 py-1.5 text-[10px] tracking-[0.06em] uppercase border"
-              style={{ borderColor: "#ef4444aa", color: "#ef4444" }}
-            >
+            <div className="mb-4 px-2.5 py-2 text-[10px] tracking-[0.06em] uppercase border border-destructive/50 bg-destructive/10 text-destructive">
               ⚠ {error.replace(/_/g, " ")}
             </div>
           )}
@@ -174,12 +141,7 @@ export function MissionConfirmModal({
               type="button"
               onClick={onCancel}
               disabled={loading}
-              className="text-[11px] tracking-[0.32em] font-medium uppercase py-2.5 transition-opacity disabled:opacity-50"
-              style={{
-                color,
-                background: "transparent",
-                border: `1px solid ${color}66`,
-              }}
+              className="text-[11px] tracking-[0.32em] font-medium uppercase py-2.5 rounded-lg border border-rule-2 text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
             >
               {t("modalAbort")}
             </button>
@@ -187,56 +149,28 @@ export function MissionConfirmModal({
               type="button"
               onClick={onConfirm}
               disabled={loading}
-              className="text-[11px] tracking-[0.32em] font-medium uppercase py-2.5 transition-transform active:scale-95 disabled:opacity-60"
+              className="text-[11px] tracking-[0.32em] font-medium uppercase py-2.5 rounded-lg transition-transform active:scale-95 disabled:opacity-60"
               style={{
-                color: "#04140a",
+                color: "#fff",
                 background: color,
-                border: `1px solid ${color}`,
-                boxShadow: `0 0 14px ${color}88`,
+                boxShadow: `0 4px 14px ${color}55`,
               }}
             >
               {loading ? "// PROCESSING…" : `▸ ${t("modalConfirm")}`}
             </button>
           </div>
-
-          <div
-            className="mt-4 text-[9px] tracking-[0.32em] uppercase opacity-60 text-center"
-            style={{ letterSpacing: "0.32em" }}
-          >
-            ⊏ ⊐ ⊏ ⊐ ⊏ ⊐ ⊏ ⊐ ⊏ ⊐ ⊏ ⊐
-          </div>
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes alien-flicker {
-          0%, 96%, 100% { opacity: 1; }
-          97% { opacity: 0.85; }
-          98% { opacity: 0.95; }
-          99% { opacity: 0.78; }
-        }
-      `}</style>
     </div>
   );
 }
 
-function Row({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: string;
-  color: string;
-}) {
+function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="opacity-70 w-16 shrink-0">{label}</span>
-      <span
-        className="flex-1 border-b border-dotted"
-        style={{ borderColor: `${color}55` }}
-      />
-      <span className="font-medium">{value}</span>
+      <span className="text-muted-foreground w-16 shrink-0">{label}</span>
+      <span className="flex-1 border-b border-dotted border-rule" />
+      <span className="font-medium text-ink">{value}</span>
     </div>
   );
 }

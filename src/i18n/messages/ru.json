@@ -12,6 +12,7 @@
     "changeNickname": "Сменить имя",
     "changePassword": "Сменить пароль",
     "reportProblem": "Сообщить о проблеме",
+    "toggleTheme": "Сменить тему",
     "adminPanel": "Панель администратора"
   },
   "dashboard": {

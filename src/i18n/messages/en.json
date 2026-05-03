@@ -12,6 +12,7 @@
     "changeNickname": "Change Nickname",
     "changePassword": "Change Password",
     "reportProblem": "Report a Problem",
+    "toggleTheme": "Toggle theme",
     "adminPanel": "Admin Panel"
   },
   "dashboard": {

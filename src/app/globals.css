@@ -137,6 +137,36 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.205 0.015 60);
+  /* Hybrid extras — dark counterparts of the cream palette. Keep the warm
+     undertone in shadows so the look stays "graphite" rather than
+     "sterile black". */
+  --background: #0d0c0b;          /* deep warm black, replaces oklch above */
+  --foreground: #ece6d8;
+  --card: #15130f;
+  --card-foreground: #ece6d8;
+  --popover: #15130f;
+  --popover-foreground: #ece6d8;
+  --primary: #ece6d8;
+  --primary-foreground: #0d0c0b;
+  --secondary: #1f1c17;
+  --secondary-foreground: #ece6d8;
+  --muted: #1f1c17;
+  --muted-foreground: #9a9183;
+  --accent: #1f1c17;
+  --accent-foreground: #ece6d8;
+  --destructive: #ef6b6b;
+  --border: #2a2620;
+  --input: #2a2620;
+  --ring: #ece6d8;
+  --ink: #ece6d8;
+  --ink-soft: #b3aa97;
+  --rule: #2a2620;
+  --rule-2: #3a352c;
+  --green-brand: #34d97a;
+  --green-deep: #4ade80;
+  --green-soft: #0e2418;
+  --amber-brand: #d8a45a;
+  --amber-soft: #2a2218;
 }
 
 @layer base {

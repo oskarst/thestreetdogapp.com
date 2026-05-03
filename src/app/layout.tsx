@@ -52,6 +52,15 @@ export default async function RootLayout({
       className={`${sans.variable} ${mono.variable} h-full`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Apply persisted theme BEFORE hydration to avoid the flash of
+            wrong-theme content. Reads localStorage("ui-theme"). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('ui-theme');if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col antialiased">
         <IconSprite />
         <ServiceWorkerRegister />

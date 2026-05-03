@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeToggleItem } from "@/components/theme/theme-toggle-item";
 import { createClient } from "@/lib/supabase/client";
 
 interface TopNavProps {
@@ -108,6 +109,8 @@ export function TopNav({ user }: TopNavProps) {
                 <Flag className="mr-2 h-4 w-4" />
                 {t("reportProblem")}
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <ThemeToggleItem label={t("toggleTheme")} />
               {user.role === "admin" && (
                 <>
                   <DropdownMenuSeparator />
