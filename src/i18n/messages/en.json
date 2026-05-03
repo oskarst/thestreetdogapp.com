@@ -258,15 +258,20 @@
     "startMission": "Start a mission",
     "startButton": "Start",
     "openOnMap": "Open on map",
+    "openMapPicker": "Pick on map",
     "cancelMission": "Cancel",
-    "pickRaion": "Pick a raion",
-    "pickerSubtitle": "Spot 20 dogs in one raion. Each one earns escalating XP.",
+    "pickRaion": "Pick a chunk",
+    "pickerLabel": "PICK A CHUNK",
+    "pickerPrompt": "Tap a chunk to start a mission",
+    "pickerBlocked": "Finish your active mission first",
+    "pickerSubtitle": "Spot 20 dogs in one chunk. Each earns escalating XP.",
+    "pickerSubtitleMap": "Tap a coloured chunk on the map to begin.",
     "dailyCounter": "{today} / {cap} bonus dogs today",
     "dailyCapReached": "Daily cap reached — resumes tomorrow",
     "completionReward": "+{xp} XP on completion",
     "allCompletedLabel": "All raions cleared",
     "allCompletedBody": "You've passed every Tbilisi mission. Nice work.",
     "seeAll": "See all",
-    "howItWorks": "Pick a raion and start the mission. Each freshly spotted dog inside the polygon earns escalating XP (1, 2, 3 … capped at 10), up to 20 dogs per day. Hit 20 dogs total to pass and claim a +50 XP bonus."
+    "howItWorks": "Each raion is split into walkable ~2.5 km chunks colour-tagged by raion. Pick one on the map. Every freshly spotted dog inside the chunk earns escalating XP (1, 2, 3 … capped at 10), up to 20 dogs per day. Hit 20 dogs total to pass and claim a +50 XP bonus."
   }
 }

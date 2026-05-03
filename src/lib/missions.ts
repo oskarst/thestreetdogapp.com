@@ -10,23 +10,53 @@ export const MISSION_TARGET = 20;
 export const MISSION_DAILY_CAP = 20;
 export const MISSION_COMPLETION_XP = 50;
 
-export interface DistrictFeature {
+/**
+ * 10-color palette indexed by parent_slug (color_index in mission_districts).
+ * Picked for distinguishability on a Carto-style basemap; saturated enough
+ * to read at small sizes but desaturated enough that overlapping cells
+ * don't blow out the underlying map.
+ */
+export const PARENT_COLORS = [
+  "#22c55e", // chugureti
+  "#0ea5e9", // didube
+  "#f97316", // gldani
+  "#a855f7", // isani
+  "#ef4444", // krtsanisi
+  "#06b6d4", // mtatsminda
+  "#eab308", // nadzaladevi
+  "#14b8a6", // saburtalo
+  "#ec4899", // samgori
+  "#84cc16", // vake
+] as const;
+
+export interface ChunkFeature {
   slug: string;
-  name_en: string;
-  name_ka: string;
-  name_ru: string;
+  parentSlug: string;
+  parentNameEn: string;
+  parentNameKa: string;
+  parentNameRu: string;
+  index: number;
+  colorIndex: number;
   /** Outer ring as [lon, lat] pairs (GeoJSON order). */
   ring: [number, number][];
   /** Pre-computed bbox: [minLon, minLat, maxLon, maxLat]. */
   bbox: [number, number, number, number];
 }
 
-function loadDistricts(): DistrictFeature[] {
-  const file = path.join(process.cwd(), "public", "tbilisi-districts.geojson");
+function loadChunks(): ChunkFeature[] {
+  const file = path.join(process.cwd(), "public", "tbilisi-chunks.geojson");
   const raw = readFileSync(file, "utf8");
   const data = JSON.parse(raw) as {
     features: {
-      properties: { slug: string; name_en: string; name_ka: string; name_ru: string };
+      properties: {
+        slug: string;
+        parent_slug: string;
+        parent_name_en: string;
+        parent_name_ka: string;
+        parent_name_ru: string;
+        index: number;
+        color_index: number;
+      };
       geometry: { type: "Polygon"; coordinates: [number, number][][] };
     }[];
   };
@@ -44,19 +74,27 @@ function loadDistricts(): DistrictFeature[] {
     }
     return {
       slug: f.properties.slug,
-      name_en: f.properties.name_en,
-      name_ka: f.properties.name_ka,
-      name_ru: f.properties.name_ru,
+      parentSlug: f.properties.parent_slug,
+      parentNameEn: f.properties.parent_name_en,
+      parentNameKa: f.properties.parent_name_ka,
+      parentNameRu: f.properties.parent_name_ru,
+      index: f.properties.index,
+      colorIndex: f.properties.color_index,
       ring,
       bbox: [minLon, minLat, maxLon, maxLat],
     };
   });
 }
 
-let _districts: DistrictFeature[] | null = null;
-export function getDistricts(): DistrictFeature[] {
-  if (!_districts) _districts = loadDistricts();
-  return _districts;
+let _chunks: ChunkFeature[] | null = null;
+export function getChunks(): ChunkFeature[] {
+  if (!_chunks) _chunks = loadChunks();
+  return _chunks;
+}
+
+/** Backwards-compat name used by the sightings route. */
+export function getDistricts(): ChunkFeature[] {
+  return getChunks();
 }
 
 export function pointInRing(
@@ -80,28 +118,34 @@ export function pointInRing(
 export function pointInDistrict(
   lon: number,
   lat: number,
-  district: DistrictFeature
+  d: ChunkFeature
 ): boolean {
-  const [minLon, minLat, maxLon, maxLat] = district.bbox;
+  const [minLon, minLat, maxLon, maxLat] = d.bbox;
   if (lon < minLon || lon > maxLon || lat < minLat || lat > maxLat) return false;
-  return pointInRing(lon, lat, district.ring);
+  return pointInRing(lon, lat, d.ring);
 }
 
 export type MissionStatus = "completed" | "active" | "available";
 
 export interface MissionListItem {
   slug: string;
-  name_en: string;
-  name_ka: string;
-  name_ru: string;
+  parentSlug: string;
+  parentNameEn: string;
+  parentNameKa: string;
+  parentNameRu: string;
+  index: number;
+  colorIndex: number;
   status: MissionStatus;
 }
 
 export interface ActiveMission {
   slug: string;
-  name_en: string;
-  name_ka: string;
-  name_ru: string;
+  parentSlug: string;
+  parentNameEn: string;
+  parentNameKa: string;
+  parentNameRu: string;
+  index: number;
+  colorIndex: number;
   startedAt: string;
   progress: number;
   target: number;
@@ -110,18 +154,13 @@ export interface ActiveMission {
   completionXp: number;
 }
 
-/**
- * Read-only summary for the dashboard MissionsBlock and the /missions page.
- * No "X dogs in district" counts — the v2 mechanic doesn't require knowing
- * the district population, and showing it would just spoil the explore.
- */
 export const getMissionsView = cache(
   async (): Promise<{
     list: MissionListItem[];
     active: ActiveMission | null;
   }> => {
     const supabase = await createClient();
-    const districts = getDistricts();
+    const chunks = getChunks();
 
     const [profile, completionsRes] = await Promise.all([
       getCurrentProfile(),
@@ -147,28 +186,34 @@ export const getMissionsView = cache(
     const today = new Date().toISOString().slice(0, 10);
     const awardsTodayEffective = awardDate === today ? awardsToday : 0;
 
-    const list: MissionListItem[] = districts.map((d) => {
+    const list: MissionListItem[] = chunks.map((c) => {
       let status: MissionStatus = "available";
-      if (completedSlugs.has(d.slug)) status = "completed";
-      else if (d.slug === activeSlug) status = "active";
+      if (completedSlugs.has(c.slug)) status = "completed";
+      else if (c.slug === activeSlug) status = "active";
       return {
-        slug: d.slug,
-        name_en: d.name_en,
-        name_ka: d.name_ka,
-        name_ru: d.name_ru,
+        slug: c.slug,
+        parentSlug: c.parentSlug,
+        parentNameEn: c.parentNameEn,
+        parentNameKa: c.parentNameKa,
+        parentNameRu: c.parentNameRu,
+        index: c.index,
+        colorIndex: c.colorIndex,
         status,
       };
     });
 
     let active: ActiveMission | null = null;
     if (activeSlug) {
-      const d = districts.find((x) => x.slug === activeSlug);
-      if (d) {
+      const c = chunks.find((x) => x.slug === activeSlug);
+      if (c) {
         active = {
-          slug: d.slug,
-          name_en: d.name_en,
-          name_ka: d.name_ka,
-          name_ru: d.name_ru,
+          slug: c.slug,
+          parentSlug: c.parentSlug,
+          parentNameEn: c.parentNameEn,
+          parentNameKa: c.parentNameKa,
+          parentNameRu: c.parentNameRu,
+          index: c.index,
+          colorIndex: c.colorIndex,
           startedAt: activeStarted ?? "",
           progress: activeCount,
           target: MISSION_TARGET,
@@ -183,13 +228,6 @@ export const getMissionsView = cache(
   }
 );
 
-/**
- * Dog IDs the user has credited toward the active mission run. Used by the
- * /map view so the mission overlay only shows dogs you've actually found —
- * the raion starts empty and fills in as you spot dogs.
- *
- * Reads mission_dog_credits scoped to the current (slug, started_at).
- */
 export async function getCreditedDogIds(
   slug: string,
   startedAt: string

@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useTransition,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import L from "leaflet";
@@ -10,21 +16,42 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet.markercluster";
 import type { DogMarker } from "@/types/database";
 import { MapSidePanel } from "./map-side-panel";
+import { createClient } from "@/lib/supabase/client";
 
 interface MissionContext {
   slug: string;
-  nameEn: string;
-  nameKa: string;
-  nameRu: string;
+  parentNameEn: string;
+  parentNameKa: string;
+  parentNameRu: string;
+  chunkIndex: number;
   progress: number;
   target: number;
   completionXp: number;
   allDistricts: { slug: string; ring: [number, number][] }[];
   locale: string;
-  /** True when the user is browsing this raion but it isn't their active mission. */
+  /** True when the user is browsing this chunk but it isn't their active mission. */
   previewOnly?: boolean;
-  /** When true, render a live "you are here" marker in the active raion. */
+  /** When true, render a live "you are here" marker. */
   showUserLocation?: boolean;
+}
+
+interface PickerChunk {
+  slug: string;
+  parentSlug: string;
+  parentNameEn: string;
+  parentNameKa: string;
+  parentNameRu: string;
+  index: number;
+  colorIndex: number;
+  ring: [number, number][];
+  status: "completed" | "active" | "available";
+}
+
+interface PickerContext {
+  chunks: PickerChunk[];
+  colors: string[];
+  hasActive: boolean;
+  locale: string;
 }
 
 // Use the local marker assets that already ship with the PWA — drops the
@@ -39,12 +66,27 @@ L.Icon.Default.mergeOptions({
 interface DogMapProps {
   dogs: DogMarker[];
   mission?: MissionContext | null;
+  picker?: PickerContext | null;
 }
 
-function localizedName(m: MissionContext): string {
-  if (m.locale === "ka") return m.nameKa;
-  if (m.locale === "ru") return m.nameRu;
-  return m.nameEn;
+function localizedMissionName(m: MissionContext): string {
+  const stem =
+    m.locale === "ka"
+      ? m.parentNameKa
+      : m.locale === "ru"
+        ? m.parentNameRu
+        : m.parentNameEn;
+  return `${stem} ${m.chunkIndex}`;
+}
+
+function localizedChunkName(c: PickerChunk, locale: string): string {
+  const stem =
+    locale === "ka"
+      ? c.parentNameKa
+      : locale === "ru"
+        ? c.parentNameRu
+        : c.parentNameEn;
+  return `${stem} ${c.index}`;
 }
 
 const TBILISI_CENTER: [number, number] = [41.7151, 44.8271];
@@ -73,7 +115,7 @@ function createDogIcon(dog: DogMarker): L.DivIcon {
   });
 }
 
-export default function DogMap({ dogs, mission }: DogMapProps) {
+export default function DogMap({ dogs, mission, picker }: DogMapProps) {
   const router = useRouter();
   const tMissions = useTranslations("missions");
   const mapRef = useRef<HTMLDivElement>(null);
@@ -86,6 +128,33 @@ export default function DogMap({ dogs, mission }: DogMapProps) {
 
   const handleClose = useCallback(() => setSelectedDog(null), []);
   const showUserLocation = mission?.showUserLocation ?? false;
+
+  const pickerLayerRef = useRef<L.LayerGroup | null>(null);
+  const [picking, startPicking] = useTransition();
+  const [pickerError, setPickerError] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  function handlePickChunk(slug: string) {
+    if (!picker || picker.hasActive) return;
+    setPickerError(null);
+    startPicking(async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.rpc("start_mission", {
+        p_slug: slug,
+      });
+      if (error) {
+        setPickerError(error.message);
+        return;
+      }
+      const result = data as { ok?: boolean; error?: string } | null;
+      if (!result?.ok) {
+        setPickerError(result?.error ?? "start_failed");
+        return;
+      }
+      router.push(`/map?mission=${slug}`);
+      router.refresh();
+    });
+  }
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
@@ -129,16 +198,19 @@ export default function DogMap({ dogs, mission }: DogMapProps) {
     map.addLayer(clusterGroup);
 
     const overlay = L.layerGroup().addTo(map);
+    const pickerLayer = L.layerGroup().addTo(map);
 
     mapInstanceRef.current = map;
     clusterGroupRef.current = clusterGroup;
     overlayLayerRef.current = overlay;
+    pickerLayerRef.current = pickerLayer;
 
     return () => {
       map.remove();
       mapInstanceRef.current = null;
       clusterGroupRef.current = null;
       overlayLayerRef.current = null;
+      pickerLayerRef.current = null;
       hasFitBoundsRef.current = false;
     };
   }, []);
@@ -174,6 +246,69 @@ export default function DogMap({ dogs, mission }: DogMapProps) {
       hasFitBoundsRef.current = true;
     }
   }, [mission]);
+
+  // Picker mode: render every chunk as a tappable, parent-tinted polygon.
+  // Completed chunks are darker + non-interactive; the user's currently
+  // active chunk (if any) is highlighted but tapping any other one is
+  // disabled until the current mission is finished or cancelled.
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const layer = pickerLayerRef.current;
+    if (!map || !layer) return;
+    layer.clearLayers();
+    if (!picker) return;
+
+    const allLatLngs: [number, number][] = [];
+    for (const c of picker.chunks) {
+      const latlngs: [number, number][] = c.ring.map(([lon, lat]) => [lat, lon]);
+      latlngs.forEach((p) => allLatLngs.push(p));
+      const baseColor = picker.colors[c.colorIndex] ?? "#1a1612";
+      const isCompleted = c.status === "completed";
+      const isActive = c.status === "active";
+      const isHovered = hovered === c.slug;
+      const interactive =
+        !isCompleted && (!picker.hasActive || isActive);
+
+      const polygon = L.polygon(latlngs, {
+        color: isActive
+          ? "#15803d"
+          : isHovered
+            ? "#1a1612"
+            : baseColor,
+        weight: isActive ? 3 : isHovered ? 2 : 1.5,
+        opacity: isCompleted ? 0.45 : 0.95,
+        fillColor: baseColor,
+        fillOpacity: isCompleted
+          ? 0.22
+          : isActive
+            ? 0.4
+            : isHovered
+              ? 0.45
+              : 0.28,
+        interactive: true,
+      });
+
+      // Tooltip with the chunk label
+      polygon.bindTooltip(localizedChunkName(c, picker.locale), {
+        direction: "center",
+        permanent: false,
+        className: "chunk-tip",
+      });
+
+      if (interactive) {
+        polygon.on("mouseover", () => setHovered(c.slug));
+        polygon.on("mouseout", () => setHovered(null));
+        polygon.on("click", () => handlePickChunk(c.slug));
+      }
+      polygon.addTo(layer);
+    }
+
+    if (allLatLngs.length > 0) {
+      const bounds = L.latLngBounds(allLatLngs);
+      map.fitBounds(bounds, { padding: [40, 40] });
+      hasFitBoundsRef.current = true;
+    }
+  }, [picker, hovered]);
 
   // Live "you are here" marker — only when an active mission asks for it.
   // Uses watchPosition so the marker tracks the spotter as they walk.
@@ -261,6 +396,40 @@ export default function DogMap({ dogs, mission }: DogMapProps) {
     <>
       <div ref={mapRef} className="w-full h-full z-0" />
 
+      {picker && (
+        <div className="absolute top-3 left-3 right-3 z-[500] rounded-xl bg-background/95 backdrop-blur-sm border border-rule-2 shadow-lg px-3 py-2.5">
+          <div className="flex items-start gap-2.5">
+            <div className="flex-1 min-w-0">
+              <div className="font-mono text-[9.5px] tracking-[0.22em] uppercase text-muted-foreground">
+                {tMissions("pickerLabel")}
+              </div>
+              <div className="text-[13px] font-semibold leading-tight">
+                {tMissions(
+                  picker.hasActive ? "pickerBlocked" : "pickerPrompt"
+                )}
+              </div>
+              {pickerError && (
+                <div className="font-mono text-[10px] tracking-[0.04em] text-destructive mt-1">
+                  {pickerError.replace(/_/g, " ")}
+                </div>
+              )}
+              {picking && (
+                <div className="font-mono text-[10px] tracking-[0.04em] text-muted-foreground mt-1">
+                  …
+                </div>
+              )}
+            </div>
+            <button
+              onClick={() => router.push("/dashboard")}
+              aria-label={tMissions("abandonMission")}
+              className="shrink-0 grid place-items-center size-7 rounded-full text-muted-foreground hover:bg-muted transition-colors"
+            >
+              <span aria-hidden className="text-lg leading-none">×</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {mission && (
         <div className="absolute top-3 left-3 right-3 z-[500] flex items-center gap-2.5 rounded-xl bg-background/95 backdrop-blur-sm border border-rule-2 shadow-lg px-3 py-2.5">
           <div className="flex-1 min-w-0">
@@ -270,7 +439,7 @@ export default function DogMap({ dogs, mission }: DogMapProps) {
                 : tMissions("bannerLabel")}
             </div>
             <div className="font-semibold text-[14px] leading-tight truncate">
-              {localizedName(mission)}
+              {localizedMissionName(mission)}
             </div>
             {!mission.previewOnly && (
               <div className="font-mono text-[10.5px] tracking-[0.04em] text-muted-foreground mt-0.5">

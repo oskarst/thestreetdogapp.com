@@ -2,16 +2,19 @@ import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui/section-label";
 import { getMissionsView } from "@/lib/missions";
-import { MissionsPicker } from "@/components/dog/missions-picker";
 import { MissionsActiveActions } from "@/components/dog/missions-active-actions";
 
-function localizedName(
+function localizedParent(
   locale: string,
-  m: { name_en: string; name_ka: string; name_ru: string }
+  m: {
+    parentNameEn: string;
+    parentNameKa: string;
+    parentNameRu: string;
+  }
 ): string {
-  if (locale === "ka") return m.name_ka;
-  if (locale === "ru") return m.name_ru;
-  return m.name_en;
+  if (locale === "ka") return m.parentNameKa;
+  if (locale === "ru") return m.parentNameRu;
+  return m.parentNameEn;
 }
 
 /**
@@ -31,13 +34,12 @@ export async function MissionsBlock() {
   ]);
 
   const { list, active } = view;
-  const available = list.filter((m) => m.status === "available");
   const completedCount = list.filter((m) => m.status === "completed").length;
+  const allCompleted = completedCount === list.length;
 
-  const localized = (slug: string) => {
-    const m = list.find((x) => x.slug === slug);
-    return m ? localizedName(locale, m) : slug;
-  };
+  const activeLabel = active
+    ? `${localizedParent(locale, active)} ${active.index}`
+    : "";
 
   return (
     <section>
@@ -53,7 +55,7 @@ export async function MissionsBlock() {
                 {t("activeLabel")}
               </div>
               <div className="text-[16px] font-semibold leading-tight truncate mt-0.5">
-                {localized(active.slug)}
+                {activeLabel}
               </div>
             </div>
             <span className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground shrink-0">
@@ -87,7 +89,7 @@ export async function MissionsBlock() {
 
           <MissionsActiveActions slug={active.slug} />
         </div>
-      ) : available.length === 0 ? (
+      ) : allCompleted ? (
         <div className="card-soft p-4 text-center">
           <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
             {t("allCompletedLabel")}
@@ -95,15 +97,22 @@ export async function MissionsBlock() {
           <p className="text-sm">{t("allCompletedBody")}</p>
         </div>
       ) : (
-        <MissionsPicker
-          available={available.map((m) => ({
-            slug: m.slug,
-            name: localizedName(locale, m),
-          }))}
-          startCta={t("startMission")}
-          pickPrompt={t("pickRaion")}
-          subtitle={t("pickerSubtitle")}
-        />
+        <Link
+          href="/map?picker=1"
+          className="card-soft w-full px-4 py-3.5 flex items-center justify-between gap-3 no-underline text-inherit transition-colors hover:border-ink/30 active:scale-[0.99]"
+        >
+          <div>
+            <div className="font-semibold text-[14px] leading-tight">
+              {t("startMission")}
+            </div>
+            <div className="font-mono text-[10px] tracking-[0.06em] text-muted-foreground mt-0.5">
+              {t("pickerSubtitleMap")}
+            </div>
+          </div>
+          <span className="font-mono text-[var(--green-brand)] text-lg shrink-0">
+            ›
+          </span>
+        </Link>
       )}
 
       <div className="mt-2 flex justify-end">
