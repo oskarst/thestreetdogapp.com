@@ -50,8 +50,8 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
       });
 
       const tileLayer = L.tileLayer(
-        "https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png",
-        { maxZoom: 19 }
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 16 }
       ).addTo(map);
 
       // Detect if tiles fail to load (offline, no cache)
