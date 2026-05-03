@@ -285,7 +285,11 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
             : isHovered
               ? 0.45
               : 0.28,
-        interactive: true,
+        // Only tappable chunks capture pointer events. Non-interactive
+        // chunks let pinch / double-tap zoom land on the underlying map
+        // tile so the user can drill down before committing.
+        interactive,
+        bubblingMouseEvents: false,
       });
 
       // Tooltip with the chunk label
