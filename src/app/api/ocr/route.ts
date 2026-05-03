@@ -26,9 +26,16 @@ export async function POST(request: Request) {
       { p_max: MAX_OCR_USAGE }
     );
     if (rateErr) {
-      console.error("[ocr] rate-limit rpc failed:", rateErr.message);
+      console.error("[ocr] rate-limit rpc failed:", rateErr);
+      // Surface the actual DB error so we can see whether the RPC is
+      // missing (migration 006 not applied) vs a column issue vs a
+      // legitimate transient failure.
       return NextResponse.json(
-        { error: "Service temporarily unavailable." },
+        {
+          error: `OCR rate-limit check failed: ${rateErr.message}`,
+          code: rateErr.code,
+          hint: rateErr.hint,
+        },
         { status: 503 }
       );
     }

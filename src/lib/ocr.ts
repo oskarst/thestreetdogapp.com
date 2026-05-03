@@ -22,11 +22,17 @@ export async function scanEarTag(file: File): Promise<ScanResult> {
     return { success: false, error: "OCR limit reached. Please enter the ID manually." };
   }
 
-  const data = await res.json();
+  const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    return { success: false, error: data.error ?? "OCR processing failed" };
+    if (typeof console !== "undefined") {
+      console.error("[scanEarTag] /api/ocr failed:", res.status, data);
+    }
+    return {
+      success: false,
+      error: data?.error ?? `OCR processing failed (${res.status})`,
+    };
   }
 
-  return data;
+  return data ?? { success: false, error: "Empty OCR response" };
 }
