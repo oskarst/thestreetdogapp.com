@@ -35,17 +35,13 @@ export async function POST(
 
   // Permission check: only the dog's first registrar OR a user who has
   // sighted this dog can add a name.
-  const [dogRes, sightingRes] = await Promise.all([
+  const [dogRes, spottedRes] = await Promise.all([
     supabase
       .from("dogs")
       .select("id, names, first_registered_by_id")
       .eq("id", id)
       .single(),
-    supabase
-      .from("sightings")
-      .select("id", { count: "exact", head: true })
-      .eq("dog_id", id)
-      .eq("user_id", user.id),
+    supabase.rpc("has_user_spotted_dog", { p_dog_id: id }),
   ]);
 
   if (dogRes.error || !dogRes.data) {
@@ -53,7 +49,7 @@ export async function POST(
   }
   const dog = dogRes.data;
   const isRegistrar = dog.first_registered_by_id === user.id;
-  const isSpotter = (sightingRes.count ?? 0) > 0;
+  const isSpotter = spottedRes.data === true;
   if (!isRegistrar && !isSpotter) {
     return NextResponse.json(
       {

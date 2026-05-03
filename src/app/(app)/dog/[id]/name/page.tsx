@@ -30,22 +30,18 @@ export default function NameDogPage() {
     const supabase = createClient();
     let cancelled = false;
     (async () => {
-      const [dogRes, sightingRes] = await Promise.all([
+      const [dogRes, spottedRes] = await Promise.all([
         supabase
           .from("dogs")
           .select("images, first_registered_by_id")
           .eq("id", id)
           .single(),
-        supabase
-          .from("sightings")
-          .select("id", { count: "exact", head: true })
-          .eq("dog_id", id)
-          .eq("user_id", user.id),
+        supabase.rpc("has_user_spotted_dog", { p_dog_id: id }),
       ]);
       if (cancelled) return;
       if (dogRes.data?.images?.[0]) setDogImage(dogRes.data.images[0]);
       const isRegistrar = dogRes.data?.first_registered_by_id === user.id;
-      const isSpotter = (sightingRes.count ?? 0) > 0;
+      const isSpotter = spottedRes.data === true;
       setPermission(isRegistrar || isSpotter ? "allowed" : "denied");
     })();
     return () => {

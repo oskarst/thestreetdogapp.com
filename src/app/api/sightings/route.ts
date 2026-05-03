@@ -123,14 +123,14 @@ export async function POST(request: Request) {
       if (existingDog) {
         dogId = existingDog.id;
 
-        // Check if this is the user's first catch of this dog
-        const { count } = await supabase
-          .from("sightings")
-          .select("*", { count: "exact", head: true })
-          .eq("dog_id", dogId)
-          .eq("user_id", user.id);
-
-        isFirstCatch = (count ?? 0) === 0;
+        // Check if this is the user's first catch of this dog. Uses the
+        // has_user_spotted_dog() RPC because sightings.user_id is no longer
+        // SELECT-able from the authenticated client (security lockdown 005).
+        const { data: alreadySpotted } = await supabase.rpc(
+          "has_user_spotted_dog",
+          { p_dog_id: dogId }
+        );
+        isFirstCatch = !alreadySpotted;
 
         // Update dog with new image and location
         const updatedImages = [...(existingDog.images ?? []), dogImageUrl];

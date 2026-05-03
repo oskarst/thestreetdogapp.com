@@ -1,11 +1,30 @@
 import { createClient } from "@/lib/supabase/server";
 import type { ProfileRow, ScoreResult } from "@/types/database";
 
-export async function getProfile(userId: string): Promise<ProfileRow | null> {
+/**
+ * Public-safe profile lookup. After the security lockdown (migration 005)
+ * the authenticated client can only SELECT (id, nickname, role,
+ * last_activity, created_at, updated_at, quest_last_claimed_date) — never
+ * `email` or other PII. Use `get_my_profile()` RPC for full self-read.
+ */
+export type PublicProfile = Pick<
+  ProfileRow,
+  | "id"
+  | "nickname"
+  | "role"
+  | "last_activity"
+  | "created_at"
+  | "updated_at"
+  | "quest_last_claimed_date"
+>;
+
+export async function getProfile(
+  userId: string
+): Promise<PublicProfile | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("profiles")
-    .select("*")
+    .select("id, nickname, role, last_activity, created_at, updated_at, quest_last_claimed_date")
     .eq("id", userId)
     .single();
 
@@ -13,23 +32,23 @@ export async function getProfile(userId: string): Promise<ProfileRow | null> {
     if (error.code === "PGRST116") return null;
     throw error;
   }
-  return data;
+  return data as PublicProfile;
 }
 
 export async function updateNickname(
   userId: string,
   nickname: string
-): Promise<ProfileRow> {
+): Promise<{ id: string; nickname: string | null }> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("profiles")
     .update({ nickname })
     .eq("id", userId)
-    .select()
+    .select("id, nickname")
     .single();
 
   if (error) throw error;
-  return data;
+  return data as { id: string; nickname: string | null };
 }
 
 export async function getUserScore(userId: string): Promise<ScoreResult> {

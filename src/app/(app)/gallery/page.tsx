@@ -23,10 +23,10 @@ export default async function GalleryPage() {
   const user = await getCurrentUser();
   const userId = user?.id ?? "";
 
-  const [dogs, sightingsRes, favsRes] = await Promise.all([
+  const [dogs, caughtRes, favsRes] = await Promise.all([
     getDogsWithImages(),
     userId
-      ? supabase.from("sightings").select("dog_id").eq("user_id", userId)
+      ? supabase.rpc("get_my_caught_dog_ids")
       : Promise.resolve({ data: [], error: null }),
     userId
       ? supabase.from("favorites").select("dog_id").eq("user_id", userId)
@@ -34,7 +34,7 @@ export default async function GalleryPage() {
   ]);
 
   const caughtIds = new Set(
-    (sightingsRes.data ?? []).map((r: { dog_id: string }) => r.dog_id)
+    ((caughtRes.data ?? []) as { dog_id: string }[]).map((r) => r.dog_id)
   );
   const favIds = new Set(
     (favsRes.data ?? []).map((r: { dog_id: string }) => r.dog_id)

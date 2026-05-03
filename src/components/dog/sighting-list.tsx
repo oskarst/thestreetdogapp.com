@@ -34,7 +34,7 @@ export function SightingList({ sightings }: SightingListProps) {
       </SectionLabel>
       <div className="space-y-1.5">
         {sightings.map((s, idx) => {
-          const nickname = s.profiles?.nickname ?? "anon";
+          const nickname = s.nickname ?? "anon";
           const id = s.id.slice(0, 4).toUpperCase();
           return (
             <div

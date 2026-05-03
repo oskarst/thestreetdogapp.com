@@ -17,20 +17,19 @@ export const getCurrentUser = cache(async () => {
 
 /**
  * Per-request cached profile fetch keyed off the current session.
- * Returns null if not signed in or the profile row is missing.
+ * Routes through the get_my_profile() RPC (SECURITY DEFINER) — full-row
+ * SELECT on profiles is no longer granted to the authenticated client,
+ * so direct `.from("profiles").select("*")` would only return nickname/
+ * role/etc. and miss email + quest fields.
  */
 export const getCurrentProfile = cache(async (): Promise<ProfileRow | null> => {
   const user = await getCurrentUser();
   if (!user) return null;
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  const { data, error } = await supabase.rpc("get_my_profile");
   if (error) {
-    if (error.code === "PGRST116") return null;
-    throw error;
+    console.error("[auth-cache] get_my_profile failed:", error.message);
+    return null;
   }
-  return data;
+  return (data as ProfileRow | null) ?? null;
 });
