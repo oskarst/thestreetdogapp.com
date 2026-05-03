@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v9";
+const CACHE_NAME = "streetdog-v10";
 
 const MIME_EXT = {
   "image/jpeg": "jpg",
@@ -79,28 +79,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Cache map tiles (cache-first)
+  // Map tiles: do NOT intercept. The browser's native HTTP cache handles
+  // these correctly (tile servers send cache-control: public,max-age=...).
+  // Earlier we used a cache-first SW strategy here, but on transient fetch
+  // failures the catch handler synthesised a 503 response — which Leaflet
+  // then logged as a tile error even though the upstream server was fine.
+  // Letting the browser handle tile requests directly means Leaflet sees
+  // the real network result and can retry.
   if (
     url.hostname.includes("basemaps.cartocdn.com") ||
     url.hostname.includes("openstreetmap.org")
   ) {
-    event.respondWith(
-      caches.open("map-tiles-cache").then((cache) =>
-        cache.match(event.request).then((cached) => {
-          if (cached) return cached;
-          return fetch(event.request).then((response) => {
-            if (response && response.status === 200) {
-              cache.put(event.request, response.clone());
-            }
-            return response;
-          }).catch(() => new Response("", { status: 503 }));
-        })
-      )
-    );
     return;
   }
 
-  // Skip non-same-origin requests (except tiles handled above)
+  // Skip non-same-origin requests
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
