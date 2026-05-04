@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DogCard } from "@/components/dog/dog-card";
 import { cn } from "@/lib/utils";
 import type { DogListRow } from "@/types/database";
 
 type FilterTab = "all" | "first_spotted" | "my_spottings" | "favorites";
+
+const PAGE_SIZE = 12;
 
 interface DashboardContentProps {
   dogs: DogListRow[];
@@ -23,6 +25,7 @@ export function DashboardContent({
 }: DashboardContentProps) {
   const t = useTranslations("dashboard");
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
+  const [visible, setVisible] = useState(PAGE_SIZE);
   const favoriteSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
   const caughtSet = useMemo(() => new Set(caughtDogIds), [caughtDogIds]);
 
@@ -45,6 +48,15 @@ export function DashboardContent({
         return dogs;
     }
   }, [activeTab, dogs, userId, caughtSet, favoriteSet]);
+
+  // Reset visible window when the tab changes — otherwise switching from
+  // a 200-dog "All" view to a 3-dog "Favorites" view leaves a stale window.
+  useEffect(() => {
+    setVisible(PAGE_SIZE);
+  }, [activeTab]);
+
+  const shown = filteredDogs.slice(0, visible);
+  const remaining = filteredDogs.length - shown.length;
 
   return (
     <div className="space-y-3">
@@ -70,17 +82,49 @@ export function DashboardContent({
           {t("noDogs")}
         </div>
       ) : (
-        <div className="space-y-2">
-          {filteredDogs.map((dog) => (
-            <DogCard
-              key={dog.id}
-              dog={dog}
-              userId={userId}
-              isFavorited={favoriteSet.has(dog.id)}
-              isCaught={caughtSet.has(dog.id)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="space-y-2">
+            {shown.map((dog) => (
+              <DogCard
+                key={dog.id}
+                dog={dog}
+                userId={userId}
+                isFavorited={favoriteSet.has(dog.id)}
+                isCaught={caughtSet.has(dog.id)}
+              />
+            ))}
+          </div>
+
+          {remaining > 0 ? (
+            <div className="flex items-center justify-between gap-3 pt-1">
+              <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+                {t("showingOf", {
+                  shown: shown.length,
+                  total: filteredDogs.length,
+                })}
+              </span>
+              <button
+                type="button"
+                onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                className="rounded-lg border border-rule-2 bg-card px-3.5 py-2 font-mono text-[11px] font-medium tracking-[0.06em] uppercase text-ink hover:bg-muted transition-colors"
+              >
+                {t("loadMore", { n: Math.min(PAGE_SIZE, remaining) })}
+              </button>
+            </div>
+          ) : (
+            filteredDogs.length > PAGE_SIZE && (
+              <div className="text-center pt-1">
+                <button
+                  type="button"
+                  onClick={() => setVisible(PAGE_SIZE)}
+                  className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink transition-colors"
+                >
+                  {t("collapseList")} ↑
+                </button>
+              </div>
+            )
+          )}
+        </>
       )}
     </div>
   );
