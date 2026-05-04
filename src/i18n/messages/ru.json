@@ -265,6 +265,8 @@
     "pickerLabel": "ВЫБЕРИ УЧАСТОК",
     "pickerPrompt": "Тапни по участку, чтобы начать миссию",
     "pickerBlocked": "Сначала закончи активную миссию",
+    "pickerBlockedLabel": "МИССИЯ В ПРОЦЕССЕ",
+    "pickerBlockedCta": "Открыть активную миссию",
     "pickerSubtitle": "Запиши 20 собак в одном участке. За каждую — растущий XP.",
     "pickerSubtitleMap": "Выбери сектор",
     "modalAbort": "Отмена",

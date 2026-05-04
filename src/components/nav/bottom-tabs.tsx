@@ -1,19 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 
+interface Tab {
+  href: string;
+  label: string;
+  icon: IconName;
+  /** Custom predicate so e.g. /map?picker=1 lights "Missions" tab not "Map". */
+  isMatch?: (pathname: string, params: URLSearchParams) => boolean;
+}
+
 export function BottomTabs() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const t = useTranslations("nav");
 
-  const tabs: { href: string; label: string; icon: IconName }[] = [
+  const tabs: Tab[] = [
     { href: "/dashboard", label: t("dogs"), icon: "home" },
-    { href: "/map", label: t("map"), icon: "pin" },
-    { href: "/missions", label: t("missions"), icon: "flag" },
+    {
+      href: "/map",
+      label: t("map"),
+      icon: "pin",
+      isMatch: (p, q) =>
+        (p === "/map" || p.startsWith("/map/")) && q.get("picker") !== "1",
+    },
+    {
+      // Missions tab opens the picker map, not the /missions list — the
+      // map is what the user actually interacts with to start a mission.
+      href: "/map?picker=1",
+      label: t("missions"),
+      icon: "flag",
+      isMatch: (p, q) =>
+        p.startsWith("/missions") || (p === "/map" && q.get("picker") === "1"),
+    },
     { href: "/gallery", label: t("gallery"), icon: "image" },
   ];
 
@@ -21,8 +44,9 @@ export function BottomTabs() {
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-background/92 backdrop-blur-md border-t border-rule pb-safe">
       <div className="flex items-center justify-around h-16">
         {tabs.map((tab) => {
-          const isActive =
-            pathname === tab.href || pathname.startsWith(tab.href + "/");
+          const isActive = tab.isMatch
+            ? tab.isMatch(pathname, searchParams)
+            : pathname === tab.href || pathname.startsWith(tab.href + "/");
           return (
             <Link
               key={tab.href}

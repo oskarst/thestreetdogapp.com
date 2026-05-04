@@ -8,6 +8,7 @@ import {
   useTransition,
 } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -412,22 +413,60 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       <div ref={mapRef} className="w-full h-full z-0" />
 
       {picker && (
-        <div className="absolute top-3 left-3 right-3 z-[500] rounded-xl bg-background/95 backdrop-blur-sm border border-rule-2 shadow-lg px-3 py-2.5">
+        <div
+          className="absolute top-3 left-3 right-3 z-[500] rounded-xl backdrop-blur-sm shadow-lg px-3 py-2.5"
+          style={{
+            background: picker.hasActive
+              ? "rgba(192, 60, 60, 0.95)"
+              : "rgba(var(--background-rgb, 255 255 255), 0.95)",
+            border: picker.hasActive
+              ? "1px solid #c03c3c"
+              : "1px solid var(--rule-2)",
+            color: picker.hasActive ? "#fff" : "inherit",
+          }}
+        >
           <div className="flex items-start gap-2.5">
+            {picker.hasActive && (
+              <span
+                aria-hidden
+                className="grid place-items-center size-9 rounded-lg shrink-0"
+                style={{ background: "rgba(255,255,255,0.18)" }}
+              >
+                <span className="text-xl leading-none">⚠</span>
+              </span>
+            )}
             <div className="flex-1 min-w-0">
-              <div className="font-mono text-[9.5px] tracking-[0.22em] uppercase text-muted-foreground">
-                {tMissions("pickerLabel")}
+              <div
+                className="font-mono text-[10px] tracking-[0.32em] uppercase"
+                style={{ opacity: picker.hasActive ? 0.85 : 0.6 }}
+              >
+                {tMissions(
+                  picker.hasActive ? "pickerBlockedLabel" : "pickerLabel"
+                )}
               </div>
-              <div className="text-[13px] font-semibold leading-tight">
+              <div className="text-[14px] font-semibold leading-tight mt-0.5">
                 {tMissions(
                   picker.hasActive ? "pickerBlocked" : "pickerPrompt"
                 )}
               </div>
+              {picker.hasActive && (
+                <Link
+                  href="/dashboard"
+                  className="inline-block mt-1.5 font-mono text-[10px] tracking-[0.16em] uppercase underline underline-offset-2 text-white/95"
+                >
+                  {tMissions("pickerBlockedCta")} →
+                </Link>
+              )}
             </div>
             <button
               onClick={() => router.push("/dashboard")}
               aria-label={tMissions("abandonMission")}
-              className="shrink-0 grid place-items-center size-7 rounded-full text-muted-foreground hover:bg-muted transition-colors"
+              className="shrink-0 grid place-items-center size-7 rounded-full transition-colors"
+              style={{
+                color: picker.hasActive
+                  ? "rgba(255,255,255,0.9)"
+                  : "var(--muted-foreground)",
+              }}
             >
               <span aria-hidden className="text-lg leading-none">×</span>
             </button>

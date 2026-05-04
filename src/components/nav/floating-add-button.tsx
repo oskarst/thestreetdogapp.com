@@ -1,16 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 
 export function FloatingAddButton() {
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   // Don't render on the add-dog screen itself — the user is already there.
+  // Also hide on the mission picker (/map?picker=1) — the user is selecting
+  // a sector and an "+ Add" overlay would just sit over the picker chrome.
   if (pathname === "/add-dog") return null;
+  if (pathname === "/map" && searchParams.get("picker") === "1") return null;
 
   return (
     <Link

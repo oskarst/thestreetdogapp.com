@@ -265,6 +265,8 @@
     "pickerLabel": "PICK A CHUNK",
     "pickerPrompt": "Tap a chunk to start a mission",
     "pickerBlocked": "Finish your active mission first",
+    "pickerBlockedLabel": "MISSION IN PROGRESS",
+    "pickerBlockedCta": "Open active mission",
     "pickerSubtitle": "Spot 20 dogs in one chunk. Each earns escalating XP.",
     "pickerSubtitleMap": "Pick a sector",
     "modalAbort": "Abort",

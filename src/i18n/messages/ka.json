@@ -265,6 +265,8 @@
     "pickerLabel": "აირჩიე უბანი",
     "pickerPrompt": "შეეხე უბანს მისიის დასაწყებად",
     "pickerBlocked": "ჯერ მიმდინარე მისია დაასრულე",
+    "pickerBlockedLabel": "მისია მიმდინარეობს",
+    "pickerBlockedCta": "გახსენი აქტიური მისია",
     "pickerSubtitle": "ერთ უბანში 20 ძაღლი დააფიქსირე. თითოეულში მზარდი XP.",
     "pickerSubtitleMap": "აირჩიე სექტორი",
     "modalAbort": "გაუქმება",
