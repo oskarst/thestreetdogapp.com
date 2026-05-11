@@ -24,6 +24,7 @@ const CATCH_LABELS: Record<string, { eyebrow: string; bonus: number }> = {
   new: { eyebrow: "+ pioneer find", bonus: 9 }, // 10 base − 1 sighting
   first_catch: { eyebrow: "+ tracker find", bonus: 4 }, // 5 base − 1 sighting
   repeat: { eyebrow: "+ field find", bonus: 0 },
+  untagged: { eyebrow: "+ untagged find", bonus: 2 }, // 1 sighting + 2 welfare
 };
 
 export default async function DogCaughtPage({
@@ -99,6 +100,11 @@ export default async function DogCaughtPage({
             first registered by you
           </div>
         )}
+        {catchType === "untagged" && (
+          <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-1">
+            untagged · field sighting
+          </div>
+        )}
 
         <div className="mt-5">
           <SectionLabel meta="scoring.rpc">Reward Breakdown</SectionLabel>
@@ -109,7 +115,9 @@ export default async function DogCaughtPage({
                   ? "Pioneer base"
                   : catchType === "first_catch"
                     ? "Tracker base"
-                    : "Field base"
+                    : catchType === "untagged"
+                      ? "Untagged base"
+                      : "Field base"
               }
               value={`+${Math.max(points - 0, 1)} pt`}
             />
@@ -156,6 +164,17 @@ export default async function DogCaughtPage({
           <div className="mt-6">
             <SectionLabel meta="optional">Name this subject</SectionLabel>
             <DogNameInput dogId={id} autoFocus={false} />
+          </div>
+        )}
+
+        {catchType === "untagged" && (
+          <div className="mt-3 rounded-xl border border-rule-2 bg-card p-3 text-center">
+            <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
+              Untagged
+            </div>
+            <div className="text-[13px] text-ink mt-1 leading-snug">
+              No ear tag — logged as a field sighting, not a catalogued subject.
+            </div>
           </div>
         )}
 

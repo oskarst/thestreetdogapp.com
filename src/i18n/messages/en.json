@@ -110,9 +110,11 @@
     "metaRequired": "required",
     "metaOptional": "optional",
     "metaOptionalOcr": "optional · ocr",
+    "metaNotApplicable": "n/a",
     "metaGpsLocked": "gps locked",
     "metaPickOne": "pick one",
     "metaScale": "scale 1–10",
+    "noEarTag": "No Ear Tag",
     "pageTitle": "Find a Dog"
   },
   "dogProfile": {

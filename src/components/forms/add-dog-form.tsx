@@ -39,6 +39,7 @@ export function AddDogForm() {
   const [dogImage, setDogImage] = useState<File | null>(null);
   const [earTagImage, setEarTagImage] = useState<File | null>(null);
   const [earTagId, setEarTagId] = useState("");
+  const [noEarTag, setNoEarTag] = useState(false);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
@@ -56,6 +57,19 @@ export function AddDogForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [savedOffline, setSavedOffline] = useState(false);
+
+  function toggleNoEarTag() {
+    setNoEarTag((prev) => {
+      const next = !prev;
+      if (next) {
+        setEarTagId("");
+        setEarTagImage(null);
+        setScanError("");
+        setExistingDog(null);
+      }
+      return next;
+    });
+  }
 
   async function handleEarTagImage(file: File | null) {
     setEarTagImage(file);
@@ -249,12 +263,13 @@ export function AddDogForm() {
       </section>
 
       <section>
-        <SectionLabel meta={t("metaOptionalOcr")}>{t("earTag")}</SectionLabel>
+        <SectionLabel meta={noEarTag ? t("metaNotApplicable") : t("metaOptionalOcr")}>{t("earTag")}</SectionLabel>
         <div className="space-y-2.5">
           <CameraUpload
             label={t("tapEarTagPhoto")}
             onChange={handleEarTagImage}
             value={earTagImage}
+            disabled={noEarTag}
           />
           {scanning && (
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
@@ -267,7 +282,7 @@ export function AddDogForm() {
               {scanError}
             </p>
           )}
-          {existingDog && (
+          {existingDog && !noEarTag && (
             <div className="rounded-lg border border-rule-2 bg-card px-3.5 py-2.5 text-sm">
               {t("dogAlreadyRegistered")}{" "}
               <a
@@ -278,13 +293,28 @@ export function AddDogForm() {
               </a>
             </div>
           )}
-          <Input
-            id="earTagId"
-            placeholder={t("earTagPlaceholder")}
-            value={earTagId}
-            onChange={(e) => setEarTagId(e.target.value)}
-            className="h-10 rounded-xl border-rule-2 bg-card font-mono text-sm tracking-[0.02em]"
-          />
+          <div className="flex items-stretch gap-2">
+            <Input
+              id="earTagId"
+              placeholder={t("earTagPlaceholder")}
+              value={earTagId}
+              onChange={(e) => setEarTagId(e.target.value)}
+              disabled={noEarTag}
+              className="h-10 flex-1 rounded-xl border-rule-2 bg-card font-mono text-sm tracking-[0.02em] disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            <button
+              type="button"
+              onClick={toggleNoEarTag}
+              aria-pressed={noEarTag}
+              className={
+                noEarTag
+                  ? "h-10 px-3 rounded-xl border border-ink bg-ink text-background font-mono text-[11px] tracking-[0.08em] uppercase whitespace-nowrap transition-colors"
+                  : "h-10 px-3 rounded-xl border border-rule-2 bg-card text-ink font-mono text-[11px] tracking-[0.08em] uppercase whitespace-nowrap transition-colors hover:bg-muted"
+              }
+            >
+              {t("noEarTag")}
+            </button>
+          </div>
         </div>
       </section>
 

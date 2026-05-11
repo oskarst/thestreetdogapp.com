@@ -110,9 +110,11 @@
     "metaRequired": "обязательно",
     "metaOptional": "по желанию",
     "metaOptionalOcr": "по желанию · ocr",
+    "metaNotApplicable": "н/д",
     "metaGpsLocked": "gps зафикс.",
     "metaPickOne": "выбери",
     "metaScale": "шкала 1–10",
+    "noEarTag": "Без бирки",
     "pageTitle": "Найти собаку"
   },
   "dogProfile": {

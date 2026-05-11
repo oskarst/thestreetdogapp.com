@@ -324,11 +324,16 @@ export async function POST(request: Request) {
       throw sightingErr;
     }
 
-    // Calculate points
+    // Calculate points. Untagged finds don't mint Pioneer / Tracker
+    // bonuses — without an ear tag we can't deduplicate, so each is just
+    // a +1 sighting plus the +2 welfare bonus from migration 007/012.
     let points: number;
-    let catchType: "new" | "first_catch" | "repeat";
+    let catchType: "new" | "first_catch" | "repeat" | "untagged";
 
-    if (isNewDog) {
+    if (isNewDog && !earTagId) {
+      points = 3;
+      catchType = "untagged";
+    } else if (isNewDog) {
       points = 10;
       catchType = "new";
     } else if (isFirstCatch) {

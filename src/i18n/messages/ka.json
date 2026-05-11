@@ -110,9 +110,11 @@
     "metaRequired": "სავალდებულო",
     "metaOptional": "სურვილისამებრ",
     "metaOptionalOcr": "სურვილისამებრ · ocr",
+    "metaNotApplicable": "არ მოეპოვება",
     "metaGpsLocked": "gps ჩაკეტილი",
     "metaPickOne": "აირჩიე",
     "metaScale": "შკალა 1–10",
+    "noEarTag": "ბირკის გარეშე",
     "pageTitle": "ძაღლის პოვნა"
   },
   "dogProfile": {
