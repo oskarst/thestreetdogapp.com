@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth-cache";
 import { getDogById } from "@/lib/db/dogs";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
+import { DogNameInput } from "@/components/dog/dog-name-input";
 
 interface DogCaughtPageProps {
   params: Promise<{ id: string }>;
@@ -20,9 +21,9 @@ interface DogCaughtPageProps {
 }
 
 const CATCH_LABELS: Record<string, { eyebrow: string; bonus: number }> = {
-  new: { eyebrow: "+ pioneer catch", bonus: 9 }, // 10 base − 1 sighting
-  first_catch: { eyebrow: "+ tracker catch", bonus: 4 }, // 5 base − 1 sighting
-  repeat: { eyebrow: "+ patrol catch", bonus: 0 },
+  new: { eyebrow: "+ pioneer find", bonus: 9 }, // 10 base − 1 sighting
+  first_catch: { eyebrow: "+ tracker find", bonus: 4 }, // 5 base − 1 sighting
+  repeat: { eyebrow: "+ field find", bonus: 0 },
 };
 
 export default async function DogCaughtPage({
@@ -58,7 +59,7 @@ export default async function DogCaughtPage({
         {heroImage && (
           <Image
             src={heroImage}
-            alt={dog?.names?.[0] ?? "Caught dog"}
+            alt={dog?.names?.[0] ?? "Found dog"}
             fill
             className="object-cover"
             sizes="100vw"
@@ -108,7 +109,7 @@ export default async function DogCaughtPage({
                   ? "Pioneer base"
                   : catchType === "first_catch"
                     ? "Tracker base"
-                    : "Patrol base"
+                    : "Field base"
               }
               value={`+${Math.max(points - 0, 1)} pt`}
             />
@@ -148,6 +149,13 @@ export default async function DogCaughtPage({
             <div className="text-[14px] font-semibold text-ink mt-0.5">
               Raion cleared — pick another from the dashboard
             </div>
+          </div>
+        )}
+
+        {catchType === "new" && !dog?.names?.length && (
+          <div className="mt-6">
+            <SectionLabel meta="optional">Name this subject</SectionLabel>
+            <DogNameInput dogId={id} autoFocus={false} />
           </div>
         )}
 

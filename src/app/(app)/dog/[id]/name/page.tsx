@@ -8,6 +8,7 @@ import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/hooks/use-user";
 import { Icon } from "@/components/ui/icon";
+import { DogNameInput } from "@/components/dog/dog-name-input";
 
 type Permission = "loading" | "allowed" | "denied";
 
@@ -15,9 +16,6 @@ export default function NameDogPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
-  const [name, setName] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [dogImage, setDogImage] = useState<string | null>(null);
   const [permission, setPermission] = useState<Permission>("loading");
 
@@ -48,33 +46,6 @@ export default function NameDogPage() {
       cancelled = true;
     };
   }, [id, user, userLoading]);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const trimmed = name.trim();
-    if (!trimmed) return;
-
-    setSubmitting(true);
-    setError(null);
-
-    try {
-      const res = await fetch(`/api/dogs/${id}/name`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: trimmed }),
-      });
-      const body = (await res.json().catch(() => null)) as
-        | { error?: string }
-        | null;
-      if (!res.ok) {
-        throw new Error(body?.error ?? "Failed to save name");
-      }
-      router.push(`/dog/${id}`);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save name");
-      setSubmitting(false);
-    }
-  }
 
   if (userLoading || permission === "loading") {
     return (
@@ -140,42 +111,12 @@ export default function NameDogPage() {
           Name this dog
         </h1>
         <p className="text-sm text-muted-foreground mt-1.5">
-          So other operators can recognize them.
+          So other researchers can recognize them.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter a name…"
-          className="w-full rounded-xl border border-rule-2 bg-card px-3.5 py-3 text-sm text-ink placeholder:text-muted-foreground focus:outline-none focus:border-ink"
-          maxLength={20}
-          required
-          autoFocus
-        />
-
-        {error && <p className="text-sm text-destructive">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={submitting || !name.trim()}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
-        >
-          <span className="font-mono text-[var(--green-brand)] font-medium">
-            &gt;
-          </span>
-          {submitting ? (
-            <>
-              <Loader2 className="size-4 animate-spin" />
-              Saving…
-            </>
-          ) : (
-            "Save name"
-          )}
-        </button>
-
+      <div className="space-y-3">
+        <DogNameInput dogId={id} redirectAfterSave={`/dog/${id}`} />
         <button
           type="button"
           onClick={() => router.back()}
@@ -183,7 +124,7 @@ export default function NameDogPage() {
         >
           Cancel
         </button>
-      </form>
+      </div>
     </div>
   );
 }

@@ -10,10 +10,6 @@ interface DashboardHeroProps {
   streakDays: number;
 }
 
-/**
- * Hybrid dashboard hero: operator card + Dog Spotting Level + XP bar.
- * Mirrors the layout in dashboard-preview-hybrid.html.
- */
 export async function DashboardHero({
   score,
   nickname,

@@ -50,7 +50,7 @@ export default function ChangePasswordPage() {
     <SettingsForm
       eyebrow="Security · Password"
       title="Change password"
-      description="Pick something you'll remember on patrol."
+      description="Pick something you'll remember in the field."
       onSubmit={handleSubmit}
       submitLabel="Save"
       loading={loading}
