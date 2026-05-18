@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { TopNav } from "@/components/nav/top-nav";
-import { BottomTabs } from "@/components/nav/bottom-tabs";
-import { StickyAddDogButton } from "@/components/nav/sticky-add-dog-button";
+import { AppFooter } from "@/components/nav/app-footer";
 import { AuthListener } from "@/components/auth/auth-listener";
 import { PrecachePages } from "@/components/pwa/sw-register";
 import { OfflineBanner } from "@/components/pwa/offline-banner";
@@ -33,8 +32,7 @@ export default async function AppLayout({
       <TopNav user={userData} />
       <OfflineBanner />
       <main className="flex-1 overflow-y-auto pb-36">{children}</main>
-      <StickyAddDogButton />
-      <BottomTabs />
+      <AppFooter />
     </div>
   );
 }

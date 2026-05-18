@@ -41,30 +41,26 @@ export function BottomTabs() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-background/92 backdrop-blur-md border-t border-rule pb-safe">
-      <div className="flex items-center justify-around h-16">
-        {tabs.map((tab) => {
-          const isActive = tab.isMatch
-            ? tab.isMatch(pathname, searchParams)
-            : pathname === tab.href || pathname.startsWith(tab.href + "/");
-          return (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className={cn(
-                "flex flex-col items-center gap-0.5 px-3.5 py-2 rounded-lg no-underline transition-colors",
-                "font-mono text-[9.5px] tracking-[0.16em] uppercase",
-                isActive
-                  ? "text-ink"
-                  : "text-muted-foreground/60 hover:text-ink"
-              )}
-            >
-              <Icon name={tab.icon} size={20} />
-              <span>{tab.label}</span>
-            </Link>
-          );
-        })}
-      </div>
+    <nav className="flex items-center justify-around h-16">
+      {tabs.map((tab) => {
+        const isActive = tab.isMatch
+          ? tab.isMatch(pathname, searchParams)
+          : pathname === tab.href || pathname.startsWith(tab.href + "/");
+        return (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={cn(
+              "flex flex-col items-center gap-0.5 px-3.5 py-2 rounded-lg no-underline transition-colors",
+              "font-mono text-[9.5px] tracking-[0.16em] uppercase",
+              isActive ? "text-ink" : "text-muted-foreground/60 hover:text-ink"
+            )}
+          >
+            <Icon name={tab.icon} size={20} />
+            <span>{tab.label}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }
