@@ -98,8 +98,11 @@ export async function GET(request: Request) {
       { items, generated_at: new Date().toISOString() },
       {
         headers: {
-          "Cache-Control":
-            "public, s-maxage=86400, stale-while-revalidate=86400",
+          // Don't let Vercel's edge cache serve this without re-running
+          // the x-api-key check. The marketing-site PHP proxy is the only
+          // legitimate caller and it holds a 24h tmpfile cache of its own,
+          // so a per-request hit here is fine and rare.
+          "Cache-Control": "private, no-store",
         },
       }
     );
