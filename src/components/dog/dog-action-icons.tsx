@@ -47,7 +47,7 @@ export function DogActionIcons({
       />
       <Link
         href={`/dog/${dogId}/report-health`}
-        className={`${btnClass} text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950`}
+        className={`${btnClass} text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950`}
         aria-label={t("reportHealth")}
         title={t("reportHealth")}
       >
