@@ -27,17 +27,17 @@ export function Achievements({ achievements }: AchievementsProps) {
   const total = achievements.length;
 
   return (
-    <section>
+    <section className="card-soft p-3">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-baseline justify-between gap-3 px-0.5 mb-2 group"
+        className="w-full flex items-baseline justify-between gap-3 px-1 py-1 group"
         aria-expanded={open}
       >
-        <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-muted-foreground group-hover:text-ink transition-colors">
+        <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-ink group-hover:text-ink transition-colors">
           {t("achievements")}
         </span>
-        <span className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/70 group-hover:text-ink transition-colors">
+        <span className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground group-hover:text-ink transition-colors">
           {t("achievementsLogged", { n: unlockedCount, total })}
           <ChevronDown
             className={cn(
@@ -49,12 +49,12 @@ export function Achievements({ achievements }: AchievementsProps) {
       </button>
 
       {open && (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2 mt-3">
           {achievements.map((ach) => (
             <div
               key={ach.id}
               className={cn(
-                "rounded-xl border bg-card p-2.5 pt-3 text-center transition-colors",
+                "rounded-xl border bg-background p-2.5 pt-3 text-center transition-colors",
                 ach.unlocked ? "border-rule-2" : "border-rule opacity-70"
               )}
             >

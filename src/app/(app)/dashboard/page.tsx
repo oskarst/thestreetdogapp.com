@@ -59,9 +59,9 @@ export default async function DashboardPage() {
       <OfflineSyncPanel />
       <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
       <DashboardHero score={score} />
+      <Achievements achievements={achievements} />
       <ScoreBoard score={score} />
       <MissionsBlock />
-      <Achievements achievements={achievements} />
       <DashboardContent
         dogs={dogs}
         userId={user.id}
