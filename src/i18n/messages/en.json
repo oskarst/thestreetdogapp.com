@@ -18,7 +18,7 @@
   "dashboard": {
     "yourScore": "Your Score",
     "newDogs": "New Dogs",
-    "pts": "pts",
+    "pts": "XP",
     "uniqueDogs": "Unique Dogs",
     "totalCatches": "Total Catches",
     "totalScore": "TOTAL SCORE",
@@ -57,7 +57,7 @@
     "daysToMilestone": "{n} {days} to {target}-day milestone",
     "milestoneHit": "milestone hit",
     "dogSpottingStats": "Research Stats",
-    "ptTotal": "{n} pt total",
+    "ptTotal": "{n} XP total",
     "pioneers": "Pioneers",
     "trackers": "Trackers",
     "spottings": "Findings",

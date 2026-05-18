@@ -18,7 +18,7 @@
   "dashboard": {
     "yourScore": "Ваш счет",
     "newDogs": "Новые собаки",
-    "pts": "очк.",
+    "pts": "XP",
     "uniqueDogs": "Уникальные собаки",
     "totalCatches": "Всего поимок",
     "totalScore": "ОБЩИЙ СЧЕТ",
@@ -57,7 +57,7 @@
     "daysToMilestone": "{n} {days} до рубежа {target} дн",
     "milestoneHit": "рубеж взят",
     "dogSpottingStats": "Статистика исследований",
-    "ptTotal": "{n} очк. всего",
+    "ptTotal": "{n} XP всего",
     "pioneers": "Первооткрыватели",
     "trackers": "Следопыты",
     "spottings": "Находки",

@@ -18,7 +18,7 @@
   "dashboard": {
     "yourScore": "თქვენი ქულა",
     "newDogs": "ახალი ძაღლები",
-    "pts": "ქ.",
+    "pts": "XP",
     "uniqueDogs": "უნიკალური ძაღლები",
     "totalCatches": "სულ დაჭერა",
     "totalScore": "სულ ქულა",
@@ -57,7 +57,7 @@
     "daysToMilestone": "{n} {days} {target}-დღიან მიზნამდე",
     "milestoneHit": "მიზანი მიღწეულია",
     "dogSpottingStats": "კვლევის სტატისტიკა",
-    "ptTotal": "{n} ქულა სულ",
+    "ptTotal": "{n} XP სულ",
     "pioneers": "პიონერები",
     "trackers": "მკვლევარები",
     "spottings": "აღმოჩენები",
