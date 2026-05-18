@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   useCallback,
@@ -94,6 +95,26 @@ function localizedChunkName(c: PickerChunk, locale: string): string {
 const TBILISI_CENTER: [number, number] = [41.7151, 44.8271];
 const DEFAULT_ZOOM = 13;
 
+// Generous bbox around Tbilisi's 10 raions (slightly padded on each side
+// so a dog logged on the city border still counts). Anything outside is
+// hidden until the user zooms out past the city scale (zoom < 11).
+const TBILISI_BBOX = {
+  minLat: 41.6,
+  maxLat: 41.88,
+  minLon: 44.55,
+  maxLon: 45.05,
+} as const;
+const TBILISI_FILTER_MIN_ZOOM = 11;
+
+function isInTbilisi(lat: number, lon: number): boolean {
+  return (
+    lat >= TBILISI_BBOX.minLat &&
+    lat <= TBILISI_BBOX.maxLat &&
+    lon >= TBILISI_BBOX.minLon &&
+    lon <= TBILISI_BBOX.maxLon
+  );
+}
+
 function createDogIcon(dog: DogMarker): L.DivIcon {
   const initial = dog.names?.[0]?.[0]?.toUpperCase() ?? "🐾";
   return L.divIcon({
@@ -130,6 +151,19 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
 
   const handleClose = useCallback(() => setSelectedDog(null), []);
   const showUserLocation = mission?.showUserLocation ?? false;
+
+  // Track whether the user has zoomed out past the Tbilisi scale. When
+  // they have, non-Tbilisi dogs become visible. Booleans (not raw zoom)
+  // so the visibleDogs memo only re-runs when crossing the threshold.
+  const [showOutsideTbilisi, setShowOutsideTbilisi] = useState(false);
+
+  const visibleDogs = useMemo(
+    () =>
+      showOutsideTbilisi
+        ? dogs
+        : dogs.filter((d) => isInTbilisi(d.last_latitude, d.last_longitude)),
+    [dogs, showOutsideTbilisi]
+  );
 
   const pickerLayerRef = useRef<L.LayerGroup | null>(null);
   const [picking, startPicking] = useTransition();
@@ -217,6 +251,14 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
 
     const overlay = L.layerGroup().addTo(map);
     const pickerLayer = L.layerGroup().addTo(map);
+
+    // Show non-Tbilisi dogs only when the user has zoomed out past the
+    // city scale. Wired here so the listener is registered once per map
+    // instance lifetime.
+    const handleZoomEnd = () => {
+      setShowOutsideTbilisi(map.getZoom() < TBILISI_FILTER_MIN_ZOOM);
+    };
+    map.on("zoomend", handleZoomEnd);
 
     mapInstanceRef.current = map;
     clusterGroupRef.current = clusterGroup;
@@ -388,7 +430,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
 
     clusterGroup.clearLayers();
 
-    const markers = dogs.map((dog) => {
+    const markers = visibleDogs.map((dog) => {
       const marker = L.marker([dog.last_latitude, dog.last_longitude], {
         icon: createDogIcon(dog),
         title: dog.names?.[0] ?? "Unnamed Dog",
@@ -399,14 +441,14 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
 
     if (markers.length > 0) clusterGroup.addLayers(markers);
 
-    if (!hasFitBoundsRef.current && dogs.length > 0) {
+    if (!hasFitBoundsRef.current && visibleDogs.length > 0) {
       const bounds = L.latLngBounds(
-        dogs.map((d) => [d.last_latitude, d.last_longitude])
+        visibleDogs.map((d) => [d.last_latitude, d.last_longitude])
       );
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
       hasFitBoundsRef.current = true;
     }
-  }, [dogs]);
+  }, [visibleDogs]);
 
   return (
     <>
