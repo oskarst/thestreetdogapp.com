@@ -147,8 +147,18 @@
   },
   "map": {},
   "gallery": {
-    "title": "ძაღლების გალერეა",
-    "noPhotos": "ძაღლები ჯერ არ აქვთ ფოტოებს. იყავი პირველი, ვინც დაიჭირე ერთი!"
+    "title": "ხროვა",
+    "subjects": "{n} ცალი",
+    "noPhotos": "ფოტოებიანი ძაღლები ჯერ არ არის. იყავი პირველი, ვინც ჩაწერს.",
+    "searchPlaceholder": "მოძებნე სახელით ან ყურის ნომრით…",
+    "filterAll": "ყველა",
+    "filterFound": "ნაპოვნი",
+    "filterToFind": "საპოვნელი",
+    "filterFavorites": "რჩეული",
+    "noMatches": "ამ ფილტრით ძაღლი არ მოიძებნა.",
+    "showingOf": "{shown} / {total}",
+    "loadMore": "კიდევ {n}",
+    "collapse": "ჩაკეცვა"
   },
   "auth": {
     "invalidCredentials": "არასწორი ელ.ფოსტა ან პაროლი",

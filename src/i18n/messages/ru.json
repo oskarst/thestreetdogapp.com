@@ -147,8 +147,18 @@
   },
   "map": {},
   "gallery": {
-    "title": "Собачья галерея",
-    "noPhotos": "Пока нет собак с фотографиями. Будьте первым, кто поймает один!"
+    "title": "Стая",
+    "subjects": "{n} собак",
+    "noPhotos": "Пока нет собак с фотографиями. Будь первым, кто запишет одну.",
+    "searchPlaceholder": "Поиск по имени или метке на ухе…",
+    "filterAll": "Все",
+    "filterFound": "Найдены",
+    "filterToFind": "Найти",
+    "filterFavorites": "Избранные",
+    "noMatches": "По этому фильтру собак нет.",
+    "showingOf": "{shown} из {total}",
+    "loadMore": "Ещё {n}",
+    "collapse": "Свернуть"
   },
   "auth": {
     "invalidCredentials": "Неверная электронная почта или пароль",

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { DogGalleryCard } from "@/components/dog/dog-gallery-card";
 import { cn } from "@/lib/utils";
 import type { DogListRow } from "@/types/database";
 
-type Filter = "all" | "caught" | "uncaught" | "favorites";
+type Filter = "all" | "found" | "toFind" | "favorites";
 
 const PAGE_SIZE = 12;
 
@@ -20,6 +21,7 @@ export function GalleryFilters({
   caughtIds,
   favIds,
 }: GalleryFiltersProps) {
+  const t = useTranslations("gallery");
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
@@ -27,17 +29,17 @@ export function GalleryFilters({
   const caughtSet = useMemo(() => new Set(caughtIds), [caughtIds]);
   const favSet = useMemo(() => new Set(favIds), [favIds]);
 
-  const counts = {
+  const counts: Record<Filter, number> = {
     all: dogs.length,
-    caught: caughtIds.length,
-    uncaught: dogs.length - caughtIds.length,
+    found: caughtIds.length,
+    toFind: dogs.length - caughtIds.length,
     favorites: favIds.length,
   };
 
   const filtered = useMemo(() => {
     let list = dogs;
-    if (filter === "caught") list = list.filter((d) => caughtSet.has(d.id));
-    if (filter === "uncaught")
+    if (filter === "found") list = list.filter((d) => caughtSet.has(d.id));
+    if (filter === "toFind")
       list = list.filter((d) => !caughtSet.has(d.id));
     if (filter === "favorites") list = list.filter((d) => favSet.has(d.id));
     if (query.trim()) {
@@ -62,10 +64,10 @@ export function GalleryFilters({
   const remaining = filtered.length - shown.length;
 
   const filters: { value: Filter; label: string }[] = [
-    { value: "all", label: "All" },
-    { value: "caught", label: "Caught" },
-    { value: "uncaught", label: "Uncaught" },
-    { value: "favorites", label: "Favorites" },
+    { value: "all", label: t("filterAll") },
+    { value: "found", label: t("filterFound") },
+    { value: "toFind", label: t("filterToFind") },
+    { value: "favorites", label: t("filterFavorites") },
   ];
 
   return (
@@ -75,7 +77,7 @@ export function GalleryFilters({
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name, ear tag, neighborhood…"
+          placeholder={t("searchPlaceholder")}
           className="flex-1 bg-transparent text-sm text-ink placeholder:text-muted-foreground outline-none"
         />
       </div>
@@ -111,7 +113,7 @@ export function GalleryFilters({
 
       {filtered.length === 0 ? (
         <div className="rounded-xl bg-card p-8 text-center text-sm text-muted-foreground border border-rule">
-          No dogs match this filter.
+          {t("noMatches")}
         </div>
       ) : (
         <>
@@ -124,14 +126,14 @@ export function GalleryFilters({
           {remaining > 0 ? (
             <div className="flex items-center justify-between gap-3 pt-1">
               <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
-                {shown.length} of {filtered.length}
+                {t("showingOf", { shown: shown.length, total: filtered.length })}
               </span>
               <button
                 type="button"
                 onClick={() => setVisible((v) => v + PAGE_SIZE)}
                 className="rounded-lg border border-rule-2 bg-card px-3.5 py-2 font-mono text-[11px] font-medium tracking-[0.06em] uppercase text-ink hover:bg-muted transition-colors"
               >
-                Load {Math.min(PAGE_SIZE, remaining)} more
+                {t("loadMore", { n: Math.min(PAGE_SIZE, remaining) })}
               </button>
             </div>
           ) : (
@@ -142,7 +144,7 @@ export function GalleryFilters({
                   onClick={() => setVisible(PAGE_SIZE)}
                   className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink transition-colors"
                 >
-                  Collapse ↑
+                  {t("collapse")} ↑
                 </button>
               </div>
             )

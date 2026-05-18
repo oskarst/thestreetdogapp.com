@@ -147,8 +147,18 @@
   },
   "map": {},
   "gallery": {
-    "title": "Dog Gallery",
-    "noPhotos": "No dogs with photos yet. Be the first to catch one!"
+    "title": "The Pack",
+    "subjects": "{n} subjects",
+    "noPhotos": "No dogs with photos yet. Be the first to log one.",
+    "searchPlaceholder": "Search by name or ear tag…",
+    "filterAll": "All",
+    "filterFound": "Found",
+    "filterToFind": "To find",
+    "filterFavorites": "Favorites",
+    "noMatches": "No dogs match this filter.",
+    "showingOf": "{shown} of {total}",
+    "loadMore": "Load {n} more",
+    "collapse": "Collapse"
   },
   "auth": {
     "invalidCredentials": "Invalid email or password",

@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth-cache";
 import { Icon } from "@/components/ui/icon";
@@ -22,6 +23,7 @@ export default async function GalleryPage() {
   const supabase = await createClient();
   const user = await getCurrentUser();
   const userId = user?.id ?? "";
+  const t = await getTranslations("gallery");
 
   const [dogs, caughtRes, favsRes] = await Promise.all([
     getDogsWithImages(),
@@ -42,7 +44,9 @@ export default async function GalleryPage() {
 
   return (
     <div className="px-4 py-4 space-y-3">
-      <SectionLabel meta={`${dogs.length} subjects`}>The Pack</SectionLabel>
+      <SectionLabel meta={t("subjects", { n: dogs.length })}>
+        {t("title")}
+      </SectionLabel>
 
       {dogs.length === 0 ? (
         <div className="rounded-xl bg-card p-8 text-center text-muted-foreground border border-rule">
@@ -51,10 +55,7 @@ export default async function GalleryPage() {
             size={32}
             className="mx-auto mb-2 text-muted-foreground"
           />
-          <p className="font-medium">No photos yet</p>
-          <p className="font-mono text-[11px] tracking-[0.04em] mt-1">
-            Be the first to log a street dog.
-          </p>
+          <p className="font-medium">{t("noPhotos")}</p>
         </div>
       ) : (
         <GalleryFilters
