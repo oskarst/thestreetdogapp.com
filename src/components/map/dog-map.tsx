@@ -20,6 +20,7 @@ import type { DogMarker } from "@/types/database";
 import { MapSidePanel } from "./map-side-panel";
 import { MissionConfirmModal } from "./mission-confirm-modal";
 import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 
 interface MissionContext {
   slug: string;
@@ -456,16 +457,17 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
 
       {picker && (
         <div
-          className="absolute top-3 left-3 right-3 z-[500] rounded-xl backdrop-blur-sm shadow-lg px-3 py-2.5"
-          style={{
-            background: picker.hasActive
-              ? "rgba(192, 60, 60, 0.95)"
-              : "rgba(var(--background-rgb, 255 255 255), 0.95)",
-            border: picker.hasActive
-              ? "1px solid #c03c3c"
-              : "1px solid var(--rule-2)",
-            color: picker.hasActive ? "#fff" : "inherit",
-          }}
+          className={cn(
+            "absolute top-3 left-3 right-3 z-[500] rounded-xl backdrop-blur-sm shadow-lg px-3 py-2.5 border",
+            picker.hasActive
+              ? "text-white border-[#c03c3c]"
+              : "bg-background/95 border-rule-2 text-ink"
+          )}
+          style={
+            picker.hasActive
+              ? { background: "rgba(192, 60, 60, 0.95)" }
+              : undefined
+          }
         >
           <div className="flex items-start gap-2.5">
             {picker.hasActive && (
