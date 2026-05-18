@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Loader2, WifiOff } from "lucide-react";
@@ -57,6 +57,17 @@ export function AddDogForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [savedOffline, setSavedOffline] = useState(false);
+  const errorRef = useRef<HTMLDivElement>(null);
+
+  // setError + scroll the error banner into view. The form is long enough
+  // that a user submitting from the bottom would otherwise never see the
+  // alert at the top.
+  function showError(msg: string) {
+    setError(msg);
+    requestAnimationFrame(() => {
+      errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
 
   function toggleNoEarTag() {
     setNoEarTag((prev) => {
@@ -104,23 +115,23 @@ export function AddDogForm() {
     setError("");
 
     if (!dogImage) {
-      setError(t("errorPhoto"));
+      showError(t("errorPhoto"));
       return;
     }
     if (!location) {
-      setError(t("errorLocation"));
+      showError(t("errorLocation"));
       return;
     }
     if (!character) {
-      setError(t("errorCharacter"));
+      showError(t("errorCharacter"));
       return;
     }
     if (!gender) {
-      setError(t("errorGender"));
+      showError(t("errorGender"));
       return;
     }
     if (!age) {
-      setError(t("errorAge"));
+      showError(t("errorAge"));
       return;
     }
 
@@ -154,7 +165,7 @@ export function AddDogForm() {
         setSubmitting(false);
         return;
       } catch (err) {
-        setError(
+        showError(
           err instanceof Error ? err.message : t("errorSaveOffline")
         );
         setSubmitting(false);
@@ -224,7 +235,7 @@ export function AddDogForm() {
       }
       router.push(`/dog-caught/${data.dogId}?${params.toString()}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("errorSubmit"));
+      showError(err instanceof Error ? err.message : t("errorSubmit"));
       setSubmitting(false);
     }
   }
@@ -247,7 +258,11 @@ export function AddDogForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div
+          ref={errorRef}
+          role="alert"
+          className="rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive scroll-mt-20"
+        >
           {error}
         </div>
       )}
