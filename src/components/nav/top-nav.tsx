@@ -15,7 +15,6 @@ import {
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggleItem } from "@/components/theme/theme-toggle-item";
 import { TourButton } from "@/components/tour/tour-button";
-import { Icon } from "@/components/ui/icon";
 import { createClient } from "@/lib/supabase/client";
 
 interface TopNavProps {
@@ -25,8 +24,6 @@ interface TopNavProps {
     nickname: string;
     role: "user" | "rescuer" | "admin";
   };
-  shortId: string;
-  streakDays: number;
 }
 
 const SECTION_NAMES: Record<string, string> = {
@@ -51,12 +48,11 @@ function sectionFor(pathname: string): string {
   return "app";
 }
 
-export function TopNav({ user, shortId, streakDays }: TopNavProps) {
+export function TopNav({ user }: TopNavProps) {
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
   const t = useTranslations("nav");
-  const tDash = useTranslations("dashboard");
 
   const initial = user.nickname.charAt(0).toUpperCase();
   const section = sectionFor(pathname);
@@ -68,46 +64,28 @@ export function TopNav({ user, shortId, streakDays }: TopNavProps) {
 
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-rule">
-      <div className="flex items-center justify-between px-4 py-2 gap-2">
+      <div className="flex items-center justify-between px-4 h-14">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2.5 no-underline min-w-0"
+          className="flex items-center gap-2.5 no-underline"
         >
           <Image
             src="/logo.png"
             alt="Street Dog"
             width={32}
             height={32}
-            className="h-8 w-8 object-contain shrink-0"
+            className="h-8 w-8 object-contain"
             priority
           />
-          <span className="flex flex-col leading-tight min-w-0">
-            <span className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-ink">
-              Street-Dog
-              <span className="font-medium text-muted-foreground ml-1">
-                // {section}
-              </span>
-            </span>
-            <span className="flex items-center gap-1.5 mt-0.5 font-mono text-[9.5px] tracking-[0.06em]">
-              <span
-                className="size-1.5 rounded-full bg-[var(--green-brand)] shrink-0"
-                style={{ animation: "pulse-dot 1.8s ease-in-out infinite" }}
-              />
-              <span className="text-green-deep">{tDash("statusOnDuty")}</span>
-              <span className="text-muted-foreground/60 truncate">
-                {shortId}
-              </span>
+          <span className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-ink">
+            Street-Dog
+            <span className="font-medium text-muted-foreground ml-1">
+              // {section}
             </span>
           </span>
         </Link>
 
         <div className="flex items-center gap-1 shrink-0">
-          {streakDays > 0 && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-soft text-amber-brand font-mono text-[10px] font-medium tracking-[0.04em]">
-              <Icon name="fire" size={12} />
-              {streakDays}d
-            </span>
-          )}
           {pathname === "/dashboard" && <TourButton userId={user.id} />}
           <LanguageSwitcher />
 

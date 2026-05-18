@@ -49,7 +49,12 @@ export function ServiceWorkerRegister() {
   return null;
 }
 
-const PRECACHE_PAGES = ["/dashboard", "/add-dog", "/map", "/gallery"];
+// Only /add-dog is actually offline-capable (the SW's fetch handler explicitly
+// falls back to /offline.html for the rest because caching authenticated HTML
+// causes cross-user contamination on shared devices). Precaching the other
+// three was just burning a network round-trip + a middleware getUser call on
+// every cold start.
+const PRECACHE_PAGES = ["/add-dog"];
 
 export function PrecachePages() {
   useEffect(() => {

@@ -81,7 +81,21 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // Skip middleware on anything that doesn't need a fresh auth check.
+  //
+  //   • `/api/*`         — route handlers self-auth and several are
+  //                        deliberately public (e.g. recent-sightings).
+  //   • `_next/static`   — chunks, fonts.
+  //   • `_next/image`    — image optimizer.
+  //   • `_next/data`     — Pages-router data; not used but stays excluded.
+  //   • `favicon.ico`, `manifest.json`, `sw.js`, `offline.html` — public
+  //     assets, never user-specific.
+  //   • Static images by extension (svg/png/jpg/jpeg/gif/webp/ico).
+  //
+  // Every excluded request was previously firing supabase.auth.getUser()
+  // for nothing. With this matcher, only real navigations + RSC fetches
+  // pay the auth round-trip.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|manifest\\.json|sw\\.js|offline\\.html|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };

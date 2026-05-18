@@ -17,6 +17,7 @@ import {
   isDailyQuestClaimedToday,
   deriveAchievements,
   deriveStreak,
+  shortHexId,
 } from "@/lib/dashboard";
 import { time } from "@/lib/perf";
 import type { ScoreResult } from "@/types/database";
@@ -68,7 +69,12 @@ export default async function DashboardPage() {
       <OfflineSyncPanel />
       <TourPrompt userId={user.id} />
       <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
-      <DashboardHero score={score} />
+      <DashboardHero
+        score={score}
+        nickname={profile?.nickname ?? user.email?.split("@")[0] ?? "Operator"}
+        shortId={shortHexId(user.id)}
+        streakDays={streakDays}
+      />
       <Achievements achievements={achievements} />
       <ScoreBoard score={score} />
       <MissionsBlock />
