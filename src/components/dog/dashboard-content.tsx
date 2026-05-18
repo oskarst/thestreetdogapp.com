@@ -80,10 +80,10 @@ export function DashboardContent({
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            <span className="text-sm font-medium leading-tight whitespace-nowrap">
+            <span className="text-[12.5px] font-medium leading-[1.15] text-center break-words hyphens-auto">
               {tab.label}
             </span>
-            <span className="font-mono text-[9px] tracking-[0.04em] leading-tight text-muted-foreground/80 truncate w-full text-center">
+            <span className="font-mono text-[9px] tracking-[0.04em] leading-tight text-muted-foreground/80 text-center break-words w-full">
               {tab.caption}
             </span>
           </button>

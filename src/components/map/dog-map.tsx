@@ -151,7 +151,10 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
   const [selectedDog, setSelectedDog] = useState<DogMarker | null>(null);
 
   const handleClose = useCallback(() => setSelectedDog(null), []);
-  const showUserLocation = mission?.showUserLocation ?? false;
+  // Show the "you are here" pin during an active mission AND while the
+  // user is picking a chunk — it helps them choose a nearby one.
+  const showUserLocation =
+    (mission?.showUserLocation ?? false) || Boolean(picker);
 
   // Track whether the user has zoomed out past the Tbilisi scale. When
   // they have, non-Tbilisi dogs become visible. Booleans (not raw zoom)
