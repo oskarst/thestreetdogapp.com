@@ -6,18 +6,16 @@ import { getUserSightings } from "@/lib/db/sightings";
 import { getUserScore } from "@/lib/db/users";
 import { DashboardHero } from "@/components/dog/dashboard-hero";
 import { DailyQuest } from "@/components/dog/daily-quest";
-import { StreakBlock } from "@/components/dog/streak-block";
 import { ScoreBoard } from "@/components/dog/score-board";
 import { Achievements } from "@/components/dog/achievements";
 import { MissionsBlock } from "@/components/dog/missions-block";
 import { DashboardContent } from "@/components/dog/dashboard-content";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import {
-  deriveStreak,
   isDailyQuestComplete,
   isDailyQuestClaimedToday,
   deriveAchievements,
-  shortHexId,
+  deriveStreak,
 } from "@/lib/dashboard";
 import type { ScoreResult } from "@/types/database";
 
@@ -56,25 +54,14 @@ export default async function DashboardPage() {
     streakDays,
   });
 
-  const nickname =
-    profile?.nickname ?? user.email?.split("@")[0] ?? "Operator";
-
   return (
     <div className="px-4 py-4 space-y-4">
       <OfflineSyncPanel />
-      <DashboardHero
-        score={score}
-        nickname={nickname}
-        shortId={shortHexId(user.id)}
-        streakDays={streakDays}
-      />
       <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
-      {streakDays > 0 && (
-        <StreakBlock days={streakDays} todayLocked={questComplete} />
-      )}
+      <DashboardHero score={score} />
       <ScoreBoard score={score} />
-      <Achievements achievements={achievements} />
       <MissionsBlock />
+      <Achievements achievements={achievements} />
       <DashboardContent
         dogs={dogs}
         userId={user.id}

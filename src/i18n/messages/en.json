@@ -27,6 +27,10 @@
     "mySpottings": "My Findings",
     "favorites": "Favorites",
     "allDogs": "All Dogs",
+    "allDogsCaption": "everything in your area",
+    "firstSpottedCaption": "dogs you pioneered",
+    "mySpottingsCaption": "ones you've logged",
+    "favoritesCaption": "your starred picks",
     "findThemAll": "Find Them All",
     "findThisDog": "Find this Dog!",
     "noDogs": "No dogs found in this category yet.",
@@ -42,10 +46,10 @@
     "spotOneDog": "Find 1 dog today",
     "questNotMet": "0 / 1 logged",
     "questReady": "1 / 1 logged · ready to claim",
-    "questClaimed": "1 / 1 logged · claimed · +5 XP",
+    "questClaimed": "1 / 1 logged · claimed · +15 XP",
     "questClaimError": "Couldn't claim — try again in a moment.",
     "questClaimFailed": "Claim failed.",
-    "claimXp": "Claim +5 XP",
+    "claimXp": "Claim +15 XP",
     "activeStreak": "Active Streak",
     "streakNext": "next: {n}d",
     "streakDay": "day",
@@ -272,7 +276,7 @@
     "pickerBlocked": "Finish your active mission first",
     "pickerBlockedLabel": "MISSION IN PROGRESS",
     "pickerBlockedCta": "Open active mission",
-    "pickerSubtitle": "Find 20 dogs in one chunk. Each earns escalating XP.",
+    "pickerSubtitle": "Find 5 dogs in one chunk. Each earns escalating XP.",
     "pickerSubtitleMap": "Pick a sector",
     "modalAbort": "Abort",
     "modalConfirm": "Confirm",
@@ -282,6 +286,6 @@
     "allCompletedLabel": "All raions cleared",
     "allCompletedBody": "You've passed every Tbilisi mission. Nice work.",
     "seeAll": "See all",
-    "howItWorks": "Each raion is split into walkable ~2.5 km chunks colour-tagged by raion. Pick one on the map. Every freshly logged dog inside the chunk earns escalating XP (1, 2, 3 … capped at 10), up to 20 dogs per day. Hit 20 dogs total to pass and claim a +50 XP bonus."
+    "howItWorks": "Each raion is split into walkable ~1.25 km chunks colour-tagged by raion. Pick one on the map. Every freshly logged dog inside the chunk earns escalating XP (10, 20, 30, 40, 50), up to 20 dogs per day. Hit 5 dogs total to pass and claim a +100 XP bonus."
   }
 }

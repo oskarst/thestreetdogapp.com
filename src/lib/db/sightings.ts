@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type {
   SightingRow,
@@ -62,15 +63,18 @@ export async function countDogCatchers(dogId: string): Promise<number> {
  * Self's own sightings. Routes through get_my_sightings() RPC since the
  * `user_id` column is no longer readable from the authenticated client
  * even when filtering by it (PostgREST returns the full row).
+ *
+ * Cached per-request so the layout (streak chip) and the dashboard page
+ * don't double-fetch on the same render.
  */
-export async function getUserSightings(
-  _userId: string
-): Promise<SightingRow[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("get_my_sightings");
-  if (error) throw error;
-  return (data ?? []) as SightingRow[];
-}
+export const getUserSightings = cache(
+  async (_userId: string): Promise<SightingRow[]> => {
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("get_my_sightings");
+    if (error) throw error;
+    return (data ?? []) as SightingRow[];
+  }
+);
 
 export async function createSighting(
   data: SightingInsert

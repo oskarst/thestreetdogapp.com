@@ -6,9 +6,9 @@ import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth-cache";
 
-export const MISSION_TARGET = 20;
+export const MISSION_TARGET = 5;
 export const MISSION_DAILY_CAP = 20;
-export const MISSION_COMPLETION_XP = 50;
+export const MISSION_COMPLETION_XP = 100;
 
 /**
  * 10-color palette indexed by parent_slug (color_index in mission_districts).

@@ -29,11 +29,19 @@ export function DashboardContent({
   const favoriteSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
   const caughtSet = useMemo(() => new Set(caughtDogIds), [caughtDogIds]);
 
-  const tabs: { value: FilterTab; label: string }[] = [
-    { value: "all", label: t("allDogs") },
-    { value: "first_spotted", label: t("firstSpotted") },
-    { value: "my_spottings", label: t("mySpottings") },
-    { value: "favorites", label: t("favorites") },
+  const tabs: { value: FilterTab; label: string; caption: string }[] = [
+    { value: "all", label: t("allDogs"), caption: t("allDogsCaption") },
+    {
+      value: "first_spotted",
+      label: t("firstSpotted"),
+      caption: t("firstSpottedCaption"),
+    },
+    {
+      value: "my_spottings",
+      label: t("mySpottings"),
+      caption: t("mySpottingsCaption"),
+    },
+    { value: "favorites", label: t("favorites"), caption: t("favoritesCaption") },
   ];
 
   const filteredDogs = useMemo(() => {
@@ -66,13 +74,18 @@ export function DashboardContent({
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
             className={cn(
-              "flex-1 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+              "flex-1 min-w-0 flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 transition-colors",
               activeTab === tab.value
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            {tab.label}
+            <span className="text-sm font-medium leading-tight whitespace-nowrap">
+              {tab.label}
+            </span>
+            <span className="font-mono text-[9px] tracking-[0.04em] leading-tight text-muted-foreground/80 truncate w-full text-center">
+              {tab.caption}
+            </span>
           </button>
         ))}
       </div>

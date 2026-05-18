@@ -96,8 +96,7 @@ export function InstallPrompt() {
 
   return (
     <>
-      {/* Sits above the BottomTabs (h-16) AND the FloatingAddButton
-          (bottom-20, ~h-12) — bottom-36 gives clearance on both. */}
+      {/* Clears the BottomTabs (h-16) + the sticky Add Dog bar (~h-14). */}
       <div className="fixed bottom-36 left-4 right-4 z-50 flex items-center gap-3 rounded-xl border bg-background p-3 shadow-lg sm:bottom-4 sm:left-auto sm:right-4 sm:w-80">
         <div className="flex-1">
           <p className="text-sm font-medium">Install The Street Dog App</p>

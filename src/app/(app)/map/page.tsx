@@ -7,6 +7,8 @@ import {
   getMissionsView,
   getCreditedDogIds,
   PARENT_COLORS,
+  MISSION_TARGET,
+  MISSION_COMPLETION_XP,
 } from "@/lib/missions";
 
 // Leaflet ships ~150kB and only renders client-side. Keep it out of the
@@ -115,8 +117,8 @@ export default async function MapPage({
           parentNameRu: target.parentNameRu,
           chunkIndex: target.index,
           progress: 0,
-          target: 20,
-          completionXp: 50,
+          target: MISSION_TARGET,
+          completionXp: MISSION_COMPLETION_XP,
           allDistricts: chunks
             .filter((c) => c.parentSlug === target.parentSlug)
             .map((c) => ({ slug: c.slug, ring: c.ring })),
