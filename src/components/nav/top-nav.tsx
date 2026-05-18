@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggleItem } from "@/components/theme/theme-toggle-item";
+import { TourButton } from "@/components/tour/tour-button";
 import { Icon } from "@/components/ui/icon";
 import { createClient } from "@/lib/supabase/client";
 
@@ -107,6 +108,7 @@ export function TopNav({ user, shortId, streakDays }: TopNavProps) {
               {streakDays}d
             </span>
           )}
+          {pathname === "/dashboard" && <TourButton userId={user.id} />}
           <LanguageSwitcher />
 
           <DropdownMenu>

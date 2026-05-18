@@ -67,7 +67,7 @@ export function DashboardContent({
   const remaining = filteredDogs.length - shown.length;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-tour-id="dashboard-content">
       <div className="flex gap-1 overflow-x-auto rounded-lg bg-muted p-1">
         {tabs.map((tab) => (
           <button

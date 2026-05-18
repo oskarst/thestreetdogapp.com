@@ -14,7 +14,7 @@ export async function DashboardHero({ score }: DashboardHeroProps) {
   const nextLevel = String(level + 1).padStart(2, "0");
 
   return (
-    <section className="card-soft p-4">
+    <section className="card-soft p-4" data-tour-id="dashboard-hero">
       <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
         {t("level")}
       </div>

@@ -53,7 +53,7 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
   }
 
   return (
-    <section>
+    <section data-tour-id="daily-quest">
       <SectionLabel meta={t("questResetsAt")}>{t("dailyDirective")}</SectionLabel>
       <div className="card-soft p-4 flex items-center gap-3.5">
         <div

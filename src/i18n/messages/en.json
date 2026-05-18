@@ -287,5 +287,19 @@
     "allCompletedBody": "You've passed every Tbilisi mission. Nice work.",
     "seeAll": "See all",
     "howItWorks": "Each raion is split into walkable ~1.25 km chunks colour-tagged by raion. Pick one on the map. Every freshly logged dog inside the chunk earns escalating XP (10, 20, 30, 40, 50), up to 20 dogs per day. Hit 5 dogs total to pass and claim a +100 XP bonus."
+  },
+  "tour": {
+    "openTour": "Take a quick tour",
+    "next": "Next",
+    "back": "Back",
+    "done": "Let's go!",
+    "step1Title": "One dog a day",
+    "step1Body": "Find one street dog each day to claim a +15 XP daily directive. The simplest way to keep your streak alive.",
+    "step2Title": "Earn XP, level up",
+    "step2Body": "Every logged sighting bumps your XP. Brand-new dogs and new-to-you dogs earn more. Each 100 XP = a new researcher level.",
+    "step3Title": "Pick a 1.25 km chunk",
+    "step3Body": "Missions ask you to find 5 dogs inside one walkable chunk. Finishing one is worth +100 XP plus everything you earn for the sightings themselves.",
+    "step4Title": "Browse the area's dogs",
+    "step4Body": "Switch between every dog nearby, ones you found first, ones you've logged, and your favourites. Ready to start?"
   }
 }

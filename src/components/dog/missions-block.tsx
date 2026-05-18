@@ -43,7 +43,7 @@ export async function MissionsBlock() {
     : "";
 
   return (
-    <section>
+    <section data-tour-id="missions-block">
       <SectionLabel meta={`${completedCount} / ${list.length}`}>
         {t("title")}
       </SectionLabel>

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "driver.js/dist/driver.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -247,4 +248,155 @@
     contrast(1.2)
     drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.85))
     drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.85));
+}
+
+/* ------------------------------------------------------------- */
+/* Onboarding tour (driver.js v1) — themed to match the hybrid   */
+/* cream + ink design language.                                  */
+/* ------------------------------------------------------------- */
+
+/* driver.js's default outer overlay; we want a soft ink dim.    */
+.driver-overlay {
+  fill: rgb(26 22 18 / 0.55) !important;
+}
+
+.streetdog-tour.driver-popover {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 1rem;
+  box-shadow:
+    0 1px 0 rgba(26, 22, 18, 0.04),
+    0 12px 32px rgba(26, 22, 18, 0.18);
+  padding: 1rem 1rem 0.875rem;
+  min-width: 280px;
+  max-width: min(360px, calc(100vw - 32px));
+  font-family: var(--font-sans);
+}
+
+.streetdog-tour .driver-popover-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0 0 0.5rem;
+  padding-right: 1.5rem; /* clear the close X */
+}
+
+.streetdog-tour .driver-popover-description {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.streetdog-tour .driver-popover-close-btn {
+  color: var(--muted-foreground);
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  top: 6px;
+  right: 6px;
+  border-radius: 9999px;
+}
+.streetdog-tour .driver-popover-close-btn:hover {
+  background: var(--muted);
+  color: var(--ink);
+}
+
+.streetdog-tour .driver-popover-footer {
+  margin-top: 0.875rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--rule);
+  gap: 0.5rem;
+}
+
+.streetdog-tour .driver-popover-progress-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.streetdog-tour .driver-popover-navigation-btns {
+  gap: 0.4rem;
+}
+
+.streetdog-tour .driver-popover-prev-btn,
+.streetdog-tour .driver-popover-next-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.9rem;
+  border-radius: 9999px;
+  min-height: 36px;
+  text-shadow: none;
+  border: none;
+}
+.streetdog-tour .driver-popover-prev-btn {
+  background: var(--muted);
+  color: var(--ink);
+}
+.streetdog-tour .driver-popover-prev-btn:hover {
+  background: var(--rule);
+}
+.streetdog-tour .driver-popover-next-btn {
+  background: var(--ink);
+  color: var(--background);
+}
+.streetdog-tour .driver-popover-next-btn:hover {
+  filter: brightness(1.1);
+}
+
+/* Arrow inherits the card surface. */
+.streetdog-tour.driver-popover-arrow-side-top.driver-popover-arrow {
+  border-top-color: var(--card);
+}
+.streetdog-tour.driver-popover-arrow-side-bottom.driver-popover-arrow {
+  border-bottom-color: var(--card);
+}
+.streetdog-tour.driver-popover-arrow-side-left.driver-popover-arrow {
+  border-left-color: var(--card);
+}
+.streetdog-tour.driver-popover-arrow-side-right.driver-popover-arrow {
+  border-right-color: var(--card);
+}
+
+/* Subtle pulse on the help icon for users who haven't finished the tour.
+   Uses color-mix so the halo tracks --amber-brand in both light + dark. */
+@keyframes tour-pill-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--amber-brand) 45%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px color-mix(in srgb, var(--amber-brand) 0%, transparent);
+  }
+}
+.tour-pill-pulse {
+  animation: tour-pill-pulse 2.2s ease-in-out infinite;
+}
+
+/* Brief halo on the Missions section after the final "Let's go!" CTA.
+   Applied to the section itself (not its children) so we get one wrapping
+   ring instead of overlapping rings around the header + card + see-all. */
+@keyframes tour-target-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--amber-brand);
+  }
+  60% {
+    box-shadow:
+      0 0 0 14px color-mix(in srgb, var(--amber-brand) 0%, transparent);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--amber-brand) 0%, transparent);
+  }
+}
+.tour-target-pulse {
+  animation: tour-target-pulse 1.4s ease-out 1;
+  border-radius: 1rem;
 }
