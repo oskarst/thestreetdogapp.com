@@ -306,5 +306,62 @@
     "step3Body": "Missions ask you to find 5 dogs inside one walkable chunk. Finishing one is worth +100 XP plus everything you earn for the sightings themselves.",
     "step4Title": "Browse the area's dogs",
     "step4Body": "Switch between every dog nearby, ones you found first, ones you've logged, and your favourites. Ready to start?"
+  },
+  "dogActions": {
+    "reportHealth": "Report health issue",
+    "adoptInfo": "Adoption information"
+  },
+  "healthReport": {
+    "eyebrow": "Health report",
+    "untitled": "this dog",
+    "title": "Flag a health issue for {name}",
+    "intro": "Tell us what you saw. The local rescue network reviews these and reaches out to a partner clinic when needed.",
+    "formLabel": "What's going on?",
+    "placeholder": "Limping on the right hind leg, looks underweight, has an open wound on the ear…",
+    "minHint": "minimum {n} characters",
+    "submit": "Send report",
+    "cancel": "Cancel",
+    "errorTooShort": "Please add a bit more detail (4+ characters).",
+    "errorTooLong": "That's too long — keep it under 2000 characters.",
+    "errorGeneric": "Couldn't send — try again in a moment.",
+    "thanksTitle": "Thanks — report received",
+    "thanksBody": "We'll follow up on {name} as soon as someone is free. If it's urgent, please also call one of the partner clinics directly.",
+    "backToDog": "Back to dog",
+    "backHome": "Dashboard"
+  },
+  "partnerClinics": {
+    "eyebrow": "Partner clinics",
+    "intro": "If the dog looks badly hurt, call ahead before bringing them in. Most clinics treat street dogs at a reduced rate or for free when the local rescue network is involved.",
+    "clinic1Name": "[Partner Clinic 1]",
+    "clinic1Phone": "+995 xxx xxx xxx",
+    "clinic1Addr": "Tbilisi, [address]",
+    "clinic2Name": "[Partner Clinic 2]",
+    "clinic2Phone": "+995 xxx xxx xxx",
+    "clinic2Addr": "Tbilisi, [address]",
+    "clinic3Name": "[Partner Clinic 3]",
+    "clinic3Phone": "+995 xxx xxx xxx",
+    "clinic3Addr": "Tbilisi, [address]",
+    "firstAidTitle": "How to help an injured street dog",
+    "firstAidBody": "1. Approach slowly from the side, never head-on. Crouch and let the dog come to you.\n2. Speak softly. Avoid sudden movements and eye contact.\n3. If the dog is bleeding, apply gentle pressure with a clean cloth.\n4. Do not give food or water if the dog is unconscious.\n5. Call a partner clinic before transport so they're ready.\n6. Wrap the dog in a coat or blanket to keep it warm and contained."
+  },
+  "adopt": {
+    "untitled": "this dog",
+    "eyebrow": "Adoption",
+    "title": "Adopting {name}",
+    "earTagLabel": "Ear tag",
+    "stepsLabel": "Step by step",
+    "step1Title": "Visit and meet the dog",
+    "step1Body": "Spend time with them in their usual area. Bring water and treats. Note their reaction to other dogs and people.",
+    "step2Title": "Health check at a vet",
+    "step2Body": "Take the dog to one of the partner clinics for an initial exam, parasite screening, and vaccinations.",
+    "step3Title": "Vaccinations and microchip",
+    "step3Body": "Required: rabies, DHPPi, leptospirosis. The clinic implants an ISO microchip and registers it in your name.",
+    "step4Title": "Spay or neuter",
+    "step4Body": "Recommended for every adopted street dog. Reduces wandering, marking, and prevents accidental litters.",
+    "step5Title": "Take them home",
+    "step5Body": "Quiet first week. Crate or safe corner, scheduled meals, slow introductions to other pets.",
+    "docsLabel": "Documents you'll need",
+    "docsBody": "· Passport (yours)\n· Vet certificate from the clinic\n· Vaccination booklet with rabies dated within the last year\n· Microchip registration in your name\n· For international travel: EU pet passport (issued by the clinic) and a 30-day waiting period after rabies vaccination",
+    "backToDog": "Back to dog"
   }
 }

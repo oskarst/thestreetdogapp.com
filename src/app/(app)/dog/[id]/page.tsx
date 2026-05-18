@@ -9,7 +9,7 @@ import { getProfile } from "@/lib/db/users";
 import { DogImageCarousel } from "@/components/dog/dog-image-carousel";
 import { DogDetails } from "@/components/dog/dog-details";
 import { SightingList } from "@/components/dog/sighting-list";
-import { FavoriteButton } from "@/components/dog/favorite-button";
+import { DogActionIcons } from "@/components/dog/dog-action-icons";
 import { LocationHistoryMap } from "@/components/map/location-history-map";
 import { DailyActivityMap } from "@/components/map/daily-activity-map";
 import { SectionLabel } from "@/components/ui/section-label";
@@ -82,10 +82,11 @@ export default async function DogProfilePage({
       />
 
       <div className="flex items-center gap-2">
-        <FavoriteButton
+        <DogActionIcons
           userId={user.id}
           dogId={dog.id}
-          initialFavorited={favorited}
+          isFavorited={favorited}
+          size="md"
         />
         <Link
           href={`/dog/${dog.id}/name`}

@@ -8,6 +8,7 @@ import {
   Dog,
   MapPin,
   Flag,
+  BadgePlus,
   Settings,
   ArrowLeft,
 } from "lucide-react";
@@ -18,6 +19,7 @@ const sidebarLinks = [
   { href: "/admin/dogs", label: "Dogs", icon: Dog },
   { href: "/admin/sightings", label: "Sightings", icon: MapPin },
   { href: "/admin/reports", label: "Reports", icon: Flag },
+  { href: "/admin/health-reports", label: "Health reports", icon: BadgePlus },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

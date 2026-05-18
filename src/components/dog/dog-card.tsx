@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FavoriteButton } from "@/components/dog/favorite-button";
+import { DogActionIcons } from "@/components/dog/dog-action-icons";
 import type { DogListRow } from "@/types/database";
 
 interface DogCardProps {
@@ -100,10 +100,10 @@ export function DogCard({ dog, userId, isFavorited, isCaught }: DogCardProps) {
             >
               <MapPin className="h-5 w-5" />
             </Link>
-            <FavoriteButton
+            <DogActionIcons
               userId={userId}
               dogId={dog.id}
-              initialFavorited={isFavorited}
+              isFavorited={isFavorited}
             />
           </>
         )}
