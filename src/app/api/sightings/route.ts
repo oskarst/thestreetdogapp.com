@@ -72,6 +72,14 @@ async function processUploadedImage(
 }
 
 export async function POST(request: Request) {
+  const t0 = performance.now();
+  let lastMark = t0;
+  const mark = (label: string) => {
+    const now = performance.now();
+    console.log(`[perf] sightings.${label} = ${Math.round(now - lastMark)}ms`);
+    lastMark = now;
+  };
+
   try {
     // Auth check
     const supabase = await createClient();
@@ -82,9 +90,11 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    mark("auth");
 
     // Parse FormData
     const formData = await request.formData();
+    mark("parse-formdata");
     const dogImageFile = formData.get("dogImage") as File | null;
     const earTagImageFile = formData.get("earTagImage") as File | null;
     const earTagId = (formData.get("earTagId") as string) || null;
@@ -147,6 +157,7 @@ export async function POST(request: Request) {
         { status: dogProcessed.status }
       );
     }
+    mark("sharp-dog");
 
     let earTagProcessed:
       | { buffer: Buffer; contentType: string; ext: string }
@@ -164,6 +175,7 @@ export async function POST(request: Request) {
         contentType: result.contentType,
         ext: result.ext,
       };
+      mark("sharp-eartag");
     }
 
     // Use admin client for storage uploads (server-side)
@@ -182,6 +194,7 @@ export async function POST(request: Request) {
     const {
       data: { publicUrl: dogImageUrl },
     } = admin.storage.from("dogs").getPublicUrl(dogPath);
+    mark("upload-dog");
 
     // Upload ear tag image if provided
     let earTagImageUrl: string | null = null;
@@ -289,6 +302,7 @@ export async function POST(request: Request) {
       if (createErr) throw createErr;
       dogId = newDog.id;
     }
+    mark("dog-upsert");
 
     // Create sighting
     const { error: sightingErr } = await supabase.from("sightings").insert({
@@ -399,6 +413,10 @@ export async function POST(request: Request) {
       // move on — the user still gets the base sighting points.
       console.error("[sightings] mission award failed:", missionErr);
     }
+    mark("mission");
+    console.log(
+      `[perf] sightings.TOTAL = ${Math.round(performance.now() - t0)}ms`
+    );
 
     return NextResponse.json({ dogId, points, catchType, missionAward });
   } catch (err) {

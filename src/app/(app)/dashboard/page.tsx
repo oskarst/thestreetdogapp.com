@@ -18,29 +18,37 @@ import {
   deriveAchievements,
   deriveStreak,
 } from "@/lib/dashboard";
+import { time } from "@/lib/perf";
 import type { ScoreResult } from "@/types/database";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
+  const dashStart = performance.now();
   const [dogs, favoriteIds, sightings, score, profile] = await Promise.all([
-    getDogs(),
-    getUserFavorites(user.id),
-    getUserSightings(user.id),
-    getUserScore(user.id).catch(
-      (): ScoreResult => ({
-        new_dogs: 0,
-        new_dogs_points: 0,
-        unique_dogs: 0,
-        unique_dogs_points: 0,
-        total_catches: 0,
-        total_catches_points: 0,
-        total_score: 0,
-      })
+    time("dash.getDogs", () => getDogs()),
+    time("dash.favorites", () => getUserFavorites(user.id)),
+    time("dash.sightings", () => getUserSightings(user.id)),
+    time("dash.score", () =>
+      getUserScore(user.id).catch(
+        (): ScoreResult => ({
+          new_dogs: 0,
+          new_dogs_points: 0,
+          unique_dogs: 0,
+          unique_dogs_points: 0,
+          total_catches: 0,
+          total_catches_points: 0,
+          total_score: 0,
+        })
+      )
     ),
-    getCurrentProfile(),
+    time("dash.profile", () => getCurrentProfile()),
   ]);
+  console.log(
+    `[perf] dash.parallel-total = ${Math.round(performance.now() - dashStart)}ms ` +
+      `(dogs=${dogs.length}, sightings=${sightings.length})`
+  );
 
   const caughtDogIds = new Set(sightings.map((s) => s.dog_id));
   const streakDays = deriveStreak(sightings);

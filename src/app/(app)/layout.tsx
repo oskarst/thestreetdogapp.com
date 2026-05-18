@@ -8,24 +8,30 @@ import { OfflineBanner } from "@/components/pwa/offline-banner";
 import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
 import { getUserSightings } from "@/lib/db/sightings";
 import { deriveStreak, shortHexId } from "@/lib/dashboard";
+import { time } from "@/lib/perf";
 
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [user, profile] = await Promise.all([
-    getCurrentUser(),
-    getCurrentProfile(),
-  ]);
+  const layoutStart = performance.now();
+  const [user, profile] = await time("layout.auth+profile", () =>
+    Promise.all([getCurrentUser(), getCurrentProfile()])
+  );
 
   if (!user) redirect("/login");
 
   // Streak + shortId surface in TopNav on every screen. Sightings is one
   // RPC call (get_my_sightings) so this stays cheap.
-  const sightings = await getUserSightings(user.id).catch(() => []);
+  const sightings = await time("layout.sightings", () =>
+    getUserSightings(user.id).catch(() => [])
+  );
   const streakDays = deriveStreak(sightings);
   const shortId = shortHexId(user.id);
+  console.log(
+    `[perf] layout.total = ${Math.round(performance.now() - layoutStart)}ms`
+  );
 
   const userData = {
     id: user.id,
