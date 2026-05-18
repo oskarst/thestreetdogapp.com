@@ -339,15 +339,22 @@
   background: var(--muted);
   color: var(--ink);
 }
-.streetdog-tour .driver-popover-prev-btn:hover {
+.streetdog-tour .driver-popover-prev-btn:hover,
+.streetdog-tour .driver-popover-prev-btn:focus,
+.streetdog-tour .driver-popover-prev-btn:active {
   background: var(--rule);
+  color: var(--ink);
 }
 .streetdog-tour .driver-popover-next-btn {
   background: var(--ink);
   color: var(--background);
 }
-.streetdog-tour .driver-popover-next-btn:hover {
-  filter: brightness(1.1);
+.streetdog-tour .driver-popover-next-btn:hover,
+.streetdog-tour .driver-popover-next-btn:focus,
+.streetdog-tour .driver-popover-next-btn:active {
+  background: var(--ink);
+  color: var(--background);
+  filter: brightness(1.15);
 }
 
 /* Arrow inherits the card surface. */

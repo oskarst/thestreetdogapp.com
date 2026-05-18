@@ -290,6 +290,11 @@
   },
   "tour": {
     "openTour": "Краткий тур",
+    "promptEyebrow": "Ты тут впервые",
+    "promptTitle": "Добро пожаловать в The Street Dog App",
+    "promptBody": "Быстрый тур из 4 шагов покажет, как всё устроено. Займёт около минуты.",
+    "promptYes": "Да, покажи",
+    "promptDismiss": "Закрыть",
     "next": "Дальше",
     "back": "Назад",
     "done": "Поехали!",

@@ -290,6 +290,11 @@
   },
   "tour": {
     "openTour": "Take a quick tour",
+    "promptEyebrow": "New here",
+    "promptTitle": "Welcome to The Street Dog App",
+    "promptBody": "A quick 4-step tour to show you how everything fits together. Takes about a minute.",
+    "promptYes": "Yes, show me",
+    "promptDismiss": "Dismiss",
     "next": "Next",
     "back": "Back",
     "done": "Let's go!",

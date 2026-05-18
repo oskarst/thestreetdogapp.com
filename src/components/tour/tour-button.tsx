@@ -1,35 +1,73 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { driver, type DriveStep } from "driver.js";
 import { cn } from "@/lib/utils";
 
-interface TourButtonProps {
+interface TourComponentProps {
   userId: string;
 }
 
 const TOUR_VERSION = "v1";
+const STATE_EVENT = "tour:state";
+
+// One state machine, four resting values:
+//   unset     → first launch. Prompt card + pulsing help icon.
+//   started   → user said "Yes" on the prompt at least once. Prompt hidden,
+//               icon still pulses (they may not have finished).
+//   dismissed → user clicked "Dismiss" on the prompt. Prompt hidden, icon
+//               stops pulsing (active reject).
+//   completed → user reached the final "Let's go!" step. Prompt hidden,
+//               icon stops pulsing.
+// Stored as `<state>:<TOUR_VERSION>`. Bumping the version resets every
+// user back to unset, which is how we re-prompt on a future tour refresh.
+type TourState = "unset" | "started" | "dismissed" | "completed";
 
 function storageKey(userId: string) {
   return `tour_state:${userId}`;
 }
 
-function safeRead(userId: string): string | null {
+function readState(userId: string): TourState {
   try {
-    return window.localStorage.getItem(storageKey(userId));
+    const stored = window.localStorage.getItem(storageKey(userId));
+    if (stored === `started:${TOUR_VERSION}`) return "started";
+    if (stored === `dismissed:${TOUR_VERSION}`) return "dismissed";
+    if (stored === `completed:${TOUR_VERSION}`) return "completed";
+    return "unset";
   } catch {
-    return null;
+    return "unset";
   }
 }
 
-function safeWrite(userId: string, value: string) {
+function writeState(userId: string, state: Exclude<TourState, "unset">) {
   try {
-    window.localStorage.setItem(storageKey(userId), value);
+    window.localStorage.setItem(
+      storageKey(userId),
+      `${state}:${TOUR_VERSION}`
+    );
   } catch {
     /* Safari private mode etc. — silently swallow. */
   }
+  // Broadcast so the prompt card and the help icon stay in sync within
+  // the same render without prop-drilling or a context provider.
+  window.dispatchEvent(new CustomEvent(STATE_EVENT));
+}
+
+/**
+ * Subscribe a component to the user's tour state. Returns "completed" while
+ * SSR / before-mount so we don't flash the pulse or the prompt on hydrate.
+ */
+function useTourState(userId: string): TourState {
+  const [state, setState] = useState<TourState>("completed");
+  useEffect(() => {
+    setState(readState(userId));
+    const refresh = () => setState(readState(userId));
+    window.addEventListener(STATE_EVENT, refresh);
+    return () => window.removeEventListener(STATE_EVENT, refresh);
+  }, [userId]);
+  return state;
 }
 
 /**
@@ -44,7 +82,6 @@ function flourishOnFinish() {
   );
   if (!target) return;
   target.scrollIntoView({ behavior: "smooth", block: "center" });
-  // Smooth scroll typically lands in ~400-700ms; wait 650ms then pulse.
   window.setTimeout(() => {
     target.classList.add("tour-target-pulse");
     window.setTimeout(
@@ -55,32 +92,25 @@ function flourishOnFinish() {
 }
 
 /**
- * Help icon in the TopNav that launches a 4-step driver.js walkthrough of
- * the dashboard. The pill pulses for first-time users until they complete
- * the tour via the final "Let's go!" CTA; after that it stays available
- * as a quiet replay affordance.
- *
- * X / Esc / overlay-click pause the tour for the session — they do not
- * persist anything. Only completing the final step writes `completed:v1`
- * to localStorage. Bumping TOUR_VERSION (e.g. on a copy refresh) will
- * unmark completed users so they see the next tour.
+ * Shared launcher used by the help icon AND the first-launch prompt card.
+ * The returned function builds + drives a fresh driver.js instance each
+ * time it's called.
  */
-export function TourButton({ userId }: TourButtonProps) {
+function useStartTour(userId: string) {
   const t = useTranslations("tour");
-  const [completed, setCompleted] = useState(true); // pessimistic: avoid pre-mount pulse flash
   // driver.js v1 wipes its internal state BEFORE invoking onDestroyed,
-  // so getActiveIndex() inside that callback is always undefined. Track
-  // "done clicked on last step" via a ref instead, set from the final
-  // step's onNextClick.
+  // so getActiveIndex() inside that callback is always undefined. We
+  // track "done clicked on last step" through this ref, set from the
+  // final step's onNextClick override.
   const completedRef = useRef(false);
 
-  useEffect(() => {
-    const stored = safeRead(userId);
-    setCompleted(stored === `completed:${TOUR_VERSION}`);
-  }, [userId]);
-
-  const start = useCallback(() => {
+  return useCallback(() => {
     completedRef.current = false;
+
+    // First time the user actively engages with the tour, mark them as
+    // started so the prompt card disappears. completed wins over started
+    // if the user makes it all the way through.
+    if (readState(userId) === "unset") writeState(userId, "started");
 
     const steps: DriveStep[] = [
       {
@@ -110,11 +140,6 @@ export function TourButton({ userId }: TourButtonProps) {
           title: t("step4Title"),
           description: t("step4Body"),
           doneBtnText: t("done"),
-          // The final "Let's go!" button. Override the default advance
-          // behaviour to mark completion + destroy ourselves; this is
-          // the ONLY path that should flag the tour as done. driver.js
-          // hands us the driver instance in opts so we don't need to
-          // capture it in a closure.
           onNextClick: (_el, _step, opts) => {
             completedRef.current = true;
             opts.driver.destroy();
@@ -140,8 +165,7 @@ export function TourButton({ userId }: TourButtonProps) {
       steps,
       onDestroyed: () => {
         if (completedRef.current) {
-          safeWrite(userId, `completed:${TOUR_VERSION}`);
-          setCompleted(true);
+          writeState(userId, "completed");
           flourishOnFinish();
         }
       },
@@ -149,6 +173,19 @@ export function TourButton({ userId }: TourButtonProps) {
 
     d.drive();
   }, [t, userId]);
+}
+
+/**
+ * Help icon in the TopNav that launches the dashboard walkthrough. Pulses
+ * for users whose tour state is `unset` or `started` — i.e. they haven't
+ * actively rejected the tour AND haven't completed it. After a completion
+ * or a dismiss, it becomes a quiet replay affordance.
+ */
+export function TourButton({ userId }: TourComponentProps) {
+  const t = useTranslations("tour");
+  const state = useTourState(userId);
+  const start = useStartTour(userId);
+  const shouldPulse = state === "unset" || state === "started";
 
   return (
     <button
@@ -157,10 +194,77 @@ export function TourButton({ userId }: TourButtonProps) {
       aria-label={t("openTour")}
       className={cn(
         "grid place-items-center size-7 rounded-full text-muted-foreground hover:text-ink hover:bg-muted transition-colors shrink-0",
-        !completed && "tour-pill-pulse text-amber-brand"
+        shouldPulse && "tour-pill-pulse text-amber-brand"
       )}
     >
       <HelpCircle className="h-[18px] w-[18px]" strokeWidth={1.75} />
     </button>
+  );
+}
+
+/**
+ * First-launch prompt card. Renders above the Daily Directive on the
+ * dashboard only when the user has never engaged with the tour
+ * (`tour_state` unset). Two actions:
+ *   - "Yes, show me" → starts the tour + state becomes `started`
+ *   - "Dismiss"      → state becomes `dismissed`; card never returns
+ *
+ * Either action persists, so the card never reappears for that user.
+ */
+export function TourPrompt({ userId }: TourComponentProps) {
+  const t = useTranslations("tour");
+  const state = useTourState(userId);
+  const start = useStartTour(userId);
+
+  if (state !== "unset") return null;
+
+  function handleDismiss() {
+    writeState(userId, "dismissed");
+  }
+
+  return (
+    <section
+      className="rounded-2xl border border-amber-brand/40 bg-amber-soft p-3.5 pr-2.5"
+      role="region"
+      aria-label={t("promptTitle")}
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-amber-brand/80 mb-1">
+            {t("promptEyebrow")}
+          </div>
+          <p className="text-[14px] font-semibold leading-snug text-amber-brand">
+            {t("promptTitle")}
+          </p>
+          <p className="text-[12.5px] leading-snug text-amber-brand/85 mt-1">
+            {t("promptBody")}
+          </p>
+          <div className="flex items-center gap-2 mt-3">
+            <button
+              type="button"
+              onClick={start}
+              className="font-mono text-[11px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full bg-amber-brand text-amber-soft hover:brightness-110 transition-all"
+            >
+              {t("promptYes")}
+            </button>
+            <button
+              type="button"
+              onClick={handleDismiss}
+              className="font-mono text-[11px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full text-amber-brand/80 hover:text-amber-brand hover:bg-amber-brand/10 transition-colors"
+            >
+              {t("promptDismiss")}
+            </button>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={handleDismiss}
+          aria-label={t("promptDismiss")}
+          className="grid place-items-center size-7 rounded-full text-amber-brand/70 hover:text-amber-brand hover:bg-amber-brand/10 transition-colors shrink-0"
+        >
+          <X className="size-4" />
+        </button>
+      </div>
+    </section>
   );
 }

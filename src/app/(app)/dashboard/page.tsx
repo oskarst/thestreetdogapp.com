@@ -11,6 +11,7 @@ import { Achievements } from "@/components/dog/achievements";
 import { MissionsBlock } from "@/components/dog/missions-block";
 import { DashboardContent } from "@/components/dog/dashboard-content";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
+import { TourPrompt } from "@/components/tour/tour-button";
 import {
   isDailyQuestComplete,
   isDailyQuestClaimedToday,
@@ -57,6 +58,7 @@ export default async function DashboardPage() {
   return (
     <div className="px-4 py-4 space-y-4">
       <OfflineSyncPanel />
+      <TourPrompt userId={user.id} />
       <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
       <DashboardHero score={score} />
       <Achievements achievements={achievements} />
