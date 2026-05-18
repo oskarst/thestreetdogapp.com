@@ -32,6 +32,11 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
   const isClaimable = complete && !claimedToday && !optimisticClaimed;
   const isClaimed = claimedToday || optimisticClaimed;
 
+  // Once the user has claimed today's directive, hide the whole block
+  // until the next day's quest resets. Nothing actionable remains in the
+  // claimed state, so leaving it on the dashboard just takes up space.
+  if (isClaimed) return null;
+
   function handleClaim() {
     if (!isClaimable || pending) return;
     setError(null);

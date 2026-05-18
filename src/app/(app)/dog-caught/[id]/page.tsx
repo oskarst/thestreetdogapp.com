@@ -167,6 +167,21 @@ export default async function DogCaughtPage({
           </div>
         )}
 
+        {catchType === "first_catch" && (
+          <div className="mt-6">
+            <SectionLabel
+              meta={
+                dog?.names?.length
+                  ? `also known as ${dog.names.slice(0, 2).join(", ")}`
+                  : "optional"
+              }
+            >
+              Suggest a name
+            </SectionLabel>
+            <DogNameInput dogId={id} autoFocus={false} />
+          </div>
+        )}
+
         {catchType === "untagged" && (
           <div className="mt-3 rounded-xl border border-rule-2 bg-card p-3 text-center">
             <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
