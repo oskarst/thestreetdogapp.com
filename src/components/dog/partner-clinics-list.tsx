@@ -15,6 +15,10 @@ export async function PartnerClinicsList() {
     name: t(`clinic${n}Name`),
     phone: t(`clinic${n}Phone`),
     addr: t(`clinic${n}Addr`),
+    // Optional per-clinic note (e.g. "24h", "Speaks English, Farsi"). The
+    // tag fallback returns the key itself when missing — translation files
+    // currently always set it but treat absence as no-note for safety.
+    note: t.has(`clinic${n}Note`) ? t(`clinic${n}Note`) : "",
   }));
 
   return (
@@ -35,9 +39,21 @@ export async function PartnerClinicsList() {
             <div className="font-medium text-[14px] text-ink leading-tight">
               {c.name}
             </div>
-            <div className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground mt-1">
-              {c.phone} · {c.addr}
+            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+              <a
+                href={`tel:${c.phone.replace(/\s+/g, "")}`}
+                className="text-ink underline underline-offset-2 hover:text-amber-brand"
+              >
+                {c.phone}
+              </a>
+              <span>·</span>
+              <span>{c.addr}</span>
             </div>
+            {c.note && (
+              <div className="mt-1 font-mono text-[10.5px] tracking-[0.04em] text-amber-brand/90">
+                {c.note}
+              </div>
+            )}
           </li>
         ))}
       </ul>
