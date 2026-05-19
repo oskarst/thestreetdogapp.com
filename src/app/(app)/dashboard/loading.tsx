@@ -1,44 +1,49 @@
 /**
- * Dashboard skeleton — renders instantly on tab switch while the page's
- * Supabase round-trips resolve. Matches the rough vertical layout
- * (daily quest, hero, achievements, missions, content) so the visual
- * doesn't jump when the real content lands.
+ * Dashboard loading splash — the first load (fresh visit, cold tab, or
+ * a manual reload while data fetches) shows a centred dog logo with the
+ * Street-Dog wordmark and a subtle pulse. Stays simple so it doesn't
+ * cost a separate stylesheet; reuses the existing pulse-dot keyframe
+ * defined in globals.css.
  */
 export default function DashboardLoading() {
   return (
-    <div className="px-4 py-4 space-y-4 animate-pulse">
-      <div className="h-20 rounded-2xl bg-muted" />
-      <div className="card-soft p-4 space-y-3">
-        <div className="h-3 w-24 rounded bg-muted" />
-        <div className="flex items-end gap-4">
-          <div className="h-14 w-20 rounded bg-muted" />
-          <div className="flex-1 space-y-2">
-            <div className="h-3 w-full rounded bg-muted" />
-            <div className="h-1 rounded bg-rule-2" />
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center gap-5">
+      {/* Logo with a gentle pulse so the user knows something is happening. */}
+      <div
+        className="size-20 sm:size-24"
+        style={{ animation: "pulse-dot 1.8s ease-in-out infinite" }}
+      >
+        <img
+          src="/logo.png"
+          alt="Street Dog"
+          width={96}
+          height={96}
+          className="size-full object-contain"
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <div className="font-mono text-[11px] font-semibold tracking-[0.32em] uppercase text-ink">
+          Street-Dog
+        </div>
+        <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+          loading dashboard
         </div>
       </div>
-      <div className="card-soft p-3 h-12" />
-      <div className="card-soft p-3 h-12" />
-      <div className="rounded-2xl border border-amber-brand/30 bg-amber-soft/60 h-24" />
-      <div className="rounded-lg bg-muted p-1 flex gap-1">
-        <div className="flex-1 h-10 rounded-md bg-background/60" />
-        <div className="flex-1 h-10 rounded-md" />
-        <div className="flex-1 h-10 rounded-md" />
-        <div className="flex-1 h-10 rounded-md" />
+
+      {/* Three dots that read as a heartbeat rather than a generic spinner. */}
+      <div className="flex items-center gap-1.5">
+        {[0, 0.2, 0.4].map((delay, i) => (
+          <span
+            key={i}
+            className="size-1.5 rounded-full bg-[var(--green-brand)]"
+            style={{
+              animation: "pulse-dot 1.4s ease-in-out infinite",
+              animationDelay: `${delay}s`,
+            }}
+          />
+        ))}
       </div>
-      {[1, 2, 3, 4].map((i) => (
-        <div
-          key={i}
-          className="flex items-center gap-3 rounded-xl p-3 ring-1 ring-foreground/10"
-        >
-          <div className="size-16 shrink-0 rounded-lg bg-muted" />
-          <div className="flex-1 space-y-2">
-            <div className="h-3 w-32 rounded bg-muted" />
-            <div className="h-2 w-24 rounded bg-muted" />
-          </div>
-        </div>
-      ))}
     </div>
   );
 }

@@ -91,14 +91,25 @@ export interface DogListRow {
   ear_tag_id: string | null;
   names: string[];
   images: string[];
-  thumbnail: string | null;
+  /**
+   * 320x320 webp variant of the primary image, set at upload time.
+   * Optional because:
+   *   1. Older rows (pre-migration-016) have no thumbnail column populated.
+   *   2. Some callers (e.g. the gallery direct query) intentionally project
+   *      DOG_LIST_COLUMNS, which excludes thumbnail so the SELECT doesn't
+   *      fail on stacks that haven't applied migration 016 yet.
+   * Components should read `dog.thumbnail ?? dog.images[0]`.
+   */
+  thumbnail?: string | null;
   last_sighting_date: string | null;
   created_at: string;
   first_registered_by_id: string | null;
 }
 
+// Excludes `thumbnail` so direct SELECTs work whether or not migration 016
+// is applied. The composite dashboard RPC projects thumbnail explicitly.
 export const DOG_LIST_COLUMNS =
-  "id,ear_tag_id,names,images,thumbnail,last_sighting_date,created_at,first_registered_by_id";
+  "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id";
 
 /**
  * Slim projection for the map view — just enough to place markers and
