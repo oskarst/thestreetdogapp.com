@@ -21,10 +21,10 @@ export default async function DogProfilePage({
 }) {
   const { id } = await params;
 
-  const user = await getCurrentUser();
+  // user + dog are independent — kick them off together instead of waiting
+  // the auth round-trip before starting the dog fetch.
+  const [user, dog] = await Promise.all([getCurrentUser(), getDogById(id)]);
   if (!user) redirect("/login");
-
-  const dog = await getDogById(id);
   if (!dog) notFound();
 
   // Each sub-query is allowed to fail independently — a missing legacy

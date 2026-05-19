@@ -26,6 +26,7 @@ export function DogGalleryCard({ dog }: DogGalleryCardProps) {
   return (
     <Link
       href={`/dog/${dog.id}`}
+      prefetch={false}
       className="group relative block aspect-square overflow-hidden rounded-xl bg-rule-2 no-underline transition-transform duration-200 hover:scale-[1.01]"
     >
       {imageUrl ? (

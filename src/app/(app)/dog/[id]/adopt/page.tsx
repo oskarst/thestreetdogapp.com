@@ -13,10 +13,8 @@ interface Params {
 
 export default async function AdoptPage({ params }: Params) {
   const { id } = await params;
-  const user = await getCurrentUser();
+  const [user, dog] = await Promise.all([getCurrentUser(), getDogById(id)]);
   if (!user) redirect("/login");
-
-  const dog = await getDogById(id);
   if (!dog) notFound();
 
   const t = await getTranslations("adopt");

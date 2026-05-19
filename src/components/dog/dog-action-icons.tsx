@@ -47,6 +47,7 @@ export function DogActionIcons({
       />
       <Link
         href={`/dog/${dogId}/report-health`}
+        prefetch={false}
         className={`${btnClass} text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950`}
         aria-label={t("reportHealth")}
         title={t("reportHealth")}
@@ -55,6 +56,7 @@ export function DogActionIcons({
       </Link>
       <Link
         href={`/dog/${dogId}/adopt`}
+        prefetch={false}
         className={`${btnClass} text-muted-foreground hover:text-amber-brand hover:bg-amber-soft`}
         aria-label={t("adoptInfo")}
         title={t("adoptInfo")}

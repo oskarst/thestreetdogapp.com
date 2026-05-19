@@ -65,6 +65,19 @@ const nextConfig: NextConfig = {
         pathname: "/storage/v1/object/public/**",
       },
     ],
+    // Prefer AVIF (≈30 % smaller than WebP on photos) with WebP as
+    // fallback; legacy clients get the original via Accept negotiation.
+    formats: ["image/avif", "image/webp"],
+    // Tuned to the actual rendered sizes in the app. `imageSizes`
+    // governs explicit `sizes="64px"` etc. on thumbnails;
+    // `deviceSizes` governs `sizes` viewport widths.
+    imageSizes: [64, 96, 128, 256, 384],
+    deviceSizes: [320, 640, 828, 1080, 1200],
+    // Vercel image-optimizer cache: keep transcoded variants warm for
+    // 30 days. Upload paths are content-addressed (Date.now()), so
+    // re-uploading produces a new URL — cache invalidation isn't a
+    // concern.
+    minimumCacheTTL: 2592000,
   },
   async headers() {
     return [

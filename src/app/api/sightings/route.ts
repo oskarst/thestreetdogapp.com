@@ -188,6 +188,9 @@ export async function POST(request: Request) {
       .from("dogs")
       .upload(dogPath, dogProcessed.buffer, {
         contentType: dogProcessed.contentType,
+        // 30 days + immutable. Path embeds Date.now() so the URL is
+        // content-addressed — bumping a dog's photo writes a new path.
+        cacheControl: "2592000, immutable",
       });
     if (dogUploadErr) throw dogUploadErr;
 
@@ -204,6 +207,7 @@ export async function POST(request: Request) {
         .from("ear-tags")
         .upload(etPath, earTagProcessed.buffer, {
           contentType: earTagProcessed.contentType,
+          cacheControl: "2592000, immutable",
         });
       if (etUploadErr) throw etUploadErr;
 

@@ -86,6 +86,7 @@ export function DogCard({ dog, userId, isFavorited, isCaught }: DogCardProps) {
         {uncaught ? (
           <Link
             href={`/dog/${dog.id}#map`}
+            prefetch={false}
             className="flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground no-underline hover:bg-primary/90"
           >
             <Search className="h-3.5 w-3.5" />
@@ -95,6 +96,7 @@ export function DogCard({ dog, userId, isFavorited, isCaught }: DogCardProps) {
           <>
             <Link
               href={`/dog/${dog.id}#map`}
+              prefetch={false}
               className="p-1.5 rounded-full text-muted-foreground hover:text-foreground transition-colors"
               aria-label="View on map"
             >
