@@ -11,7 +11,7 @@ import { getTranslations } from "next-intl/server";
 export async function PartnerClinicsList() {
   const t = await getTranslations("partnerClinics");
 
-  const clinics = [1, 2, 3].map((n) => ({
+  const clinics = [1, 2, 3, 4, 5].map((n) => ({
     name: t(`clinic${n}Name`),
     phone: t(`clinic${n}Phone`),
     addr: t(`clinic${n}Addr`),
