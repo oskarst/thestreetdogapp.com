@@ -4,6 +4,13 @@ import { useEffect, useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -28,7 +35,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { MoreHorizontal, Search } from "lucide-react";
-import type { DogRow } from "@/types/database";
+import type {
+  DogAge,
+  DogCharacter,
+  DogGender,
+  DogRow,
+} from "@/types/database";
 import { toast } from "sonner";
 import { AdminHeader } from "@/components/admin/admin-header";
 
@@ -37,12 +49,35 @@ interface DogWithMeta extends DogRow {
   registered_by_email: string | null;
 }
 
+interface EditDraft {
+  id: string;
+  ear_tag_id: string;
+  namesCsv: string;
+  character: DogCharacter | "unset";
+  gender: DogGender | "unset";
+  age: DogAge | "unset";
+  size: number | null;
+}
+
+const CHARACTER_OPTIONS: DogCharacter[] = [
+  "friendly",
+  "very_friendly",
+  "indifferent",
+  "sleeping",
+  "afraid",
+  "aggressive",
+];
+const GENDER_OPTIONS: DogGender[] = ["male", "female", "unknown"];
+const AGE_OPTIONS: DogAge[] = ["puppy", "young", "adult", "old"];
+
 export default function AdminDogsPage() {
   const [dogs, setDogs] = useState<DogWithMeta[]>([]);
   const [search, setSearch] = useState("");
   const [isPending, startTransition] = useTransition();
   const [mergeSourceId, setMergeSourceId] = useState<string | null>(null);
   const [mergeTargetId, setMergeTargetId] = useState("");
+  const [editDraft, setEditDraft] = useState<EditDraft | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
 
   useEffect(() => {
     fetchDogs();
@@ -71,6 +106,50 @@ export default function AdminDogsPage() {
       fetchDogs();
     } else {
       toast.error("Failed to delete dog");
+    }
+  }
+
+  function openEdit(dog: DogWithMeta) {
+    setEditDraft({
+      id: dog.id,
+      ear_tag_id: dog.ear_tag_id ?? "",
+      namesCsv: (dog.names ?? []).join(", "),
+      character: (dog.character ?? "unset") as EditDraft["character"],
+      gender: (dog.gender ?? "unset") as EditDraft["gender"],
+      age: (dog.age ?? "unset") as EditDraft["age"],
+      size: dog.size ?? null,
+    });
+  }
+
+  async function saveEdit() {
+    if (!editDraft) return;
+    const payload: Record<string, unknown> = {
+      ear_tag_id: editDraft.ear_tag_id.trim() || null,
+      names: editDraft.namesCsv
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      character: editDraft.character === "unset" ? null : editDraft.character,
+      gender: editDraft.gender === "unset" ? null : editDraft.gender,
+      age: editDraft.age === "unset" ? null : editDraft.age,
+      size: editDraft.size,
+    };
+    setSavingEdit(true);
+    const res = await fetch(`/api/admin/dogs/${editDraft.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    setSavingEdit(false);
+    if (res.ok) {
+      toast.success("Dog updated");
+      setEditDraft(null);
+      fetchDogs();
+    } else {
+      const err = (await res.json().catch(() => null)) as
+        | { error?: string }
+        | null;
+      toast.error(err?.error ?? "Failed to update dog");
     }
   }
 
@@ -156,6 +235,9 @@ export default function AdminDogsPage() {
                     <MoreHorizontal className="size-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => openEdit(dog)}>
+                      Edit attributes
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => {
                         setMergeSourceId(dog.id);
@@ -219,6 +301,147 @@ export default function AdminDogsPage() {
               disabled={!mergeTargetId.trim()}
             >
               Merge
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit attributes dialog */}
+      <Dialog
+        open={editDraft !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditDraft(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit dog attributes</DialogTitle>
+            <DialogDescription>
+              Whitelisted fields only. Image arrays, registration metadata,
+              and last-sighting timestamps stay read-only here.
+            </DialogDescription>
+          </DialogHeader>
+          {editDraft && (
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Ear tag ID</label>
+                <Input
+                  placeholder="e.g. 123 or empty for none"
+                  value={editDraft.ear_tag_id}
+                  onChange={(e) =>
+                    setEditDraft({ ...editDraft, ear_tag_id: e.target.value })
+                  }
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">
+                  Names (comma-separated)
+                </label>
+                <Input
+                  placeholder="e.g. Frank, Bubu"
+                  value={editDraft.namesCsv}
+                  onChange={(e) =>
+                    setEditDraft({ ...editDraft, namesCsv: e.target.value })
+                  }
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Character</label>
+                  <Select
+                    value={editDraft.character}
+                    onValueChange={(v) =>
+                      setEditDraft({
+                        ...editDraft,
+                        character: (v ?? "unset") as EditDraft["character"],
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unset">— unset —</SelectItem>
+                      {CHARACTER_OPTIONS.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c.replace(/_/g, " ")}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Gender</label>
+                  <Select
+                    value={editDraft.gender}
+                    onValueChange={(v) =>
+                      setEditDraft({
+                        ...editDraft,
+                        gender: (v ?? "unset") as EditDraft["gender"],
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unset">— unset —</SelectItem>
+                      {GENDER_OPTIONS.map((g) => (
+                        <SelectItem key={g} value={g}>
+                          {g}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Age</label>
+                  <Select
+                    value={editDraft.age}
+                    onValueChange={(v) =>
+                      setEditDraft({
+                        ...editDraft,
+                        age: (v ?? "unset") as EditDraft["age"],
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unset">— unset —</SelectItem>
+                      {AGE_OPTIONS.map((a) => (
+                        <SelectItem key={a} value={a}>
+                          {a}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Size (1–10)</label>
+                  <Input
+                    type="number"
+                    min={1}
+                    max={10}
+                    value={editDraft.size ?? ""}
+                    onChange={(e) =>
+                      setEditDraft({
+                        ...editDraft,
+                        size: e.target.value === "" ? null : Number(e.target.value),
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditDraft(null)}>
+              Cancel
+            </Button>
+            <Button onClick={saveEdit} disabled={savingEdit}>
+              {savingEdit ? "Saving…" : "Save"}
             </Button>
           </DialogFooter>
         </DialogContent>

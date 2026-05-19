@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { MapPin } from "lucide-react";
 
 /**
  * Static partner-clinic list with first-aid pointers, rendered above the
@@ -31,31 +32,48 @@ export async function PartnerClinicsList() {
       </div>
 
       <ul className="space-y-2">
-        {clinics.map((c, i) => (
-          <li
-            key={i}
-            className="rounded-xl border border-rule bg-background px-3 py-2.5"
-          >
-            <div className="font-medium text-[14px] text-ink leading-tight">
-              {c.name}
-            </div>
-            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
-              <a
-                href={`tel:${c.phone.replace(/\s+/g, "")}`}
-                className="text-ink underline underline-offset-2 hover:text-amber-brand"
-              >
-                {c.phone}
-              </a>
-              <span>·</span>
-              <span>{c.addr}</span>
-            </div>
-            {c.note && (
-              <div className="mt-1 font-mono text-[10.5px] tracking-[0.04em] text-amber-brand/90">
-                {c.note}
+        {clinics.map((c, i) => {
+          const mapsQuery = encodeURIComponent(`${c.name} ${c.addr}`);
+          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+          return (
+            <li
+              key={i}
+              className="rounded-xl border border-rule bg-background px-3 py-2.5"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="font-medium text-[14px] text-ink leading-tight">
+                    {c.name}
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+                    <a
+                      href={`tel:${c.phone.replace(/\s+/g, "")}`}
+                      className="text-ink underline underline-offset-2 hover:text-amber-brand"
+                    >
+                      {c.phone}
+                    </a>
+                    <span>·</span>
+                    <span>{c.addr}</span>
+                  </div>
+                  {c.note && (
+                    <div className="mt-1 font-mono text-[10.5px] tracking-[0.04em] text-amber-brand/90">
+                      {c.note}
+                    </div>
+                  )}
+                </div>
+                <a
+                  href={mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${t("openInMaps")} — ${c.name}`}
+                  className="shrink-0 grid place-items-center size-9 rounded-full bg-muted text-ink hover:bg-amber-brand hover:text-amber-soft transition-colors"
+                >
+                  <MapPin className="size-4" />
+                </a>
               </div>
-            )}
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
 
       <details className="text-sm">
