@@ -240,38 +240,41 @@ self.addEventListener("sync", (event) => {
   }
 });
 
-async function syncOfflineDogs() {
+// Max consecutive 4xx attempts before an entry is flagged `dead` and
+// stops being retried. Matches MAX_PERMANENT_FAILURES in offline-db.ts.
+const SW_MAX_PERMANENT_FAILURES = 3;
+
+async function runSyncOfflineDogs() {
   try {
-    const db = await openDB();
-    const tx = db.transaction("offlineDogs", "readonly");
-    const store = tx.objectStore("offlineDogs");
-    const allDogs = await getAllFromStore(store);
+    const allDogs = await getAllOfflineDogs();
 
     for (const entry of allDogs) {
-      try {
-        const formData = new FormData();
-        formData.append(
-          "dogImage",
-          entry.dogImage,
-          uploadFileName(entry.dogImage, "dog_image")
-        );
-        if (entry.earTagImage) {
-          formData.append(
-            "earTagImage",
-            entry.earTagImage,
-            uploadFileName(entry.earTagImage, "ear_tag")
-          );
-        }
-        if (entry.earTagId) formData.append("earTagId", entry.earTagId);
-        formData.append("latitude", String(entry.latitude));
-        formData.append("longitude", String(entry.longitude));
-        formData.append("character", entry.character);
-        formData.append("size", String(entry.size));
-        formData.append("gender", entry.gender);
-        formData.append("age", entry.age);
-        if (entry.notes) formData.append("notes", entry.notes);
-        if (entry.clientUuid) formData.append("clientUuid", entry.clientUuid);
+      if (entry.dead || entry.id == null) continue;
 
+      const formData = new FormData();
+      formData.append(
+        "dogImage",
+        entry.dogImage,
+        uploadFileName(entry.dogImage, "dog_image")
+      );
+      if (entry.earTagImage) {
+        formData.append(
+          "earTagImage",
+          entry.earTagImage,
+          uploadFileName(entry.earTagImage, "ear_tag")
+        );
+      }
+      if (entry.earTagId) formData.append("earTagId", entry.earTagId);
+      formData.append("latitude", String(entry.latitude));
+      formData.append("longitude", String(entry.longitude));
+      formData.append("character", entry.character);
+      formData.append("size", String(entry.size));
+      formData.append("gender", entry.gender);
+      formData.append("age", entry.age);
+      if (entry.notes) formData.append("notes", entry.notes);
+      if (entry.clientUuid) formData.append("clientUuid", entry.clientUuid);
+
+      try {
         const response = await fetch("/api/sightings", {
           method: "POST",
           body: formData,
@@ -280,13 +283,41 @@ async function syncOfflineDogs() {
 
         if (response.ok) {
           await removeFromDB(entry.id);
+          continue;
         }
+
+        const isPermanent = response.status >= 400 && response.status < 500;
+        const newCount = (entry.failureCount || 0) + (isPermanent ? 1 : 0);
+        const becomesDead =
+          isPermanent && newCount >= SW_MAX_PERMANENT_FAILURES;
+        let errorText = "";
+        try {
+          const cloned = response.clone();
+          const body = await cloned.text();
+          if (body.length < 400) errorText = body;
+        } catch (_) {
+          /* ignore */
+        }
+        await updateOfflineDog(entry.id, {
+          failureCount: newCount,
+          lastFailureStatus: response.status,
+          lastFailureMessage: errorText || undefined,
+          lastAttemptAt: new Date().toISOString(),
+          dead: becomesDead,
+        });
       } catch (err) {
-        console.error("[SW] Error syncing dog:", err);
+        console.error("[SW] Network error syncing dog:", err);
+        try {
+          await updateOfflineDog(entry.id, {
+            lastFailureStatus: 0,
+            lastAttemptAt: new Date().toISOString(),
+          });
+        } catch (_) {
+          /* ignore */
+        }
       }
     }
 
-    // Notify clients
     const clients = await self.clients.matchAll();
     clients.forEach((client) => {
       client.postMessage({ type: "SYNC_COMPLETE" });
@@ -297,26 +328,67 @@ async function syncOfflineDogs() {
   }
 }
 
-// IndexedDB helpers for service worker
+async function syncOfflineDogs() {
+  // Serialise with any manual "Sync Now" running in a page client so the
+  // clientUuid-dedupe window in /api/sightings stays safe.
+  if (self.locks && self.locks.request) {
+    return self.locks.request("sync-dogs", runSyncOfflineDogs);
+  }
+  return runSyncOfflineDogs();
+}
+
+// IndexedDB helpers for service worker. DB_VERSION must match
+// offline-db.ts; mismatch triggers VersionError on the SW side after a
+// page has upgraded.
 function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open("StreetDogDB", 1);
+    const request = indexedDB.open("StreetDogDB", 2);
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
     request.onupgradeneeded = (event) => {
-      const db = event.target.result;
+      const target = event.target;
+      const db = target.result;
+      const tx = target.transaction;
       if (!db.objectStoreNames.contains("offlineDogs")) {
-        db.createObjectStore("offlineDogs", { keyPath: "id", autoIncrement: true });
+        db.createObjectStore("offlineDogs", {
+          keyPath: "id",
+          autoIncrement: true,
+        });
+      }
+      // v1 → v2: backfill retry metadata on existing rows so the sync
+      // loop can rely on .failureCount + .dead always being defined.
+      if (event.oldVersion < 2) {
+        const store = tx.objectStore("offlineDogs");
+        const cursorReq = store.openCursor();
+        cursorReq.onsuccess = (e) => {
+          const cursor = e.target.result;
+          if (!cursor) return;
+          const v = cursor.value;
+          let dirty = false;
+          if (v.failureCount === undefined) {
+            v.failureCount = 0;
+            dirty = true;
+          }
+          if (v.dead === undefined) {
+            v.dead = false;
+            dirty = true;
+          }
+          if (dirty) cursor.update(v);
+          cursor.continue();
+        };
       }
     };
   });
 }
 
-function getAllFromStore(store) {
+async function getAllOfflineDogs() {
+  const db = await openDB();
   return new Promise((resolve, reject) => {
-    const request = store.getAll();
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
+    const tx = db.transaction("offlineDogs", "readonly");
+    const store = tx.objectStore("offlineDogs");
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
   });
 }
 
@@ -325,6 +397,25 @@ async function removeFromDB(id) {
   const tx = db.transaction("offlineDogs", "readwrite");
   tx.objectStore("offlineDogs").delete(id);
   return new Promise((resolve, reject) => {
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function updateOfflineDog(id, patch) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("offlineDogs", "readwrite");
+    const store = tx.objectStore("offlineDogs");
+    const req = store.get(id);
+    req.onsuccess = () => {
+      const current = req.result;
+      if (!current) {
+        resolve();
+        return;
+      }
+      store.put({ ...current, ...patch });
+    };
     tx.oncomplete = resolve;
     tx.onerror = () => reject(tx.error);
   });

@@ -136,6 +136,14 @@ export function AddDogForm() {
     }
 
     setSubmitting(true);
+    // Tell sw-register.tsx not to soft-reload mid-submit if a new SW
+    // takes over right now — it would cancel the response render and the
+    // user would never see /dog-caught. Cleared in finally blocks below.
+    try {
+      window.sessionStorage.setItem("sdog:submitting", "1");
+    } catch {
+      /* private mode — best-effort. */
+    }
 
     // Offline: save to IndexedDB instead of posting
     if (typeof navigator !== "undefined" && !navigator.onLine) {
@@ -163,12 +171,14 @@ export function AddDogForm() {
 
         setSavedOffline(true);
         setSubmitting(false);
+        clearSubmittingFlag();
         return;
       } catch (err) {
         showError(
           err instanceof Error ? err.message : t("errorSaveOffline")
         );
         setSubmitting(false);
+        clearSubmittingFlag();
         return;
       }
     }
@@ -234,9 +244,23 @@ export function AddDogForm() {
         }
       }
       router.push(`/dog-caught/${data.dogId}?${params.toString()}`);
+      // Leave the flag in place until just before navigation completes —
+      // if the page is replaced, sessionStorage gets cleared automatically
+      // on the new render. Belt-and-suspenders: clear it too in case the
+      // route guard turns this into a same-document navigation.
+      clearSubmittingFlag();
     } catch (err) {
       showError(err instanceof Error ? err.message : t("errorSubmit"));
       setSubmitting(false);
+      clearSubmittingFlag();
+    }
+  }
+
+  function clearSubmittingFlag() {
+    try {
+      window.sessionStorage.removeItem("sdog:submitting");
+    } catch {
+      /* private mode — best-effort. */
     }
   }
 

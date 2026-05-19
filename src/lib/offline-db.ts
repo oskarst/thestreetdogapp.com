@@ -1,9 +1,23 @@
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
+/**
+ * Schema for offline-queued sightings stored in IndexedDB.
+ *
+ * v1 fields (everything required for the replay POST) are unchanged.
+ *
+ * v2 adds retry-state fields:
+ *   - failureCount       — incremented on each non-ok response
+ *   - lastFailureStatus  — HTTP status (or 0 for network error)
+ *   - lastFailureMessage — optional server error text
+ *   - lastAttemptAt      — ISO timestamp of last sync attempt
+ *   - dead               — true after 3 consecutive 4xx; sync loop skips
+ *
+ * v1 entries get these fields backfilled at first open via the
+ * onupgradeneeded migration; the SW's openDB() runs the same migration
+ * so a deploy that ships v2 SW + v2 page bundle stays in sync.
+ */
 export interface OfflineDogEntry {
   id?: number;
-  // Stored as File so the original name + mime survive replay (e.g. .heic from iOS).
-  // Older entries written before the File migration may still arrive as plain Blob.
   dogImage: File | Blob;
   earTagImage?: File | Blob;
   earTagId?: string;
@@ -14,10 +28,14 @@ export interface OfflineDogEntry {
   gender: DogGender;
   age: DogAge;
   notes?: string;
-  // Stable per-entry id used for server-side dedupe across replay paths.
-  // Optional because entries written before this field existed won't have one.
   clientUuid?: string;
   createdAt: string;
+  // v2 retry metadata — optional on read, defaults applied at write.
+  failureCount?: number;
+  lastFailureStatus?: number;
+  lastFailureMessage?: string;
+  lastAttemptAt?: string;
+  dead?: boolean;
 }
 
 const MIME_EXT: Record<string, string> = {
@@ -37,8 +55,38 @@ export function uploadFileName(blob: File | Blob, fallback: string): string {
 }
 
 const DB_NAME = "StreetDogDB";
-const DB_VERSION = 1;
+export const DB_VERSION = 2;
 const STORE_NAME = "offlineDogs";
+
+// Max 4xx attempts before an entry is flagged `dead` and stops being
+// retried. 5xx + network errors are retried forever (background sync's
+// own backoff governs cadence).
+export const MAX_PERMANENT_FAILURES = 3;
+
+/**
+ * Apply v1 → v2 defaults to every entry already in the store. Adds the
+ * retry metadata fields so the rest of the code path can treat them as
+ * always-present. Idempotent — re-running it does nothing harmful.
+ */
+function migrateToV2(store: IDBObjectStore): void {
+  const cursorReq = store.openCursor();
+  cursorReq.onsuccess = (e) => {
+    const cursor = (e.target as IDBRequest<IDBCursorWithValue | null>).result;
+    if (!cursor) return;
+    const value = cursor.value as OfflineDogEntry;
+    let dirty = false;
+    if (value.failureCount === undefined) {
+      value.failureCount = 0;
+      dirty = true;
+    }
+    if (value.dead === undefined) {
+      value.dead = false;
+      dirty = true;
+    }
+    if (dirty) cursor.update(value);
+    cursor.continue();
+  };
+}
 
 export function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -46,12 +94,18 @@ export function openDB(): Promise<IDBDatabase> {
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
     request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
+      const target = event.target as IDBOpenDBRequest;
+      const db = target.result;
+      const tx = target.transaction!;
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME, {
           keyPath: "id",
           autoIncrement: true,
         });
+      }
+      // v1 → v2: backfill retry metadata on existing rows.
+      if (event.oldVersion < 2) {
+        migrateToV2(tx.objectStore(STORE_NAME));
       }
     };
   });
@@ -71,12 +125,6 @@ export class QuotaExceededError extends Error {
   }
 }
 
-/**
- * Bail before writing if the browser's storage estimate is within ~10% of
- * its quota. Without this, IndexedDB can OOM silently and Safari may evict
- * the DB without warning. Browsers without `navigator.storage.estimate`
- * are treated as ok (no signal to act on).
- */
 async function ensureQuotaAvailable(): Promise<void> {
   if (typeof navigator === "undefined") return;
   const storage = navigator.storage;
@@ -88,7 +136,6 @@ async function ensureQuotaAvailable(): Promise<void> {
     }
   } catch (err) {
     if (err instanceof QuotaExceededError) throw err;
-    // estimate() throwing is non-fatal — let the write attempt anyway.
   }
 }
 
@@ -100,7 +147,13 @@ export async function saveOfflineDog(
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, "readwrite");
     const store = tx.objectStore(STORE_NAME);
-    const request = store.add(entry);
+    // Default retry metadata so reads can always trust failureCount / dead.
+    const enriched: Omit<OfflineDogEntry, "id"> = {
+      failureCount: 0,
+      dead: false,
+      ...entry,
+    };
+    const request = store.add(enriched);
     request.onsuccess = () => resolve(request.result as number);
     request.onerror = () => reject(request.error);
     tx.oncomplete = () => db.close();
@@ -135,16 +188,60 @@ export async function removeOfflineDog(id: number): Promise<void> {
   });
 }
 
+/** Update retry metadata on an entry without rewriting payload fields. */
+export async function updateOfflineDogStatus(
+  id: number,
+  patch: Pick<
+    OfflineDogEntry,
+    "failureCount" | "lastFailureStatus" | "lastFailureMessage" | "lastAttemptAt" | "dead"
+  >
+): Promise<void> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    const getReq = store.get(id);
+    getReq.onsuccess = () => {
+      const current = getReq.result as OfflineDogEntry | undefined;
+      if (!current) {
+        db.close();
+        resolve();
+        return;
+      }
+      store.put({ ...current, ...patch });
+    };
+    tx.oncomplete = () => {
+      db.close();
+      resolve();
+    };
+    tx.onerror = () => {
+      db.close();
+      reject(tx.error);
+    };
+  });
+}
+
+/**
+ * Replay every pending entry (not yet dead) via /api/sightings POST.
+ * Serialised with navigator.locks so a manual "Sync Now" and a
+ * background sync-dogs event can't race. Distinguishes 4xx (permanent,
+ * count up to MAX_PERMANENT_FAILURES then mark dead) from 5xx / network
+ * (transient, leave in queue without bumping the dead counter).
+ */
 export async function syncOfflineDogs(): Promise<{
   synced: number;
   failed: number;
+  dead: number;
 }> {
-  const dogs = await getOfflineDogs();
-  let synced = 0;
-  let failed = 0;
+  const run = async () => {
+    const dogs = await getOfflineDogs();
+    let synced = 0;
+    let failed = 0;
+    let dead = 0;
 
-  for (const entry of dogs) {
-    try {
+    for (const entry of dogs) {
+      if (entry.dead || entry.id == null) continue;
+
       const formData = new FormData();
       formData.append(
         "dogImage",
@@ -168,21 +265,63 @@ export async function syncOfflineDogs(): Promise<{
       if (entry.notes) formData.append("notes", entry.notes);
       if (entry.clientUuid) formData.append("clientUuid", entry.clientUuid);
 
-      const res = await fetch("/api/sightings", {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const res = await fetch("/api/sightings", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (res.ok && entry.id != null) {
-        await removeOfflineDog(entry.id);
-        synced++;
-      } else {
+        if (res.ok) {
+          await removeOfflineDog(entry.id);
+          synced++;
+          continue;
+        }
+
+        // 4xx is permanent — bump failureCount and possibly mark dead.
+        // 5xx is transient — note the status but don't escalate.
+        const isPermanent = res.status >= 400 && res.status < 500;
+        const newCount = (entry.failureCount ?? 0) + (isPermanent ? 1 : 0);
+        const becomesDead = isPermanent && newCount >= MAX_PERMANENT_FAILURES;
+        let errorText = "";
+        try {
+          const cloned = res.clone();
+          const body = await cloned.text();
+          if (body.length < 400) errorText = body;
+        } catch {
+          /* ignore */
+        }
+        await updateOfflineDogStatus(entry.id, {
+          failureCount: newCount,
+          lastFailureStatus: res.status,
+          lastFailureMessage: errorText || undefined,
+          lastAttemptAt: new Date().toISOString(),
+          dead: becomesDead,
+        });
+        if (becomesDead) dead++;
+        else failed++;
+      } catch {
+        // Network error (offline mid-sync, fetch threw). Transient —
+        // don't count toward the permanent-failure budget.
+        try {
+          await updateOfflineDogStatus(entry.id, {
+            lastFailureStatus: 0,
+            lastAttemptAt: new Date().toISOString(),
+          });
+        } catch {
+          /* ignore */
+        }
         failed++;
       }
-    } catch {
-      failed++;
     }
-  }
 
-  return { synced, failed };
+    return { synced, failed, dead };
+  };
+
+  // Serialise concurrent callers so manual "Sync Now" and the background
+  // sync-dogs event can't fire overlapping replay loops past the
+  // clientUuid dedupe window.
+  if (typeof navigator !== "undefined" && navigator.locks?.request) {
+    return navigator.locks.request("sync-dogs", run);
+  }
+  return run();
 }

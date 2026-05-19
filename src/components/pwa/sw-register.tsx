@@ -29,9 +29,16 @@ export function ServiceWorkerRegister() {
 
     const onControllerChange = () => {
       if (reloadedThisSession) return;
+      // Guard: if the user is mid-submit (add-dog form posting to
+      // /api/sightings), a reload here cancels the response render and
+      // the user never sees /dog-caught. The form sets the flag at submit
+      // start and clears it on success/error.
+      try {
+        if (window.sessionStorage.getItem("sdog:submitting") === "1") return;
+      } catch {
+        /* sessionStorage can throw in private mode — fall through. */
+      }
       reloadedThisSession = true;
-      // Soft reload — picks up the new chunks without showing the user a
-      // hard navigation flash.
       window.location.reload();
     };
     navigator.serviceWorker.addEventListener(
