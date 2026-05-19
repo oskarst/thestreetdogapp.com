@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
 import { getDogs } from "@/lib/db/dogs";
@@ -77,7 +78,16 @@ export default async function DashboardPage() {
       />
       <Achievements achievements={achievements} />
       <ScoreBoard score={score} />
-      <MissionsBlock />
+      {/* MissionsBlock does its own profile + completions round-trips, so
+          let it stream in independently while the rest of the dashboard
+          paints. Falls back to a slim placeholder card. */}
+      <Suspense
+        fallback={
+          <div className="rounded-2xl border border-amber-brand/30 bg-amber-soft/60 h-24 animate-pulse" />
+        }
+      >
+        <MissionsBlock />
+      </Suspense>
       <DashboardContent
         dogs={dogs}
         userId={user.id}

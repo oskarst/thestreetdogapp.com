@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HelpCircle, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { driver, type DriveStep } from "driver.js";
+import type { DriveStep } from "driver.js";
 import { cn } from "@/lib/utils";
 
 interface TourComponentProps {
@@ -104,13 +104,20 @@ function useStartTour(userId: string) {
   // final step's onNextClick override.
   const completedRef = useRef(false);
 
-  return useCallback(() => {
+  return useCallback(async () => {
     completedRef.current = false;
 
     // First time the user actively engages with the tour, mark them as
     // started so the prompt card disappears. completed wins over started
     // if the user makes it all the way through.
     if (readState(userId) === "unset") writeState(userId, "started");
+
+    // Lazy-load driver.js only when the user actually opens the tour.
+    // Saves ~9 KB gz + 4 KB CSS off every authenticated route's shared
+    // chunk; the wait between click and overlay is a single fetch on the
+    // happy path, network-idle / preloaded after that.
+    const { driver } = await import("driver.js");
+    await import("driver.js/dist/driver.css");
 
     const steps: DriveStep[] = [
       {

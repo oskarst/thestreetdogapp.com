@@ -12,10 +12,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import dynamic from "next/dynamic";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggleItem } from "@/components/theme/theme-toggle-item";
-import { TourButton } from "@/components/tour/tour-button";
 import { createClient } from "@/lib/supabase/client";
+
+// TourButton owns driver.js + tour state. Loading it dynamically keeps
+// driver.js out of the shared TopNav chunk; the button only mounts on
+// /dashboard anyway, so non-dashboard navigations don't even fetch it.
+const TourButton = dynamic(
+  () => import("@/components/tour/tour-button").then((m) => m.TourButton),
+  { ssr: false, loading: () => null }
+);
 
 interface TopNavProps {
   user: {

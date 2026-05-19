@@ -1,7 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "driver.js/dist/driver.css";
+/* driver.js CSS is loaded on-demand from TourButton's click handler so
+   it doesn't add to every authenticated route's stylesheet. */
 
 @custom-variant dark (&:is(.dark *));
 
