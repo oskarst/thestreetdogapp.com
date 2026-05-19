@@ -1,10 +1,8 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
-import { getDogs } from "@/lib/db/dogs";
-import { getUserFavorites } from "@/lib/db/favorites";
+import { getDashboardPayload } from "@/lib/db/dashboard";
 import { getUserSightings } from "@/lib/db/sightings";
-import { getUserScore } from "@/lib/db/users";
 import { DashboardHero } from "@/components/dog/dashboard-hero";
 import { DailyQuest } from "@/components/dog/daily-quest";
 import { ScoreBoard } from "@/components/dog/score-board";
@@ -21,38 +19,27 @@ import {
   shortHexId,
 } from "@/lib/dashboard";
 import { time } from "@/lib/perf";
-import type { ScoreResult } from "@/types/database";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
+  // Two real network calls: the composite dashboard RPC (dogs + favorites
+  // + caught_ids + score) and the user's sightings (for streak + quest).
+  // Profile is React-cached from the layout, so it's effectively free.
   const dashStart = performance.now();
-  const [dogs, favoriteIds, sightings, score, profile] = await Promise.all([
-    time("dash.getDogs", () => getDogs()),
-    time("dash.favorites", () => getUserFavorites(user.id)),
+  const [dashboard, sightings, profile] = await Promise.all([
+    time("dash.composite", () => getDashboardPayload(60)),
     time("dash.sightings", () => getUserSightings(user.id)),
-    time("dash.score", () =>
-      getUserScore(user.id).catch(
-        (): ScoreResult => ({
-          new_dogs: 0,
-          new_dogs_points: 0,
-          unique_dogs: 0,
-          unique_dogs_points: 0,
-          total_catches: 0,
-          total_catches_points: 0,
-          total_score: 0,
-        })
-      )
-    ),
     time("dash.profile", () => getCurrentProfile()),
   ]);
   console.log(
     `[perf] dash.parallel-total = ${Math.round(performance.now() - dashStart)}ms ` +
-      `(dogs=${dogs.length}, sightings=${sightings.length})`
+      `(dogs=${dashboard.dogs.length}, sightings=${sightings.length})`
   );
 
-  const caughtDogIds = new Set(sightings.map((s) => s.dog_id));
+  const { dogs, favorite_ids, caught_dog_ids, score } = dashboard;
+
   const streakDays = deriveStreak(sightings);
   const questComplete = isDailyQuestComplete(sightings);
   const questClaimedToday = isDailyQuestClaimedToday(
@@ -91,8 +78,8 @@ export default async function DashboardPage() {
       <DashboardContent
         dogs={dogs}
         userId={user.id}
-        favoriteIds={favoriteIds}
-        caughtDogIds={Array.from(caughtDogIds)}
+        favoriteIds={favorite_ids}
+        caughtDogIds={caught_dog_ids}
       />
     </div>
   );

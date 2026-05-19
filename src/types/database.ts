@@ -91,13 +91,14 @@ export interface DogListRow {
   ear_tag_id: string | null;
   names: string[];
   images: string[];
+  thumbnail: string | null;
   last_sighting_date: string | null;
   created_at: string;
   first_registered_by_id: string | null;
 }
 
 export const DOG_LIST_COLUMNS =
-  "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id";
+  "id,ear_tag_id,names,images,thumbnail,last_sighting_date,created_at,first_registered_by_id";
 
 /**
  * Slim projection for the map view — just enough to place markers and

@@ -35,7 +35,10 @@ function timeAgo(dateStr: string | null): string {
 export function DogCard({ dog, userId, isFavorited, isCaught }: DogCardProps) {
   const router = useRouter();
   const name = dog.names?.[0] ?? "Unnamed Dog";
-  const imageUrl = dog.images?.[0] ?? null;
+  // Prefer the 320x320 webp thumbnail variant when present; falls back
+  // to the full-size image for rows uploaded before the thumb pipeline
+  // landed (backfill runs separately).
+  const imageUrl = dog.thumbnail ?? dog.images?.[0] ?? null;
   const uncaught = !isCaught;
 
   return (

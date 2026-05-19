@@ -1,6 +1,10 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v11";
+const CACHE_NAME = "streetdog-v12";
+// Dedicated cache for Supabase Storage public objects (dog photos +
+// thumbnails). Stays out of CACHE_NAME so deploys don't have to evict
+// the user's photo cache.
+const SUPABASE_IMAGES_CACHE = "supabase-images-v1";
 
 const MIME_EXT = {
   "image/jpeg": "jpg",
@@ -37,7 +41,11 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((names) =>
       Promise.all(
         names.map((name) => {
-          if (name !== CACHE_NAME && name !== "map-tiles-cache") {
+          if (
+            name !== CACHE_NAME &&
+            name !== "map-tiles-cache" &&
+            name !== SUPABASE_IMAGES_CACHE
+          ) {
             return caches.delete(name);
           }
         })
@@ -90,6 +98,31 @@ self.addEventListener("fetch", (event) => {
     url.hostname.includes("basemaps.cartocdn.com") ||
     url.hostname.includes("openstreetmap.org")
   ) {
+    return;
+  }
+
+  // Supabase Storage public objects (dog photos, ear-tag photos,
+  // thumbnails). Cache-first with a 30d TTL inside a dedicated cache
+  // namespace. Paths embed Date.now() so URLs are content-addressed —
+  // safe to cache aggressively. User-agnostic content; no
+  // cross-user-contamination risk.
+  if (
+    url.hostname.endsWith(".supabase.co") &&
+    url.pathname.startsWith("/storage/v1/object/public/")
+  ) {
+    event.respondWith(
+      caches.open(SUPABASE_IMAGES_CACHE).then((cache) =>
+        cache.match(event.request).then((cached) => {
+          if (cached) return cached;
+          return fetch(event.request).then((response) => {
+            if (response && response.status === 200) {
+              cache.put(event.request, response.clone()).catch(() => {});
+            }
+            return response;
+          });
+        })
+      )
+    );
     return;
   }
 

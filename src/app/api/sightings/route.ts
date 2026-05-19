@@ -20,6 +20,23 @@ const ALLOWED_UPLOAD_MIME = new Set([
  * image/png MIME → stored XSS via public bucket" vector — non-images
  * fail at sharp.metadata().
  */
+/**
+ * Build a 320x320 webp thumbnail from a sanitized image buffer. Called
+ * after the main re-encode; failures are non-fatal — we still upload the
+ * full-size variant and leave the thumb null.
+ */
+async function buildThumbnail(jpegBuffer: Buffer): Promise<Buffer | null> {
+  try {
+    return await sharp(jpegBuffer)
+      .resize({ width: 320, height: 320, fit: "cover", position: "centre" })
+      .webp({ quality: 72 })
+      .toBuffer();
+  } catch (err) {
+    console.error("[sightings] thumbnail build failed:", err);
+    return null;
+  }
+}
+
 async function processUploadedImage(
   file: File
 ): Promise<
@@ -199,6 +216,29 @@ export async function POST(request: Request) {
     } = admin.storage.from("dogs").getPublicUrl(dogPath);
     mark("upload-dog");
 
+    // Optional 320x320 webp thumbnail. Best-effort — thumb failure
+    // doesn't fail the sighting; clients fall back to images[0].
+    let dogThumbnailUrl: string | null = null;
+    const thumbBuffer = await buildThumbnail(dogProcessed.buffer);
+    if (thumbBuffer) {
+      const thumbPath = `${user.id}/${Date.now()}_thumb.webp`;
+      const { error: thumbErr } = await admin.storage
+        .from("dogs")
+        .upload(thumbPath, thumbBuffer, {
+          contentType: "image/webp",
+          cacheControl: "2592000, immutable",
+        });
+      if (!thumbErr) {
+        const {
+          data: { publicUrl },
+        } = admin.storage.from("dogs").getPublicUrl(thumbPath);
+        dogThumbnailUrl = publicUrl;
+      } else {
+        console.error("[sightings] thumb upload failed:", thumbErr);
+      }
+    }
+    mark("upload-thumb");
+
     // Upload ear tag image if provided
     let earTagImageUrl: string | null = null;
     if (earTagProcessed) {
@@ -247,6 +287,9 @@ export async function POST(request: Request) {
           .from("dogs")
           .update({
             images: updatedImages,
+            // Refresh thumbnail to the most recent sighting's webp.
+            // Falls back to existing if we failed to generate a new one.
+            thumbnail: dogThumbnailUrl ?? existingDog.thumbnail ?? null,
             last_latitude: latitude,
             last_longitude: longitude,
             last_sighting_date: new Date().toISOString(),
@@ -266,6 +309,7 @@ export async function POST(request: Request) {
             ear_tag_id: earTagId,
             names: [],
             images: [dogImageUrl],
+            thumbnail: dogThumbnailUrl,
             ear_tag_image: earTagImageUrl,
             last_latitude: latitude,
             last_longitude: longitude,
@@ -290,6 +334,7 @@ export async function POST(request: Request) {
         .insert({
           names: [],
           images: [dogImageUrl],
+          thumbnail: dogThumbnailUrl,
           ear_tag_image: earTagImageUrl,
           last_latitude: latitude,
           last_longitude: longitude,
