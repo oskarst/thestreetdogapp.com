@@ -20,7 +20,7 @@ export default async function AdoptPage({ params }: Params) {
   const t = await getTranslations("adopt");
   const dogName = dog.names?.[0] ?? t("untitled");
   const image = dog.images?.[0];
-  const steps = [1, 2, 3, 4, 5];
+  const steps = [1, 2, 3, 4, 5, 6, 7, 8];
 
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
@@ -77,7 +77,7 @@ export default async function AdoptPage({ params }: Params) {
                 <div className="font-semibold text-[14px] leading-tight text-ink">
                   {t(`step${n}Title`)}
                 </div>
-                <p className="text-[13px] text-muted-foreground leading-snug mt-1">
+                <p className="text-[13px] text-muted-foreground leading-snug mt-1 whitespace-pre-line">
                   {t(`step${n}Body`)}
                 </p>
               </div>
