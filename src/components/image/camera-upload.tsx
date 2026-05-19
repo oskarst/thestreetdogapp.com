@@ -10,6 +10,9 @@ interface CameraUploadProps {
   value: File | null;
   required?: boolean;
   disabled?: boolean;
+  /** When true, the dashed border switches to destructive to flag the
+   *  field as failed validation. */
+  invalid?: boolean;
 }
 
 export function CameraUpload({
@@ -18,6 +21,7 @@ export function CameraUpload({
   value,
   required,
   disabled,
+  invalid,
 }: CameraUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [processing, setProcessing] = useState(false);
@@ -42,7 +46,11 @@ export function CameraUpload({
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={disabled}
-        className="w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/30 p-6 transition-colors hover:border-primary/50 hover:bg-muted/50 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-muted-foreground/25 disabled:hover:bg-muted/30 disabled:active:scale-100"
+        className={`w-full flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed bg-muted/30 p-6 transition-colors active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 ${
+          invalid
+            ? "border-destructive bg-destructive/5 hover:border-destructive/80"
+            : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50 disabled:hover:border-muted-foreground/25 disabled:hover:bg-muted/30"
+        }`}
       >
         {processing ? (
           <div className="flex flex-col items-center gap-2 py-6">

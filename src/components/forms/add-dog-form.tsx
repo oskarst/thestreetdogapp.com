@@ -55,13 +55,55 @@ export function AddDogForm() {
     name: string;
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // Top-level error reserved for server / network failures the form
+  // can't attribute to a specific field (e.g. /api/sightings 500). Field
+  // validation errors live in fieldErrors below and render inline.
   const [error, setError] = useState("");
   const [savedOffline, setSavedOffline] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
 
-  // setError + scroll the error banner into view. The form is long enough
-  // that a user submitting from the bottom would otherwise never see the
-  // alert at the top.
+  type FieldKey =
+    | "dogImage"
+    | "location"
+    | "character"
+    | "gender"
+    | "age";
+
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<FieldKey, string>>
+  >({});
+
+  // Refs for each validated section so we can scroll the offending one
+  // into view on submit. block: "center" puts the field roughly in the
+  // middle of the viewport so the inline error below it is visible too.
+  const sectionRefs: Record<FieldKey, React.RefObject<HTMLElement | null>> = {
+    dogImage: useRef<HTMLElement | null>(null),
+    location: useRef<HTMLElement | null>(null),
+    character: useRef<HTMLElement | null>(null),
+    gender: useRef<HTMLElement | null>(null),
+    age: useRef<HTMLElement | null>(null),
+  };
+
+  function flagField(field: FieldKey, message: string) {
+    setFieldErrors({ [field]: message });
+    requestAnimationFrame(() => {
+      sectionRefs[field].current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    });
+  }
+
+  function clearFieldError(field: FieldKey) {
+    setFieldErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  }
+
+  // Top-banner showError stays for server-side failures only.
   function showError(msg: string) {
     setError(msg);
     requestAnimationFrame(() => {
@@ -113,25 +155,26 @@ export function AddDogForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
 
     if (!dogImage) {
-      showError(t("errorPhoto"));
+      flagField("dogImage", t("errorPhoto"));
       return;
     }
     if (!location) {
-      showError(t("errorLocation"));
+      flagField("location", t("errorLocation"));
       return;
     }
     if (!character) {
-      showError(t("errorCharacter"));
+      flagField("character", t("errorCharacter"));
       return;
     }
     if (!gender) {
-      showError(t("errorGender"));
+      flagField("gender", t("errorGender"));
       return;
     }
     if (!age) {
-      showError(t("errorAge"));
+      flagField("age", t("errorAge"));
       return;
     }
 
@@ -291,14 +334,26 @@ export function AddDogForm() {
         </div>
       )}
 
-      <section>
+      <section ref={sectionRefs.dogImage} className="scroll-mt-24">
         <SectionLabel meta={t("metaRequired")}>{t("dogPhoto")}</SectionLabel>
         <CameraUpload
           label={t("tapDogPhoto")}
-          onChange={setDogImage}
+          onChange={(file) => {
+            setDogImage(file);
+            clearFieldError("dogImage");
+          }}
           value={dogImage}
           required
+          invalid={Boolean(fieldErrors.dogImage)}
         />
+        {fieldErrors.dogImage && (
+          <p
+            role="alert"
+            className="mt-2 text-sm font-medium text-destructive"
+          >
+            {fieldErrors.dogImage}
+          </p>
+        )}
       </section>
 
       <section>
@@ -357,14 +412,41 @@ export function AddDogForm() {
         </div>
       </section>
 
-      <section>
+      <section ref={sectionRefs.location} className="scroll-mt-24">
         <SectionLabel meta={t("metaGpsLocked")}>{t("location")}</SectionLabel>
-        <LocationPicker onChange={setLocation} />
+        <LocationPicker
+          onChange={(pos) => {
+            setLocation(pos);
+            clearFieldError("location");
+          }}
+        />
+        {fieldErrors.location && (
+          <p
+            role="alert"
+            className="mt-2 text-sm font-medium text-destructive"
+          >
+            {fieldErrors.location}
+          </p>
+        )}
       </section>
 
-      <section>
+      <section ref={sectionRefs.character} className="scroll-mt-24">
         <SectionLabel meta={t("metaPickOne")}>{t("character")}</SectionLabel>
-        <CharacterPicker value={character} onChange={setCharacter} />
+        <CharacterPicker
+          value={character}
+          onChange={(value) => {
+            setCharacter(value);
+            clearFieldError("character");
+          }}
+        />
+        {fieldErrors.character && (
+          <p
+            role="alert"
+            className="mt-2 text-sm font-medium text-destructive"
+          >
+            {fieldErrors.character}
+          </p>
+        )}
       </section>
 
       <section>
@@ -372,14 +454,42 @@ export function AddDogForm() {
         <SizeSlider value={size} onChange={setSize} />
       </section>
 
-      <section>
+      <section ref={sectionRefs.gender} className="scroll-mt-24">
         <SectionLabel meta={t("metaPickOne")}>{t("gender")}</SectionLabel>
-        <GenderPicker value={gender} onChange={setGender} />
+        <GenderPicker
+          value={gender}
+          onChange={(value) => {
+            setGender(value);
+            clearFieldError("gender");
+          }}
+        />
+        {fieldErrors.gender && (
+          <p
+            role="alert"
+            className="mt-2 text-sm font-medium text-destructive"
+          >
+            {fieldErrors.gender}
+          </p>
+        )}
       </section>
 
-      <section>
+      <section ref={sectionRefs.age} className="scroll-mt-24">
         <SectionLabel meta={t("metaPickOne")}>{t("age")}</SectionLabel>
-        <AgePicker value={age} onChange={setAge} />
+        <AgePicker
+          value={age}
+          onChange={(value) => {
+            setAge(value);
+            clearFieldError("age");
+          }}
+        />
+        {fieldErrors.age && (
+          <p
+            role="alert"
+            className="mt-2 text-sm font-medium text-destructive"
+          >
+            {fieldErrors.age}
+          </p>
+        )}
       </section>
 
       <section>
