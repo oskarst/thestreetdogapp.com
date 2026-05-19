@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Shield, Flag, LogOut, UserPen, KeyRound } from "lucide-react";
+import { Shield, Flag, Heart, LogOut, UserPen, KeyRound } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,6 +44,7 @@ const SECTION_NAMES: Record<string, string> = {
   "/change-nickname": "settings",
   "/change-password": "settings",
   "/report": "report",
+  "/support": "support",
   "/admin": "admin",
 };
 
@@ -118,6 +119,10 @@ export function TopNav({ user }: TopNavProps) {
               <DropdownMenuItem onClick={() => router.push("/report")}>
                 <Flag className="mr-2 h-4 w-4" />
                 {t("reportProblem")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/support")}>
+                <Heart className="mr-2 h-4 w-4 text-red-500" />
+                {t("supportAndDonate")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <ThemeToggleItem label={t("toggleTheme")} />

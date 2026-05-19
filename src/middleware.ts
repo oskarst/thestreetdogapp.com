@@ -64,6 +64,7 @@ export async function middleware(request: NextRequest) {
     "/adopt",
     "/veterinary",
     "/report",
+    "/support",
     "/change-nickname",
     "/change-password",
     "/admin",
