@@ -64,6 +64,7 @@ export function AddDogForm() {
 
   type FieldKey =
     | "dogImage"
+    | "earTag"
     | "location"
     | "character"
     | "gender"
@@ -78,6 +79,7 @@ export function AddDogForm() {
   // middle of the viewport so the inline error below it is visible too.
   const sectionRefs: Record<FieldKey, React.RefObject<HTMLElement | null>> = {
     dogImage: useRef<HTMLElement | null>(null),
+    earTag: useRef<HTMLElement | null>(null),
     location: useRef<HTMLElement | null>(null),
     character: useRef<HTMLElement | null>(null),
     gender: useRef<HTMLElement | null>(null),
@@ -159,6 +161,14 @@ export function AddDogForm() {
 
     if (!dogImage) {
       flagField("dogImage", t("errorPhoto"));
+      return;
+    }
+    // Ear tag is optional only when the user has explicitly ticked
+    // "No ear tag". If they leave it blank without ticking the toggle,
+    // it's ambiguous whether the dog truly has no tag — force them to
+    // decide. Either an OCR/manual ID or an ear-tag photo satisfies.
+    if (!noEarTag && !earTagId.trim() && !earTagImage) {
+      flagField("earTag", t("errorEarTag"));
       return;
     }
     if (!location) {
@@ -323,7 +333,7 @@ export function AddDogForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} noValidate className="space-y-4">
       {error && (
         <div
           ref={errorRef}
@@ -356,14 +366,18 @@ export function AddDogForm() {
         )}
       </section>
 
-      <section>
+      <section ref={sectionRefs.earTag} className="scroll-mt-24">
         <SectionLabel meta={noEarTag ? t("metaNotApplicable") : t("metaOptionalOcr")}>{t("earTag")}</SectionLabel>
         <div className="space-y-2.5">
           <CameraUpload
             label={t("tapEarTagPhoto")}
-            onChange={handleEarTagImage}
+            onChange={(file) => {
+              handleEarTagImage(file);
+              clearFieldError("earTag");
+            }}
             value={earTagImage}
             disabled={noEarTag}
+            invalid={Boolean(fieldErrors.earTag) && !noEarTag}
           />
           {scanning && (
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
@@ -392,13 +406,19 @@ export function AddDogForm() {
               id="earTagId"
               placeholder={t("earTagPlaceholder")}
               value={earTagId}
-              onChange={(e) => setEarTagId(e.target.value)}
+              onChange={(e) => {
+                setEarTagId(e.target.value);
+                if (e.target.value.trim()) clearFieldError("earTag");
+              }}
               disabled={noEarTag}
               className="h-10 flex-1 rounded-xl border-rule-2 bg-card font-mono text-sm tracking-[0.02em] disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <button
               type="button"
-              onClick={toggleNoEarTag}
+              onClick={() => {
+                toggleNoEarTag();
+                clearFieldError("earTag");
+              }}
               aria-pressed={noEarTag}
               className={
                 noEarTag
@@ -409,6 +429,14 @@ export function AddDogForm() {
               {t("noEarTag")}
             </button>
           </div>
+          {fieldErrors.earTag && (
+            <p
+              role="alert"
+              className="text-sm font-medium text-destructive"
+            >
+              {fieldErrors.earTag}
+            </p>
+          )}
         </div>
       </section>
 

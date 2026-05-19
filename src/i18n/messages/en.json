@@ -99,6 +99,7 @@
     "submitting": "Submitting...",
     "catchThisDog": "Log this dog",
     "errorPhoto": "Please take a photo of the dog.",
+    "errorEarTag": "Add an ear-tag photo or ID, or tick \"No ear tag\".",
     "errorLocation": "Please set the location on the map.",
     "errorCharacter": "Please select the dog's character.",
     "errorGender": "Please select the dog's gender.",
