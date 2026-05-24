@@ -14,7 +14,7 @@ import { SizeSlider } from "@/components/forms/size-slider";
 import { GenderPicker } from "@/components/forms/gender-picker";
 import { AgePicker } from "@/components/forms/age-picker";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
-import { scanEarTag } from "@/lib/ocr";
+import { checkDogPhoto, checkEarTagImage } from "@/lib/image-checks";
 import { saveOfflineDog } from "@/lib/offline-db";
 
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
@@ -37,7 +37,11 @@ export function AddDogForm() {
   const t = useTranslations("addDog");
 
   const [dogImage, setDogImage] = useState<File | null>(null);
+  const [dogImageChecking, setDogImageChecking] = useState(false);
+  const [dogImageError, setDogImageError] = useState("");
   const [earTagImage, setEarTagImage] = useState<File | null>(null);
+  const [earTagImageChecking, setEarTagImageChecking] = useState(false);
+  const [earTagImageError, setEarTagImageError] = useState("");
   const [earTagId, setEarTagId] = useState("");
   const [noEarTag, setNoEarTag] = useState(false);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
@@ -48,12 +52,6 @@ export function AddDogForm() {
   const [gender, setGender] = useState<DogGender | "">("");
   const [age, setAge] = useState<DogAge | "">("");
   const [notes, setNotes] = useState("");
-  const [scanning, setScanning] = useState(false);
-  const [scanError, setScanError] = useState("");
-  const [existingDog, setExistingDog] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   // Top-level error reserved for server / network failures the form
   // can't attribute to a specific field (e.g. /api/sightings 500). Field
@@ -119,38 +117,59 @@ export function AddDogForm() {
       if (next) {
         setEarTagId("");
         setEarTagImage(null);
-        setScanError("");
-        setExistingDog(null);
+        setEarTagImageError("");
       }
       return next;
     });
   }
 
-  async function handleEarTagImage(file: File | null) {
-    setEarTagImage(file);
-    setScanError("");
-    setExistingDog(null);
+  // Skip the network check when the user is offline — we can't reach
+  // OpenAI, and the form's existing offline path saves to IndexedDB
+  // without validation. Online submission re-runs through /api/sightings
+  // which is also where final checks should land in future.
+  function shouldSkipImageCheck(): boolean {
+    return typeof navigator !== "undefined" && !navigator.onLine;
+  }
 
-    if (!file) return;
+  async function handleDogImage(file: File | null) {
+    setDogImage(file);
+    setDogImageError("");
 
-    setScanning(true);
+    if (!file || shouldSkipImageCheck()) return;
+
+    setDogImageChecking(true);
     try {
-      const result = await scanEarTag(file);
-      if (result.success && result.earTagId) {
-        setEarTagId(result.earTagId);
-        if (result.existingDog) {
-          setExistingDog({
-            id: result.existingDog.id,
-            name: result.existingDog.name ?? `Dog #${result.earTagId}`,
-          });
-        }
-      } else if (result.error) {
-        setScanError(result.error);
+      const result = await checkDogPhoto(file);
+      if (!result.ok) {
+        setDogImage(null);
+        setDogImageError(result.error ?? t("errorGeneric"));
       }
     } catch {
-      setScanError(t("scanFailed"));
+      setDogImage(null);
+      setDogImageError(t("errorGeneric"));
     } finally {
-      setScanning(false);
+      setDogImageChecking(false);
+    }
+  }
+
+  async function handleEarTagImage(file: File | null) {
+    setEarTagImage(file);
+    setEarTagImageError("");
+
+    if (!file || shouldSkipImageCheck()) return;
+
+    setEarTagImageChecking(true);
+    try {
+      const result = await checkEarTagImage(file);
+      if (!result.ok) {
+        setEarTagImage(null);
+        setEarTagImageError(result.error ?? t("errorGeneric"));
+      }
+    } catch {
+      setEarTagImage(null);
+      setEarTagImageError(t("errorGeneric"));
+    } finally {
+      setEarTagImageChecking(false);
     }
   }
 
@@ -166,7 +185,7 @@ export function AddDogForm() {
     // Ear tag is optional only when the user has explicitly ticked
     // "No ear tag". If they leave it blank without ticking the toggle,
     // it's ambiguous whether the dog truly has no tag — force them to
-    // decide. Either an OCR/manual ID or an ear-tag photo satisfies.
+    // decide. Either a manually-entered ID or an ear-tag photo satisfies.
     if (!noEarTag && !earTagId.trim() && !earTagImage) {
       flagField("earTag", t("errorEarTag"));
       return;
@@ -349,13 +368,27 @@ export function AddDogForm() {
         <CameraUpload
           label={t("tapDogPhoto")}
           onChange={(file) => {
-            setDogImage(file);
+            handleDogImage(file);
             clearFieldError("dogImage");
           }}
           value={dogImage}
           required
-          invalid={Boolean(fieldErrors.dogImage)}
+          invalid={Boolean(fieldErrors.dogImage) || Boolean(dogImageError)}
         />
+        {dogImageChecking && (
+          <div className="mt-2 flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+            <Loader2 className="size-3.5 animate-spin" />
+            {t("checkingImage")}
+          </div>
+        )}
+        {dogImageError && (
+          <p
+            role="alert"
+            className="mt-2 text-sm font-medium text-destructive"
+          >
+            {dogImageError}
+          </p>
+        )}
         {fieldErrors.dogImage && (
           <p
             role="alert"
@@ -367,7 +400,7 @@ export function AddDogForm() {
       </section>
 
       <section ref={sectionRefs.earTag} className="scroll-mt-24">
-        <SectionLabel meta={noEarTag ? t("metaNotApplicable") : t("metaOptionalOcr")}>{t("earTag")}</SectionLabel>
+        <SectionLabel meta={noEarTag ? t("metaNotApplicable") : t("metaOptional")}>{t("earTag")}</SectionLabel>
         <div className="space-y-2.5">
           <CameraUpload
             label={t("tapEarTagPhoto")}
@@ -377,29 +410,24 @@ export function AddDogForm() {
             }}
             value={earTagImage}
             disabled={noEarTag}
-            invalid={Boolean(fieldErrors.earTag) && !noEarTag}
+            invalid={
+              (Boolean(fieldErrors.earTag) || Boolean(earTagImageError)) &&
+              !noEarTag
+            }
           />
-          {scanning && (
+          {earTagImageChecking && (
             <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
               <Loader2 className="size-3.5 animate-spin" />
-              {t("scanningEarTag")}
+              {t("checkingImage")}
             </div>
           )}
-          {scanError && (
-            <p className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
-              {scanError}
+          {earTagImageError && (
+            <p
+              role="alert"
+              className="text-sm font-medium text-destructive"
+            >
+              {earTagImageError}
             </p>
-          )}
-          {existingDog && !noEarTag && (
-            <div className="rounded-lg border border-rule-2 bg-card px-3.5 py-2.5 text-sm">
-              {t("dogAlreadyRegistered")}{" "}
-              <a
-                href={`/dog/${existingDog.id}`}
-                className="font-medium text-ink underline underline-offset-2"
-              >
-                {existingDog.name}
-              </a>
-            </div>
           )}
           <div className="flex items-stretch gap-2">
             <Input
@@ -533,7 +561,7 @@ export function AddDogForm() {
 
       <button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || dogImageChecking || earTagImageChecking}
         className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
       >
         <span className="font-mono text-[var(--green-brand)] font-medium">&gt;</span>
