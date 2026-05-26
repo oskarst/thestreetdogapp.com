@@ -365,6 +365,22 @@
     "firstAidTitle": "What to do if you encounter a sick or injured dog",
     "firstAidBody": "Determine the severity of the condition:\n\n1. The dog is injured: the wound is old or fresh, or the dog is bleeding.\n2. The dog is unwell: the animal is not moving, does not respond to calls, is shivering, or is whimpering / howling.\n3. The dog is limping: it is holding up or dragging its paw, the paw is bleeding, or there is an open fracture.\n4. The dog was in an accident (car hit): it is lying down and whimpering, limping, lying down and unable to get up, or clearly injured.\n5. The dog looks sick: it has hair loss, visible wounds, severe emaciation, or is vomiting.\n6. The dog is trapped: it is stuck in a fence, tangled in a rope, wire, or netting, or caught in a trap.\n\nProviding assistance:\n\nWhen providing emergency aid, first assess the dog from a safe distance. Be careful to avoid getting bitten by the animal.\n\nYour action plan:\n· Take photos and videos of the animal.\n· Call a veterinary clinic to consult with a doctor or write to their support chat.\n· Call a specialized animal ambulance service.\n· Ask volunteers and animal rights activists for help.\n· Try to transport the dog to a clinic yourself or wait for help to arrive on-site."
   },
+  "partnerOrgs": {
+    "eyebrow": "Partner organisations",
+    "intro": "Dog welfare in Tbilisi runs through a small set of organisations. If a dog needs capture, shelter, treatment, or rehoming, these are the people to call.",
+    "openWebsite": "Open website",
+    "org1Name": "AMA · Animal Monitoring Agency",
+    "org1Type": "Government · Tbilisi municipality",
+    "org1Mission": "Controls Tbilisi's stray animal population and ensures public safety. Responds to 112 reports, captures aggressive or vulnerable strays, runs the municipal shelter, and handles vaccination, sterilization, microchipping, and pet registration.",
+    "org1Phone": "112",
+    "org1Website": "https://ama.gov.ge",
+    "org1Note": "Call 112 to report aggressive or vulnerable strays",
+    "org2Name": "DogHome",
+    "org2Type": "NGO · rescue & rehabilitation",
+    "org2Mission": "Rescues and treats severely injured dogs from across Georgia, places them with families locally and abroad (especially Germany), and advocates against cruelty in state-run shelters. \"Give a dog a second chance.\"",
+    "org2Website": "https://www.facebook.com/doghome.ge",
+    "org2Note": "Treatment · international adoption · animal rights advocacy"
+  },
   "adopt": {
     "untitled": "this dog",
     "eyebrow": "Adoption",

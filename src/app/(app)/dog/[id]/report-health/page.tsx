@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth-cache";
 import { getDogById } from "@/lib/db/dogs";
 import { ReportHealthForm } from "@/components/dog/report-health-form";
 import { PartnerClinicsList } from "@/components/dog/partner-clinics-list";
+import { PartnerOrgsList } from "@/components/dog/partner-orgs-list";
 import { getTranslations } from "next-intl/server";
 
 interface Params {
@@ -33,6 +34,8 @@ export default async function ReportHealthPage({ params }: Params) {
       </div>
 
       <PartnerClinicsList />
+
+      <PartnerOrgsList />
 
       <ReportHealthForm dogId={dog.id} dogName={dogName} />
     </div>

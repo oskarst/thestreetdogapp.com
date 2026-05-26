@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth-cache";
 import { getDogById } from "@/lib/db/dogs";
 import { PartnerClinicsList } from "@/components/dog/partner-clinics-list";
+import { PartnerOrgsList } from "@/components/dog/partner-orgs-list";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -87,6 +88,8 @@ export default async function AdoptPage({ params }: Params) {
       </section>
 
       <PartnerClinicsList />
+
+      <PartnerOrgsList />
 
       <section className="rounded-2xl border border-amber-brand/40 bg-amber-soft p-4">
         <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-amber-brand/80 mb-1">
