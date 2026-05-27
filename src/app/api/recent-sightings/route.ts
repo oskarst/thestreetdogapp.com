@@ -14,7 +14,12 @@ import { createAdminClient } from "@/lib/supabase/admin";
  */
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+// Edge runtime: this handler does one auth-header check and one Supabase
+// REST call — no Node-only APIs (no sharp, no fs). Edge invocations cost
+// less than Node lambdas and cold-start in ~50ms instead of ~300ms,
+// which matters because the marketing-site PHP proxy can have a thundering
+// herd of cache-misses at 00:00 UTC when its tmpfile cache expires.
+export const runtime = "edge";
 
 const ITEM_LIMIT = 12;
 const FIRST_RECORD_WINDOW_MS = 60_000;
