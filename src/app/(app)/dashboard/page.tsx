@@ -26,15 +26,17 @@ export default async function DashboardPage() {
   // Two real network calls: the composite dashboard RPC (dogs + favorites
   // + caught_ids + score) and the user's sightings (for streak + quest).
   // Profile is React-cached from the layout, so it's effectively free.
-  const dashStart = performance.now();
-  const [dashboard, sightings, profile] = await Promise.all([
-    time("dash.composite", () => getDashboardPayload(60)),
-    time("dash.sightings", () => getUserSightings(user.id)),
-    time("dash.profile", () => getCurrentProfile()),
-  ]);
+  const [dashboard, sightings, profile] = await time(
+    "dash.parallel-total",
+    () =>
+      Promise.all([
+        time("dash.composite", () => getDashboardPayload(60)),
+        time("dash.sightings", () => getUserSightings(user.id)),
+        time("dash.profile", () => getCurrentProfile()),
+      ])
+  );
   console.log(
-    `[perf] dash.parallel-total = ${Math.round(performance.now() - dashStart)}ms ` +
-      `(dogs=${dashboard.dogs.length}, sightings=${sightings.length})`
+    `[perf] dash.context dogs=${dashboard.dogs.length} sightings=${sightings.length}`
   );
 
   const { dogs, favorite_ids, caught_dog_ids, score } = dashboard;
