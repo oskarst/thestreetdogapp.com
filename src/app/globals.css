@@ -232,6 +232,15 @@
   from { transform: scale(0.4); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+/* Top-bar navigation indicator. Eases out toward 90% so the user always
+   sees motion while still waiting, then the bar disappears the instant
+   the new route mounts (NavProgress hides it on pathname change). */
+@keyframes nav-progress {
+  0%   { transform: scaleX(0); }
+  40%  { transform: scaleX(0.55); }
+  80%  { transform: scaleX(0.85); }
+  100% { transform: scaleX(0.9); }
+}
 
 /* Approximation of Esri's WCAG-AA "Accessible Basemap Gray v2" — applied
    on top of the standard Esri Light Gray Canvas raster. The base layer
