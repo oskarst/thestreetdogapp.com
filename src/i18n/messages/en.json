@@ -337,7 +337,9 @@
     "finddoggoNearbyScope": "Target is within 3 km of where you started.",
     "finddoggoReward": "+100 XP when you log a sighting of this dog",
     "finddoggoBack": "Back to missions",
-    "finddoggoUnnamed": "Unnamed dog"
+    "finddoggoUnnamed": "Unnamed dog",
+    "finddoggoMovement": "Recent movement",
+    "finddoggoTrackerNickname": "Tracker"
   },
   "tour": {
     "openTour": "Take a quick tour",

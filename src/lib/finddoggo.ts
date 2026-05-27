@@ -3,7 +3,11 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth-cache";
 
 export const FINDDOGGO_REWARD_XP = 100;
-export const FINDDOGGO_RECENT_SIGHTINGS_LIMIT = 5;
+// 15 is enough sightings to draw a meaningful movement track on the
+// embedded map without overloading the target screen. The "Recent
+// sightings" list below the map still trims to 5 visible rows.
+export const FINDDOGGO_RECENT_SIGHTINGS_LIMIT = 15;
+export const FINDDOGGO_VISIBLE_SIGHTINGS_LIMIT = 5;
 
 export interface FindDoggoTarget {
   dogId: string;

@@ -337,7 +337,9 @@
     "finddoggoNearbyScope": "Цель в радиусе 3 км от старта.",
     "finddoggoReward": "+100 XP за регистрацию находки этой собаки",
     "finddoggoBack": "К миссиям",
-    "finddoggoUnnamed": "Собака без имени"
+    "finddoggoUnnamed": "Собака без имени",
+    "finddoggoMovement": "Недавние перемещения",
+    "finddoggoTrackerNickname": "Исследователь"
   },
   "tour": {
     "openTour": "Краткий тур",

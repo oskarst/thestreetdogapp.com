@@ -3,10 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth-cache";
-import { getActiveFindDoggo } from "@/lib/finddoggo";
+import {
+  getActiveFindDoggo,
+  FINDDOGGO_VISIBLE_SIGHTINGS_LIMIT,
+} from "@/lib/finddoggo";
 import { FindDoggoStart } from "@/components/dog/finddoggo-start";
 import { FindDoggoActions } from "@/components/dog/finddoggo-actions";
 import { Icon } from "@/components/ui/icon";
+import { LocationHistoryMap } from "@/components/map/location-history-map";
 
 function formatDateShort(iso: string): string {
   try {
@@ -103,6 +107,25 @@ export default async function FindDoggoPage() {
             </div>
           </section>
 
+          {target.recentSightings.length > 0 && (
+            <section>
+              <div className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-ink mb-2 px-1">
+                {t("finddoggoMovement")}
+              </div>
+              <div className="rounded-xl border border-rule overflow-hidden h-[260px]">
+                <LocationHistoryMap
+                  locations={target.recentSightings.map((s) => ({
+                    latitude: s.latitude,
+                    longitude: s.longitude,
+                    timestamp: s.timestamp,
+                    nickname: t("finddoggoTrackerNickname"),
+                    notes: null,
+                  }))}
+                />
+              </div>
+            </section>
+          )}
+
           <section className="card-soft p-4">
             <div className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-ink mb-3">
               {t("finddoggoSightings")}
@@ -113,7 +136,9 @@ export default async function FindDoggoPage() {
               </p>
             ) : (
               <ul className="divide-y divide-rule">
-                {target.recentSightings.map((s) => (
+                {target.recentSightings
+                  .slice(0, FINDDOGGO_VISIBLE_SIGHTINGS_LIMIT)
+                  .map((s) => (
                   <li
                     key={s.id}
                     className="py-2 flex items-center justify-between gap-3 first:pt-0 last:pb-0"
@@ -140,7 +165,10 @@ export default async function FindDoggoPage() {
             )}
           </section>
 
-          <FindDoggoActions dogId={target.dogId} />
+          <FindDoggoActions
+            dogId={target.dogId}
+            earTagId={target.earTagId}
+          />
         </>
       )}
     </div>

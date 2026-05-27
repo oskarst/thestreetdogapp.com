@@ -12,9 +12,14 @@ interface FindDoggoActionsProps {
    *  by dog_id once the user logs a new sighting. Kept for future deep-link
    *  prefill of the add-dog form. */
   dogId: string;
+  /** Pre-fills the ear-tag input on the add-dog form via ?earTag=. */
+  earTagId: string | null;
 }
 
-export function FindDoggoActions({ dogId: _dogId }: FindDoggoActionsProps) {
+export function FindDoggoActions({
+  dogId: _dogId,
+  earTagId,
+}: FindDoggoActionsProps) {
   const router = useRouter();
   const t = useTranslations("missions");
   const [pending, startTransition] = useTransition();
@@ -37,7 +42,11 @@ export function FindDoggoActions({ dogId: _dogId }: FindDoggoActionsProps) {
   return (
     <div className="space-y-2">
       <Link
-        href="/add-dog"
+        href={
+          earTagId
+            ? `/add-dog?earTag=${encodeURIComponent(earTagId)}`
+            : "/add-dog"
+        }
         className={cn(
           "block w-full text-center px-4 py-3 rounded-full",
           "bg-ink text-background font-semibold text-[14px] no-underline",

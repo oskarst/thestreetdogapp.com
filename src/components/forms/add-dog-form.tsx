@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Loader2, WifiOff } from "lucide-react";
 
@@ -35,6 +35,10 @@ function makeUuid(): string {
 export function AddDogForm() {
   const router = useRouter();
   const t = useTranslations("addDog");
+  const searchParams = useSearchParams();
+  // Deep-link prefill: /add-dog?earTag=XXX lands here from the Find a
+  // Doggo target screen so the user doesn't have to retype the tag.
+  const prefilledEarTag = searchParams.get("earTag") ?? "";
 
   const [dogImage, setDogImage] = useState<File | null>(null);
   const [dogImageChecking, setDogImageChecking] = useState(false);
@@ -42,7 +46,7 @@ export function AddDogForm() {
   const [earTagImage, setEarTagImage] = useState<File | null>(null);
   const [earTagImageChecking, setEarTagImageChecking] = useState(false);
   const [earTagImageError, setEarTagImageError] = useState("");
-  const [earTagId, setEarTagId] = useState("");
+  const [earTagId, setEarTagId] = useState(prefilledEarTag);
   const [noEarTag, setNoEarTag] = useState(false);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
