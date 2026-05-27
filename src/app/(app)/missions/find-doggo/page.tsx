@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/auth-cache";
 import { getActiveFindDoggo } from "@/lib/finddoggo";
 import { FindDoggoStart } from "@/components/dog/finddoggo-start";
 import { FindDoggoActions } from "@/components/dog/finddoggo-actions";
+import { Icon } from "@/components/ui/icon";
 
 function formatDateShort(iso: string): string {
   try {
@@ -63,8 +64,8 @@ export default async function FindDoggoPage() {
                 />
               </div>
             ) : (
-              <div className="w-full aspect-[4/3] bg-rule-2 grid place-items-center">
-                <span className="text-6xl opacity-40">🐕</span>
+              <div className="w-full aspect-[4/3] bg-rule-2 grid place-items-center text-muted-foreground/50">
+                <Icon name="dog" size={72} />
               </div>
             )}
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth-cache";
 import { getActiveFindDoggo } from "@/lib/finddoggo";
+import { Icon } from "@/components/ui/icon";
 
 export default async function MissionsStartPage() {
   const user = await getCurrentUser();
@@ -33,7 +34,7 @@ export default async function MissionsStartPage() {
       >
         <div className="flex items-start gap-3">
           <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-ink text-background">
-            <span className="text-2xl leading-none">🗺️</span>
+            <Icon name="pin" size={28} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
@@ -58,7 +59,7 @@ export default async function MissionsStartPage() {
       >
         <div className="flex items-start gap-3">
           <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-amber-brand text-amber-soft">
-            <span className="text-2xl leading-none">🐾</span>
+            <Icon name="dog" size={28} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-amber-brand/80">

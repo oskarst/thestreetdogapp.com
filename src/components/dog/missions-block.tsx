@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SectionLabel } from "@/components/ui/section-label";
 import { getMissionsView, PARENT_COLORS } from "@/lib/missions";
 import { MissionsActiveActions } from "@/components/dog/missions-active-actions";
+import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 
 function localizedParent(
@@ -56,7 +57,7 @@ export async function MissionsBlock() {
                 className="size-14 rounded-full grid place-items-center bg-amber-brand text-amber-soft"
                 style={{ boxShadow: "0 6px 14px rgba(176, 122, 44, 0.25)" }}
               >
-                <span className="text-2xl leading-none">🧭</span>
+                <Icon name="target" size={28} />
               </div>
               <span
                 className="absolute -bottom-1 -right-1 size-4 rounded-full border-2 border-amber-soft"
@@ -122,7 +123,7 @@ export async function MissionsBlock() {
         >
           <div className="relative px-5 py-4 flex items-center gap-4">
             <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-amber-brand text-amber-soft">
-              <span className="text-2xl leading-none">🧭</span>
+              <Icon name="target" size={26} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-mono text-[10px] tracking-[0.32em] uppercase text-amber-brand/80">

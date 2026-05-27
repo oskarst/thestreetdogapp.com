@@ -1,63 +1,76 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Icon } from "@/components/ui/icon";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 export function FindDoggoStart() {
-  const router = useRouter();
   const t = useTranslations("missions");
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  async function runStart(lat: number, lng: number) {
+    const supabase = createClient();
+    const { data, error: rpcErr } = await supabase.rpc("start_finddoggo", {
+      p_lat: lat,
+      p_lng: lng,
+    });
+    if (rpcErr) {
+      setPending(false);
+      setError(rpcErr.message);
+      return;
+    }
+    const r = data as
+      | { ok: boolean; error?: string; dog_id?: string }
+      | null;
+    if (!r?.ok) {
+      setPending(false);
+      if (r?.error === "no_candidates") {
+        setError(t("finddoggoNoCandidates"));
+      } else {
+        setError(r?.error ?? "unknown");
+      }
+      return;
+    }
+    // Hard reload. router.refresh() relies on the server fetching the
+    // updated profile row through get_my_profile(); when its return type
+    // was stale (pre-018 migration), the new active_finddoggo_dog_id
+    // wasn't in the response and the page kept rendering this start
+    // screen. A full navigation is also more resilient to any RSC cache
+    // edge cases and gives the user a familiar "thing changed" cue.
+    window.location.href = "/missions/find-doggo";
+  }
 
   function handleStart() {
     if (pending) return;
     setError(null);
+    setPending(true);
 
     if (!("geolocation" in navigator)) {
+      setPending(false);
       setError(t("finddoggoLocationRequired"));
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        startTransition(async () => {
-          const supabase = createClient();
-          const { data, error: rpcErr } = await supabase.rpc(
-            "start_finddoggo",
-            {
-              p_lat: pos.coords.latitude,
-              p_lng: pos.coords.longitude,
-            }
-          );
-          if (rpcErr) {
-            setError(rpcErr.message);
-            return;
-          }
-          const r = data as
-            | { ok: boolean; error?: string; dog_id?: string }
-            | null;
-          if (!r?.ok) {
-            if (r?.error === "no_candidates") {
-              setError(t("finddoggoNoCandidates"));
-            } else {
-              setError(r?.error ?? "unknown");
-            }
-            return;
-          }
-          router.refresh();
-        });
+        runStart(pos.coords.latitude, pos.coords.longitude);
       },
-      () => setError(t("finddoggoLocationRequired")),
+      () => {
+        setPending(false);
+        setError(t("finddoggoLocationRequired"));
+      },
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 60_000 }
     );
   }
 
   return (
     <div className="card-soft p-6 text-center space-y-4">
-      <div className="text-5xl">🐾</div>
+      <div className="size-14 mx-auto grid place-items-center rounded-2xl bg-amber-brand text-amber-soft">
+        <Icon name="dog" size={32} />
+      </div>
       <h2 className="text-[20px] font-semibold leading-tight">
         {t("chooserFindTitle")}
       </h2>
@@ -77,6 +90,12 @@ export function FindDoggoStart() {
           "transition-transform active:scale-95 disabled:opacity-60"
         )}
       >
+        {pending && (
+          <span
+            className="size-3 rounded-full border-2 border-background/40 border-t-background animate-spin"
+            aria-hidden
+          />
+        )}
         {pending ? t("finddoggoStarting") : t("finddoggoStart")}
       </button>
       {error && (
