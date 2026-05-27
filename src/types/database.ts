@@ -40,6 +40,9 @@ export interface ProfileRow {
   active_mission_distinct_count?: number;
   active_mission_awards_today?: number;
   active_mission_award_date?: string | null;
+  /** Find Doggo active state — null when no active target. */
+  active_finddoggo_dog_id?: string | null;
+  active_finddoggo_started_at?: string | null;
 }
 
 export interface ProfileInsert {

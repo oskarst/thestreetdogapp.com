@@ -463,11 +463,38 @@ export async function POST(request: Request) {
       console.error("[sightings] mission award failed:", missionErr);
     }
     mark("mission");
+
+    // Find Doggo completion: if the user is hunting this exact dog, the RPC
+    // is a no-op when the active target is null or a different dog. Cheap
+    // single-row check inside SECURITY DEFINER; failures must not break the
+    // sighting itself.
+    let finddoggoAward: { awarded: number; dogId: string } | null = null;
+    try {
+      const { data: fddRes } = await supabase.rpc("complete_finddoggo", {
+        p_dog_id: dogId,
+      });
+      const f = fddRes as
+        | { ok: boolean; awarded?: number; dog_id?: string }
+        | null;
+      if (f?.ok && f.awarded && f.awarded > 0) {
+        finddoggoAward = { awarded: f.awarded, dogId: f.dog_id ?? dogId };
+      }
+    } catch (fddErr) {
+      console.error("[sightings] finddoggo award failed:", fddErr);
+    }
+    mark("finddoggo");
+
     console.log(
       `[perf] sightings.TOTAL = ${Math.round(performance.now() - t0)}ms`
     );
 
-    return NextResponse.json({ dogId, points, catchType, missionAward });
+    return NextResponse.json({
+      dogId,
+      points,
+      catchType,
+      missionAward,
+      finddoggoAward,
+    });
   } catch (err) {
     console.error("[POST /api/sightings]", err);
     return NextResponse.json(

@@ -117,7 +117,7 @@ export async function MissionsBlock() {
         </div>
       ) : (
         <Link
-          href="/map?picker=1"
+          href="/missions/start"
           className="relative block w-full overflow-hidden rounded-2xl border border-amber-brand/40 bg-amber-soft no-underline text-amber-brand transition-transform active:scale-[0.99] hover:brightness-95"
         >
           <div className="relative px-5 py-4 flex items-center gap-4">

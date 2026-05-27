@@ -5,7 +5,6 @@ import { getDashboardPayload } from "@/lib/db/dashboard";
 import { getUserSightings } from "@/lib/db/sightings";
 import { DashboardHero } from "@/components/dog/dashboard-hero";
 import { DailyQuest } from "@/components/dog/daily-quest";
-import { ScoreBoard } from "@/components/dog/score-board";
 import { Achievements } from "@/components/dog/achievements";
 import { MissionsBlock } from "@/components/dog/missions-block";
 import { DashboardContent } from "@/components/dog/dashboard-content";
@@ -56,15 +55,14 @@ export default async function DashboardPage() {
     <div className="px-4 py-4 space-y-4">
       <OfflineSyncPanel />
       <TourPrompt userId={user.id} />
-      <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
       <DashboardHero
         score={score}
         nickname={profile?.nickname ?? user.email?.split("@")[0] ?? "Operator"}
         shortId={shortHexId(user.id)}
         streakDays={streakDays}
       />
-      <Achievements achievements={achievements} />
-      <ScoreBoard score={score} />
+      <Achievements achievements={achievements} score={score} />
+      <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
       {/* MissionsBlock does its own profile + completions round-trips, so
           let it stream in independently while the rest of the dashboard
           paints. Falls back to a slim placeholder card. */}

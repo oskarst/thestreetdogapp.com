@@ -70,16 +70,16 @@ export default async function MissionsPage() {
       </header>
 
       <Link
-        href="/map?picker=1"
+        href="/missions/start"
         className="card-soft block w-full px-4 py-3 no-underline text-inherit transition-colors hover:border-ink/30"
       >
         <div className="flex items-center justify-between gap-3">
           <div>
             <div className="font-semibold text-[14px] leading-tight">
-              {t("openMapPicker")}
+              {t("chooserTitle")}
             </div>
             <div className="font-mono text-[10px] tracking-[0.06em] text-muted-foreground mt-0.5">
-              {t("pickerSubtitleMap")}
+              {t("chooserSubtitle")}
             </div>
           </div>
           <span className="font-mono text-[var(--green-brand)] text-lg shrink-0">
