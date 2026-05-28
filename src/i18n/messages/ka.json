@@ -118,7 +118,8 @@
     "metaPickOne": "აირჩიე",
     "metaScale": "შკალა 1–10",
     "noEarTag": "ბირკის გარეშე",
-    "pageTitle": "ძაღლის პოვნა"
+    "pageTitle": "ძაღლის პოვნა",
+    "earTagHint": "შეიყვანე მხოლოდ ძაღლის ID — ყურის ნიშნის ბოლო 3–7 ციფრი. მაგ. AMA 111 <id>334523</id>"
   },
   "dogProfile": {
     "adoptInfo": "ინფორმაციის მიღება",

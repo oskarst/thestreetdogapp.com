@@ -118,7 +118,8 @@
     "metaPickOne": "выбери",
     "metaScale": "шкала 1–10",
     "noEarTag": "Без бирки",
-    "pageTitle": "Найти собаку"
+    "pageTitle": "Найти собаку",
+    "earTagHint": "Введи только ID собаки — последние 3–7 цифр на ушной бирке. Напр. AMA 111 <id>334523</id>"
   },
   "dogProfile": {
     "adoptInfo": "Принять информацию",

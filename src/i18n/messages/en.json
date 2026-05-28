@@ -118,7 +118,8 @@
     "metaPickOne": "pick one",
     "metaScale": "scale 1–10",
     "noEarTag": "No Ear Tag",
-    "pageTitle": "Find a Dog"
+    "pageTitle": "Find a Dog",
+    "earTagHint": "Enter the dog ID only — the last 3–7 digits on the ear tag. e.g. AMA 111 <id>334523</id>"
   },
   "dogProfile": {
     "adoptInfo": "Adopt Info",

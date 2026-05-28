@@ -461,6 +461,20 @@ export function AddDogForm() {
               {t("noEarTag")}
             </button>
           </div>
+          {!noEarTag && (
+            <p className="text-[12px] leading-snug text-muted-foreground">
+              {t.rich("earTagHint", {
+                id: (chunks) => (
+                  <>
+                    <span aria-hidden className="text-ink">↳ </span>
+                    <span className="font-bold font-mono text-ink bg-amber-soft px-1 py-0.5 rounded">
+                      {chunks}
+                    </span>
+                  </>
+                ),
+              })}
+            </p>
+          )}
           {fieldErrors.earTag && (
             <p
               role="alert"
