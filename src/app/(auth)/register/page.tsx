@@ -1,43 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
 import { z } from "zod/v4";
 import { AuthShell } from "@/components/auth/auth-shell";
-import {
-  AuthField,
-  PrimaryAuthButton,
-  AuthDivider,
-} from "@/components/auth/auth-fields";
-import { GoogleAuthButton } from "@/components/auth/google-auth-button";
+import { AuthField, PrimaryAuthButton } from "@/components/auth/auth-fields";
 import { createClient } from "@/lib/supabase/client";
 
-const registerSchema = z
-  .object({
-    email: z.email("Please enter a valid email address."),
-    nickname: z
-      .string()
-      .min(2, "Nickname must be at least 2 characters.")
-      .max(100, "Nickname must be under 100 characters."),
-    password: z.string().min(8, "Password must be at least 8 characters."),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match.",
-    path: ["confirmPassword"],
-  });
+const registerSchema = z.object({
+  email: z.email("Please enter a valid email address."),
+  nickname: z
+    .string()
+    .min(2, "Nickname must be at least 2 characters.")
+    .max(100, "Nickname must be under 100 characters."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
+});
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     email: "",
     nickname: "",
     password: "",
-    confirmPassword: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   function update(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -61,7 +49,7 @@ export default function RegisterPage() {
 
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
       options: {
@@ -70,53 +58,54 @@ export default function RegisterPage() {
     });
 
     if (error) {
-      // Don't reflect the raw Supabase error: "User already registered"
-      // is the same enumeration vector as login error reflection. Show
-      // the success state regardless — duplicate-email registrations
-      // silently no-op (Supabase still mails the original account if
-      // it exists, which is the right behavior for password reset
-      // attempts disguised as registration).
       const lower = error.message.toLowerCase();
       if (lower.includes("rate limit")) {
         setErrors({
           form: "Too many attempts. Please try again in a few minutes.",
         });
-        setLoading(false);
-        return;
+      } else if (
+        lower.includes("already registered") ||
+        lower.includes("already been registered") ||
+        lower.includes("user already")
+      ) {
+        // Surface the one error worth surfacing: the email is taken, so
+        // there's nothing for the user to do here but sign in instead.
+        setErrors({
+          form: "That email is already registered. Try signing in instead.",
+        });
+      } else {
+        setErrors({ form: "Something went wrong. Please try again." });
       }
-      // For all other errors, treat as success — Supabase has already
-      // routed the verification email to the right place.
+      setLoading(false);
+      return;
     }
 
-    setLoading(false);
-    setSuccess(true);
-  }
+    // Easiest possible signup: no email-confirmation gate. When Supabase
+    // email confirmation is OFF, signUp returns a live session and the user
+    // is already logged in. If it's ON (no session returned), fall back to
+    // an explicit password sign-in so the user still lands logged in.
+    if (!data.session) {
+      await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+    }
 
-  if (success) {
-    return (
-      <AuthShell
-        eyebrow="Confirmation Sent"
-        title="Check your email."
-        description=""
-        footer={
-          <Link
-            href="/login"
-            className="text-ink underline underline-offset-[3px] font-medium"
-          >
-            back to login
-          </Link>
-        }
-      >
-        <div className="card-soft p-5 flex items-start gap-3">
-          <CheckCircle2 className="size-5 text-[var(--green-brand)] shrink-0 mt-0.5" />
-          <div className="text-sm leading-relaxed">
-            We sent a confirmation link to{" "}
-            <span className="font-medium text-ink">{form.email}</span>. Verify
-            your email to activate the operator account.
-          </div>
-        </div>
-      </AuthShell>
-    );
+    // The auth trigger creates the profile row with id + email only, so the
+    // chosen nickname has to be written back here (RLS allows the user to
+    // update their own nickname). Best-effort: a failure here shouldn't block
+    // an otherwise-successful signup.
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      await supabase
+        .from("profiles")
+        .update({ nickname: form.nickname })
+        .eq("id", user.id);
+    }
+
+    router.push("/dashboard");
   }
 
   return (
@@ -165,16 +154,6 @@ export default function RegisterPage() {
           togglePassword
           error={errors.password}
         />
-        <AuthField
-          label="Confirm password"
-          type="password"
-          placeholder="Repeat password"
-          value={form.confirmPassword}
-          onChange={(e) => update("confirmPassword", e.target.value)}
-          autoComplete="new-password"
-          togglePassword
-          error={errors.confirmPassword}
-        />
 
         {errors.form && (
           <p className="text-sm text-destructive mb-2">{errors.form}</p>
@@ -184,10 +163,6 @@ export default function RegisterPage() {
           Create operator
         </PrimaryAuthButton>
       </form>
-
-      <AuthDivider>or</AuthDivider>
-
-      <GoogleAuthButton />
     </AuthShell>
   );
 }

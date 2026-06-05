@@ -4,12 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { GoogleAuthButton } from "@/components/auth/google-auth-button";
 import { AuthShell } from "@/components/auth/auth-shell";
 import {
   AuthField,
   PrimaryAuthButton,
-  AuthDivider,
 } from "@/components/auth/auth-fields";
 import { createClient } from "@/lib/supabase/client";
 
@@ -99,10 +97,6 @@ export default function LoginPage() {
           {t("signIn")}
         </PrimaryAuthButton>
       </form>
-
-      <AuthDivider>{t("or")}</AuthDivider>
-
-      <GoogleAuthButton />
     </AuthShell>
   );
 }
