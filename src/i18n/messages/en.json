@@ -71,7 +71,8 @@
     "achFiveTrackers": "5 Trackers",
     "achFivePioneers": "5 Pioneers",
     "achFiftySpottings": "50 Findings",
-    "achSevenDayStreak": "7-Day Streak"
+    "achSevenDayStreak": "7-Day Streak",
+    "developedBy": "Developed by"
   },
   "addDog": {
     "dogNamed": "Dog named {name}!",

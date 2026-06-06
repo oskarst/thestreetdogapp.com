@@ -71,7 +71,8 @@
     "achFiveTrackers": "5 მკვლევარი",
     "achFivePioneers": "5 აღმოჩენილი",
     "achFiftySpottings": "50 აღმოჩენა",
-    "achSevenDayStreak": "7-დღიანი სერია"
+    "achSevenDayStreak": "7-დღიანი სერია",
+    "developedBy": "შემქმნელი:"
   },
   "addDog": {
     "dogNamed": "ძაღლი დასახელდა {name}!",

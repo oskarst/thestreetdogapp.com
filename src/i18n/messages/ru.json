@@ -71,7 +71,8 @@
     "achFiveTrackers": "5 повторных находок",
     "achFivePioneers": "5 первооткрывателей",
     "achFiftySpottings": "50 находок",
-    "achSevenDayStreak": "7-дневная серия"
+    "achSevenDayStreak": "7-дневная серия",
+    "developedBy": "Разработчик:"
   },
   "addDog": {
     "dogNamed": "Собака по имени {name}!",

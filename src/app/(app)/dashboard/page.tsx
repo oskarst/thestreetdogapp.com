@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
 import { getDashboardPayload } from "@/lib/db/dashboard";
 import { getUserSightings } from "@/lib/db/sightings";
@@ -19,6 +20,8 @@ import { time } from "@/lib/perf";
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t = await getTranslations("dashboard");
 
   // Two real network calls: the composite dashboard RPC (dogs + favorites
   // + caught_ids + score) and the user's sightings (for streak + quest).
@@ -78,6 +81,18 @@ export default async function DashboardPage() {
         favoriteIds={favorite_ids}
         caughtDogIds={caught_dog_ids}
       />
+
+      <p className="pt-2 pb-1 text-center font-mono text-[10px] tracking-[0.06em] text-muted-foreground">
+        {t("developedBy")}{" "}
+        <a
+          href="https://developers-alliance.com"
+          target="_blank"
+          rel="noopener"
+          className="underline underline-offset-2 hover:text-ink"
+        >
+          Developers Alliance
+        </a>
+      </p>
     </div>
   );
 }
