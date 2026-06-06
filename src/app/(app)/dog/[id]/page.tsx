@@ -79,6 +79,7 @@ export default async function DogProfilePage({
       <DogImageCarousel
         images={dog.images ?? []}
         name={dog.names?.[0] ?? "Dog"}
+        earTagImage={dog.ear_tag_image}
       />
 
       <div className="flex items-center gap-2">
