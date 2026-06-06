@@ -1,8 +1,6 @@
 import type { SightingWithUser } from "@/lib/db/sightings";
-import { CharacterIcon } from "@/components/dog/character-icon";
 import { SectionLabel } from "@/components/ui/section-label";
 import { sizeLabel } from "@/lib/size";
-import type { DogCharacter } from "@/types/database";
 
 function relativeOffset(dateStr: string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -50,12 +48,7 @@ export function SightingList({ sightings }: SightingListProps) {
                   {nickname === "anon" ? "Sighting" : `by ${nickname}`}
                 </div>
                 <div className="font-mono text-[10.5px] tracking-[0.04em] text-muted-foreground mt-0.5 flex items-center gap-1.5">
-                  <CharacterIcon
-                    character={s.character as DogCharacter}
-                    size={12}
-                    className="text-muted-foreground"
-                  />
-                  {s.character.replace(/_/g, " ")} · size {sizeLabel(s.size)}
+                  size {sizeLabel(s.size)}
                 </div>
                 {s.notes && (
                   <div className="text-[12px] text-muted-foreground mt-1 truncate">

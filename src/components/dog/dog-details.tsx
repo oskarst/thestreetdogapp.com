@@ -1,8 +1,7 @@
 import { getTranslations } from "next-intl/server";
-import type { DogRow, DogCharacter } from "@/types/database";
+import type { DogRow } from "@/types/database";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
-import { CharacterIcon } from "@/components/dog/character-icon";
 import { sizeLabel } from "@/lib/size";
 
 function timeAgo(dateStr: string | null): string {
@@ -16,10 +15,6 @@ function timeAgo(dateStr: string | null): string {
   const d = Math.floor(h / 24);
   if (d < 30) return `${d}d`;
   return `${Math.floor(d / 30)}mo`;
-}
-
-function formatCharacter(char: string): string {
-  return char.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function formatLabel(s: string): string {
@@ -106,18 +101,6 @@ export async function DogDetails({
       <div>
         <SectionLabel meta="aggregated">Profile</SectionLabel>
         <div className="space-y-2">
-          {dog.character && (
-            <ProfileRow
-              icon={
-                <CharacterIcon
-                  character={dog.character as DogCharacter}
-                  size={16}
-                />
-              }
-              label="Character"
-              value={formatCharacter(dog.character)}
-            />
-          )}
           {dog.size != null && (
             <ProfileRow
               icon={<Icon name="target" size={14} />}

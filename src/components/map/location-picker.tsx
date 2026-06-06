@@ -45,21 +45,18 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
       const center = initialPosition ?? TBILISI;
       const map = L.map(mapRef.current!, {
         center: [center.lat, center.lng],
-        zoom: 15,
+        zoom: 16,
+        maxZoom: 20,
         attributionControl: false,
       });
 
+      // CARTO dark_all: keeps the dark theme but bakes in street names and
+      // supports native zoom to 20 (the old Esri Dark Gray Canvas capped at
+      // 16 with sparse labels), so users can zoom right down to the street
+      // to place the marker accurately.
       const tileLayer = L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-        { maxZoom: 16, className: "map-base-accessible" }
-      ).addTo(map);
-      L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
-        {
-          maxZoom: 16,
-          pane: "shadowPane",
-          className: "map-labels-accessible",
-        }
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        { maxZoom: 20, subdomains: "abcd", className: "map-base-accessible" }
       ).addTo(map);
 
       // Detect if tiles fail to load (offline, no cache)
@@ -111,7 +108,7 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
         const map = mapInstanceRef.current;
         const marker = markerRef.current;
         if (map && marker) {
-          map.setView([loc.lat, loc.lng], 15);
+          map.setView([loc.lat, loc.lng], 17);
           marker.setLatLng([loc.lat, loc.lng]);
         }
       },
@@ -132,7 +129,7 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
         const map = mapInstanceRef.current;
         const marker = markerRef.current;
         if (map && marker) {
-          map.setView([lat, lng], 15);
+          map.setView([lat, lng], 17);
           marker.setLatLng([lat, lng]);
         }
         setGpsPosition({ lat, lng });

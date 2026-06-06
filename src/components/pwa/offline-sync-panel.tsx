@@ -13,16 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useOfflineDogs } from "@/hooks/use-offline-dogs";
-import type { DogCharacter } from "@/types/database";
-
-const CHARACTER_EMOJI: Record<DogCharacter, string> = {
-  friendly: "\u{1F60A}",
-  very_friendly: "\u{1F970}",
-  indifferent: "\u{1F610}",
-  sleeping: "\u{1F634}",
-  afraid: "\u{1F630}",
-  aggressive: "\u{1F621}",
-};
 
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -139,9 +129,7 @@ export function OfflineSyncPanel() {
                 ) : (
                   <div className="size-10 rounded-md bg-amber-200" />
                 )}
-                <span className="text-lg leading-none">
-                  {CHARACTER_EMOJI[dog.character] ?? "\u{1F415}"}
-                </span>
+                <span className="text-lg leading-none">{"\u{1F415}"}</span>
                 <span className="ml-auto text-xs text-amber-700">
                   {timeAgo(dog.createdAt)}
                 </span>

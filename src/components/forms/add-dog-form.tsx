@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { SectionLabel } from "@/components/ui/section-label";
 import { CameraUpload } from "@/components/image/camera-upload";
 import { LocationPicker } from "@/components/map/location-picker";
-import { CharacterPicker } from "@/components/forms/character-picker";
 import { SizeSelector } from "@/components/forms/size-selector";
 import { GenderPicker } from "@/components/forms/gender-picker";
 import { AgePicker } from "@/components/forms/age-picker";
@@ -52,7 +51,10 @@ export function AddDogForm() {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
-  const [character, setCharacter] = useState<DogCharacter | "">("friendly");
+  // Friendliness/character is hidden from the UI for now to keep the form
+  // simple, but the column is still required, so we always submit a sensible
+  // default.
+  const [character] = useState<DogCharacter>("friendly");
   const [size, setSize] = useState(DEFAULT_SIZE);
   const [gender, setGender] = useState<DogGender | "">("");
   const [age, setAge] = useState<DogAge | "">("");
@@ -69,7 +71,6 @@ export function AddDogForm() {
     | "dogImage"
     | "earTag"
     | "location"
-    | "character"
     | "gender"
     | "age";
 
@@ -84,7 +85,6 @@ export function AddDogForm() {
     dogImage: useRef<HTMLElement | null>(null),
     earTag: useRef<HTMLElement | null>(null),
     location: useRef<HTMLElement | null>(null),
-    character: useRef<HTMLElement | null>(null),
     gender: useRef<HTMLElement | null>(null),
     age: useRef<HTMLElement | null>(null),
   };
@@ -192,10 +192,6 @@ export function AddDogForm() {
     // a blank ear-tag section no longer blocks submission.
     if (!location) {
       flagField("location", t("errorLocation"));
-      return;
-    }
-    if (!character) {
-      flagField("character", t("errorCharacter"));
       return;
     }
     if (!gender) {
@@ -367,6 +363,7 @@ export function AddDogForm() {
         <SectionLabel meta={t("metaRequired")}>{t("dogPhoto")}</SectionLabel>
         <CameraUpload
           label={t("tapDogPhoto")}
+          zoomable
           onChange={(file) => {
             handleDogImage(file);
             clearFieldError("dogImage");
@@ -497,25 +494,6 @@ export function AddDogForm() {
             className="mt-2 text-sm font-medium text-destructive"
           >
             {fieldErrors.location}
-          </p>
-        )}
-      </section>
-
-      <section ref={sectionRefs.character} className="scroll-mt-24">
-        <SectionLabel meta={t("metaPickOne")}>{t("character")}</SectionLabel>
-        <CharacterPicker
-          value={character}
-          onChange={(value) => {
-            setCharacter(value);
-            clearFieldError("character");
-          }}
-        />
-        {fieldErrors.character && (
-          <p
-            role="alert"
-            className="mt-2 text-sm font-medium text-destructive"
-          >
-            {fieldErrors.character}
           </p>
         )}
       </section>
