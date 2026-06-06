@@ -4,15 +4,12 @@ import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
 import { getDashboardPayload } from "@/lib/db/dashboard";
 import { getUserSightings } from "@/lib/db/sightings";
 import { DashboardHero } from "@/components/dog/dashboard-hero";
-import { DailyQuest } from "@/components/dog/daily-quest";
 import { Achievements } from "@/components/dog/achievements";
 import { MissionsBlock } from "@/components/dog/missions-block";
 import { DashboardContent } from "@/components/dog/dashboard-content";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import { TourPrompt } from "@/components/tour/tour-button";
 import {
-  isDailyQuestComplete,
-  isDailyQuestClaimedToday,
   deriveAchievements,
   deriveStreak,
   shortHexId,
@@ -42,10 +39,6 @@ export default async function DashboardPage() {
   const { dogs, favorite_ids, caught_dog_ids, score } = dashboard;
 
   const streakDays = deriveStreak(sightings);
-  const questComplete = isDailyQuestComplete(sightings);
-  const questClaimedToday = isDailyQuestClaimedToday(
-    profile?.quest_last_claimed_date
-  );
   const achievements = deriveAchievements({
     newDogs: score.new_dogs,
     uniqueDogs: score.unique_dogs,
@@ -59,7 +52,7 @@ export default async function DashboardPage() {
       <TourPrompt userId={user.id} />
       {/* Researcher Level + Achievements share one card (no gap between
           them); Achievements still folds out on click. */}
-      <section className="card-soft p-4 space-y-3">
+      <section className="card-soft p-4 space-y-3" data-tour-id="dashboard-hero">
         <DashboardHero
           score={score}
           nickname={profile?.nickname ?? user.email?.split("@")[0] ?? "Operator"}
@@ -69,7 +62,6 @@ export default async function DashboardPage() {
         <div className="h-px bg-rule" />
         <Achievements achievements={achievements} score={score} />
       </section>
-      <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
       {/* MissionsBlock does its own profile + completions round-trips, so
           let it stream in independently while the rest of the dashboard
           paints. Falls back to a slim placeholder card. */}

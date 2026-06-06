@@ -21,7 +21,7 @@ export async function DashboardHero({
   const nextLevel = String(level + 1).padStart(2, "0");
 
   return (
-    <div data-tour-id="dashboard-hero">
+    <div>
       <div className="flex items-start justify-between gap-3 mb-1">
         <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
           {t("level")}

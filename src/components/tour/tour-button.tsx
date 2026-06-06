@@ -10,7 +10,7 @@ interface TourComponentProps {
   userId: string;
 }
 
-const TOUR_VERSION = "v1";
+const TOUR_VERSION = "v2";
 const STATE_EVENT = "tour:state";
 
 // One state machine, four resting values:
@@ -121,31 +121,24 @@ function useStartTour(userId: string) {
 
     const allSteps: DriveStep[] = [
       {
-        element: '[data-tour-id="daily-quest"]',
+        element: '[data-tour-id="dashboard-hero"]',
         popover: {
           title: t("step1Title"),
           description: t("step1Body"),
         },
       },
       {
-        element: '[data-tour-id="dashboard-hero"]',
+        element: '[data-tour-id="missions-block"]',
         popover: {
           title: t("step2Title"),
           description: t("step2Body"),
         },
       },
       {
-        element: '[data-tour-id="missions-block"]',
+        element: '[data-tour-id="dashboard-content"]',
         popover: {
           title: t("step3Title"),
           description: t("step3Body"),
-        },
-      },
-      {
-        element: '[data-tour-id="dashboard-content"]',
-        popover: {
-          title: t("step4Title"),
-          description: t("step4Body"),
         },
       },
     ];

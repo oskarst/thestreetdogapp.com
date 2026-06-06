@@ -1,20 +1,35 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { getCurrentUser } from "@/lib/auth-cache";
+import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
+import { getUserSightings } from "@/lib/db/sightings";
+import {
+  isDailyQuestComplete,
+  isDailyQuestClaimedToday,
+} from "@/lib/dashboard";
+import { DailyQuest } from "@/components/dog/daily-quest";
 import { Icon } from "@/components/ui/icon";
 
 export default async function MissionsStartPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const t = await getTranslations("missions");
-
   // The chooser is the missions hub: always show both options (Find a
   // Doggo / map mission). We deliberately do NOT auto-redirect into an
   // active Find Doggo here — that bounced the back button from the
   // find-doggo screen straight back into the mission. The "Find a Doggo"
   // card below already resumes an active target on tap.
+  const [t, sightings, profile] = await Promise.all([
+    getTranslations("missions"),
+    getUserSightings(user.id),
+    getCurrentProfile(),
+  ]);
+
+  // Daily quest ("spot 1 dog today") lives here as a daily mission.
+  const questComplete = isDailyQuestComplete(sightings);
+  const questClaimedToday = isDailyQuestClaimedToday(
+    profile?.quest_last_claimed_date
+  );
 
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
@@ -26,6 +41,8 @@ export default async function MissionsStartPage() {
           {t("chooserTitle")}
         </h1>
       </header>
+
+      <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
 
       <Link
         href="/map?picker=1"
