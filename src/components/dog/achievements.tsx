@@ -52,7 +52,7 @@ export function Achievements({ achievements, score }: AchievementsProps) {
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <section className="card-soft p-3">
+    <div>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -145,6 +145,6 @@ export function Achievements({ achievements, score }: AchievementsProps) {
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

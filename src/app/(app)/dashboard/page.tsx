@@ -57,13 +57,18 @@ export default async function DashboardPage() {
     <div className="px-4 py-4 space-y-4">
       <OfflineSyncPanel />
       <TourPrompt userId={user.id} />
-      <DashboardHero
-        score={score}
-        nickname={profile?.nickname ?? user.email?.split("@")[0] ?? "Operator"}
-        shortId={shortHexId(user.id)}
-        streakDays={streakDays}
-      />
-      <Achievements achievements={achievements} score={score} />
+      {/* Researcher Level + Achievements share one card (no gap between
+          them); Achievements still folds out on click. */}
+      <section className="card-soft p-4 space-y-3">
+        <DashboardHero
+          score={score}
+          nickname={profile?.nickname ?? user.email?.split("@")[0] ?? "Operator"}
+          shortId={shortHexId(user.id)}
+          streakDays={streakDays}
+        />
+        <div className="h-px bg-rule" />
+        <Achievements achievements={achievements} score={score} />
+      </section>
       <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
       {/* MissionsBlock does its own profile + completions round-trips, so
           let it stream in independently while the rest of the dashboard
