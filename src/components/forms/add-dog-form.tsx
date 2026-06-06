@@ -10,12 +10,13 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { CameraUpload } from "@/components/image/camera-upload";
 import { LocationPicker } from "@/components/map/location-picker";
 import { CharacterPicker } from "@/components/forms/character-picker";
-import { SizeSlider } from "@/components/forms/size-slider";
+import { SizeSelector } from "@/components/forms/size-selector";
 import { GenderPicker } from "@/components/forms/gender-picker";
 import { AgePicker } from "@/components/forms/age-picker";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import { checkDogPhoto, checkEarTagImage } from "@/lib/image-checks";
 import { saveOfflineDog } from "@/lib/offline-db";
+import { DEFAULT_SIZE } from "@/lib/size";
 
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
@@ -52,7 +53,7 @@ export function AddDogForm() {
     null
   );
   const [character, setCharacter] = useState<DogCharacter | "">("");
-  const [size, setSize] = useState(5);
+  const [size, setSize] = useState(DEFAULT_SIZE);
   const [gender, setGender] = useState<DogGender | "">("");
   const [age, setAge] = useState<DogAge | "">("");
   const [notes, setNotes] = useState("");
@@ -408,6 +409,7 @@ export function AddDogForm() {
         <div className="space-y-2.5">
           <CameraUpload
             label={t("tapEarTagPhoto")}
+            zoomable
             onChange={(file) => {
               handleEarTagImage(file);
               clearFieldError("earTag");
@@ -525,7 +527,7 @@ export function AddDogForm() {
 
       <section>
         <SectionLabel meta={t("metaScale")}>{t("size")}</SectionLabel>
-        <SizeSlider value={size} onChange={setSize} />
+        <SizeSelector value={size} onChange={setSize} />
       </section>
 
       <section ref={sectionRefs.gender} className="scroll-mt-24">

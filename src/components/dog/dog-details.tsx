@@ -3,6 +3,7 @@ import type { DogRow, DogCharacter } from "@/types/database";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
 import { CharacterIcon } from "@/components/dog/character-icon";
+import { sizeLabel } from "@/lib/size";
 
 function timeAgo(dateStr: string | null): string {
   if (!dateStr) return "—";
@@ -121,7 +122,7 @@ export async function DogDetails({
             <ProfileRow
               icon={<Icon name="target" size={14} />}
               label="Size"
-              value={`${dog.size} / 10`}
+              value={sizeLabel(dog.size)}
             />
           )}
           {dog.gender && (
