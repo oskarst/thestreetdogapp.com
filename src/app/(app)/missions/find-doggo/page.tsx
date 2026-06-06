@@ -38,7 +38,7 @@ export default async function FindDoggoPage() {
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
       <header>
         <Link
-          href="/missions"
+          href="/missions/start"
           className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink no-underline transition-colors"
         >
           ← {t("finddoggoBack")}

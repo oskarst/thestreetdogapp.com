@@ -2,20 +2,19 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth-cache";
-import { getActiveFindDoggo } from "@/lib/finddoggo";
 import { Icon } from "@/components/ui/icon";
 
 export default async function MissionsStartPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const [t, active] = await Promise.all([
-    getTranslations("missions"),
-    getActiveFindDoggo(),
-  ]);
+  const t = await getTranslations("missions");
 
-  // If there's already an active Find Doggo target, jump straight to it.
-  if (active) redirect("/missions/find-doggo");
+  // The chooser is the missions hub: always show both options (Find a
+  // Doggo / map mission). We deliberately do NOT auto-redirect into an
+  // active Find Doggo here — that bounced the back button from the
+  // find-doggo screen straight back into the mission. The "Find a Doggo"
+  // card below already resumes an active target on tap.
 
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
