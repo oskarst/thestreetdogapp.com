@@ -6,6 +6,7 @@ import { getDashboardPayload } from "@/lib/db/dashboard";
 import { getUserSightings } from "@/lib/db/sightings";
 import { DashboardHero } from "@/components/dog/dashboard-hero";
 import { Achievements } from "@/components/dog/achievements";
+import { DailyQuest } from "@/components/dog/daily-quest";
 import { MissionsBlock } from "@/components/dog/missions-block";
 import { DashboardContent } from "@/components/dog/dashboard-content";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
@@ -14,6 +15,8 @@ import {
   deriveAchievements,
   deriveStreak,
   shortHexId,
+  isDailyQuestComplete,
+  isDailyQuestClaimedToday,
 } from "@/lib/dashboard";
 import { time } from "@/lib/perf";
 
@@ -42,6 +45,12 @@ export default async function DashboardPage() {
   const { dogs, favorite_ids, caught_dog_ids, score } = dashboard;
 
   const streakDays = deriveStreak(sightings);
+  // Daily directive: only surfaces once the first dog of the day is logged
+  // (quest complete) and not yet claimed; otherwise it stays invisible.
+  const questComplete = isDailyQuestComplete(sightings);
+  const questClaimedToday = isDailyQuestClaimedToday(
+    profile?.quest_last_claimed_date
+  );
   const achievements = deriveAchievements({
     newDogs: score.new_dogs,
     uniqueDogs: score.unique_dogs,
@@ -65,6 +74,11 @@ export default async function DashboardPage() {
         <div className="h-px bg-rule" />
         <Achievements achievements={achievements} score={score} />
       </section>
+      {/* Daily directive claim — only rendered once the day's first dog is
+          logged (and hidden again after claiming). */}
+      {questComplete && (
+        <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
+      )}
       {/* MissionsBlock does its own profile + completions round-trips, so
           let it stream in independently while the rest of the dashboard
           paints. Falls back to a slim placeholder card. */}

@@ -341,7 +341,11 @@
     "finddoggoBack": "К миссиям",
     "finddoggoUnnamed": "Собака без имени",
     "finddoggoMovement": "Недавние перемещения",
-    "finddoggoTrackerNickname": "Следопыт"
+    "finddoggoTrackerNickname": "Следопыт",
+    "dailyTitle": "Ежедневная задача",
+    "dailyStart": "Найди как можно больше собак",
+    "dailyBody": "Записывай всех уличных собак, которых заметишь сегодня. Каждая повышает твой счёт.",
+    "dailyReward": "+15 XP за первую находку дня"
   },
   "tour": {
     "openTour": "Краткий тур",

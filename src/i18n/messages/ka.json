@@ -341,7 +341,11 @@
     "finddoggoBack": "მისიებზე დაბრუნება",
     "finddoggoUnnamed": "უსახელო ძაღლი",
     "finddoggoMovement": "ბოლო მოძრაობა",
-    "finddoggoTrackerNickname": "მკვლევარი"
+    "finddoggoTrackerNickname": "მკვლევარი",
+    "dailyTitle": "დღიური დავალება",
+    "dailyStart": "იპოვე რაც შეიძლება მეტი ძაღლი",
+    "dailyBody": "ჩაწერე ყველა ქუჩის ძაღლი, რომელსაც დღეს შენიშნავ. თითოეული ზრდის შენს ქულას.",
+    "dailyReward": "+15 XP დღის პირველი აღმოჩენისთვის"
   },
   "tour": {
     "openTour": "სწრაფი ტური",
