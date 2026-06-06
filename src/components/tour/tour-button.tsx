@@ -119,7 +119,7 @@ function useStartTour(userId: string) {
     const { driver } = await import("driver.js");
     await import("driver.js/dist/driver.css");
 
-    const steps: DriveStep[] = [
+    const allSteps: DriveStep[] = [
       {
         element: '[data-tour-id="daily-quest"]',
         popover: {
@@ -146,14 +146,33 @@ function useStartTour(userId: string) {
         popover: {
           title: t("step4Title"),
           description: t("step4Body"),
-          doneBtnText: t("done"),
-          onNextClick: (_el, _step, opts) => {
-            completedRef.current = true;
-            opts.driver.destroy();
-          },
         },
       },
     ];
+
+    // Some anchors are conditional — the daily directive hides itself once
+    // the day's quest is claimed, so its element is absent on a returning
+    // visit. Driver.js renders a step with a missing target as a detached,
+    // centered popover with no highlight, which reads as a broken first
+    // step. Only drive steps whose anchor is actually mounted.
+    const steps = allSteps.filter(
+      (s) => typeof s.element === "string" && document.querySelector(s.element)
+    );
+    if (steps.length === 0) return;
+
+    // Completion is tracked off the final step's "Done" click. Attach the
+    // handler to whichever step ends up last after filtering, so finishing
+    // the tour always records completion regardless of which anchors were
+    // present.
+    const last = steps[steps.length - 1];
+    last.popover = {
+      ...last.popover,
+      doneBtnText: t("done"),
+      onNextClick: (_el, _step, opts) => {
+        completedRef.current = true;
+        opts.driver.destroy();
+      },
+    };
 
     const d = driver({
       showProgress: true,
