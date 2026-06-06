@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
   let query = admin
     .from("profiles")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(200);
 
   const safeSearch = sanitizeSearch(search);
   if (safeSearch) {

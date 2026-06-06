@@ -29,12 +29,23 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data, error: authError } = await supabase.auth.getUser();
-  const user = data.user;
+  // Routing gate uses LOCAL JWT verification (getClaims) instead of the
+  // network getUser(). getClaims verifies the access-token signature
+  // against the project JWKS via WebCrypto — no Auth round-trip — which is
+  // plenty for deciding redirect-vs-pass-through. The authoritative
+  // network getUser() still runs in the RSC/data layer (auth-cache.ts),
+  // so this removes one serialized auth leg per navigation with no
+  // security loss. NOTE: getClaims still calls getSession() to read the
+  // cookie, which is what triggers @supabase/ssr's cookie refresh, so the
+  // session-handling contract above stays intact.
+  const { data, error: authError } = await supabase.auth.getClaims();
+  const claims = data?.claims;
+  const isAuthed = Boolean(claims?.sub);
 
-  // If auth check failed but user has a session cookie, don't kick them out.
-  // This handles offline/network errors and Safari cookie quirks.
-  if (authError && !user) {
+  // If the JWT check failed but the user has a session cookie, don't kick
+  // them out. This handles offline/network errors (JWKS fetch) and Safari
+  // cookie quirks.
+  if (authError && !isAuthed) {
     const hasSessionCookie = request.cookies
       .getAll()
       .some((c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"));
@@ -47,7 +58,7 @@ export async function middleware(request: NextRequest) {
 
   // Auth routes - redirect to dashboard if already logged in
   const authRoutes = ["/login", "/register", "/reset-password"];
-  if (user && authRoutes.some((route) => pathname.startsWith(route))) {
+  if (isAuthed && authRoutes.some((route) => pathname.startsWith(route))) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
@@ -70,7 +81,7 @@ export async function middleware(request: NextRequest) {
     "/admin",
   ];
   if (
-    !user &&
+    !isAuthed &&
     protectedPrefixes.some((prefix) => pathname.startsWith(prefix))
   ) {
     const url = request.nextUrl.clone();

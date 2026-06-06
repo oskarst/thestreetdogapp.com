@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
-import { DOG_MARKER_COLUMNS, type DogMarker } from "@/types/database";
+import { type DogMarker } from "@/types/database";
 import {
   getChunks,
   getMissionsView,
@@ -15,18 +15,34 @@ import {
 // server bundle — and out of every other route's chunks.
 const DogMap = dynamic(() => import("@/components/map/dog-map"));
 
+// Minimal column set the markers + side panel actually read: cluster icon
+// uses names; the popup uses ear_tag_id, last_sighting_date, and a single
+// thumbnail (images[0]). Trimmed from DOG_MARKER_COLUMNS so the growing
+// images array doesn't ship in full for every marker.
+const MAP_MARKER_COLUMNS =
+  "id,ear_tag_id,names,images,last_latitude,last_longitude,last_sighting_date";
+// Hard ceiling on markers shipped to the client cluster. Newest sightings
+// first so the most relevant dogs survive the cap.
+const MAP_MARKER_LIMIT = 2000;
+
 async function getDogMarkers(): Promise<DogMarker[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("dogs")
-    .select(DOG_MARKER_COLUMNS)
+    .select(MAP_MARKER_COLUMNS)
     .not("last_latitude", "is", null)
-    .not("last_longitude", "is", null);
+    .not("last_longitude", "is", null)
+    .order("last_sighting_date", { ascending: false })
+    .limit(MAP_MARKER_LIMIT);
   if (error) {
     console.error("[map] failed to fetch dogs:", error.message);
     return [];
   }
-  return (data ?? []) as DogMarker[];
+  // Side panel only ever renders images[0]; drop the rest off the wire.
+  return ((data ?? []) as DogMarker[]).map((d) => ({
+    ...d,
+    images: d.images?.length ? [d.images[0]] : [],
+  }));
 }
 
 export default async function MapPage({

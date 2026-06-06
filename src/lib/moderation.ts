@@ -6,6 +6,11 @@ interface ModerationResult {
   reason?: string;
 }
 
+// Module-level client so the underlying HTTP keep-alive agent is reused
+// across invocations instead of reconnecting per request. apiKey is read
+// here once; the per-call guard below still handles a missing key.
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 /**
  * Multilingual profanity / offensive-content check for dog names.
  * Covers English, Russian, Georgian. Uses gpt-5-nano (cheapest OpenAI
@@ -32,10 +37,8 @@ export async function checkNameForProfanity(
     };
   }
 
-  const openai = new OpenAI({ apiKey });
-
   try {
-    const response = await openai.responses.create({
+    const response = await client.responses.create({
       model: "gpt-5-nano",
       input: [
         {

@@ -12,7 +12,8 @@ export async function GET(request: NextRequest) {
   let query = admin
     .from("reports")
     .select("*, profiles:user_id(nickname, email)")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(200);
 
   if (status) {
     query = query.eq("status", status);

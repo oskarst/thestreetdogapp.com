@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
   let query = admin
     .from("dogs")
     .select("*, profiles:first_registered_by_id(email)")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(200);
 
   // Sanitize before string-interpolation into the PostgREST filter — see
   // src/lib/validate.ts for what gets stripped and why.
@@ -29,16 +30,22 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Get sighting counts for each dog
+  // Exact sighting counts for the shown dogs in a single grouped query (see
+  // admin_dog_sighting_counts in migration 020) rather than one COUNT
+  // round-trip per dog or pulling every sightings row into JS.
   const dogIds = (dogs ?? []).map((d) => d.id);
-  const { data: counts } = await admin
-    .from("sightings")
-    .select("dog_id")
-    .in("dog_id", dogIds.length > 0 ? dogIds : ["__none__"]);
-
   const countMap: Record<string, number> = {};
-  for (const row of counts ?? []) {
-    countMap[row.dog_id] = (countMap[row.dog_id] ?? 0) + 1;
+  if (dogIds.length > 0) {
+    const { data: counts, error: countError } = await admin.rpc(
+      "admin_dog_sighting_counts",
+      { p_dog_ids: dogIds }
+    );
+    if (countError) {
+      return NextResponse.json({ error: countError.message }, { status: 500 });
+    }
+    for (const row of (counts ?? []) as { dog_id: string; cnt: number }[]) {
+      countMap[row.dog_id] = Number(row.cnt);
+    }
   }
 
   const result = (dogs ?? []).map((dog) => ({

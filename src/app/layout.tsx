@@ -46,6 +46,32 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
 
+  // Ship only the namespaces actually consumed by "use client" components
+  // to NextIntlClientProvider. The full catalog (admin, adopt, common, map,
+  // dogProfile, partnerClinics, partnerOrgs, report, support, …) is server-
+  // rendered and doesn't need to cross to the client bundle on every route.
+  // next-intl exposes no `pick()` in this version, so we filter by hand.
+  // Client-used namespaces (from useTranslations("…") in "use client"):
+  //   addDog, auth, dashboard, dogActions, gallery, healthReport,
+  //   missions, nav, tour.
+  const CLIENT_NAMESPACES = [
+    "addDog",
+    "auth",
+    "dashboard",
+    "dogActions",
+    "gallery",
+    "healthReport",
+    "missions",
+    "nav",
+    "tour",
+  ] as const;
+  const clientMessages = Object.fromEntries(
+    CLIENT_NAMESPACES.filter((ns) => ns in messages).map((ns) => [
+      ns,
+      messages[ns],
+    ])
+  );
+
   return (
     <html
       lang={locale}
@@ -64,7 +90,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col antialiased">
         <IconSprite />
         <ServiceWorkerRegister />
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider messages={clientMessages}>
           {children}
         </NextIntlClientProvider>
         <InstallPrompt />

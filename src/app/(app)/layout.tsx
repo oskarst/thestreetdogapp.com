@@ -13,19 +13,15 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, profile] = await Promise.all([
-    getCurrentUser(),
-    getCurrentProfile(),
-  ]);
+  // Cheap auth gate only — getCurrentUser() is the (cache()'d) round-trip
+  // children already pay. We deliberately do NOT await getCurrentProfile()
+  // here: the profile RPC used to serialize ahead of the page's heavy
+  // parallel RPCs. It's now resolved inside <TopNavWithProfile> behind a
+  // Suspense boundary so the nav (which renders nickname/role) loads in
+  // parallel with children instead of blocking them.
+  const user = await getCurrentUser();
 
   if (!user) redirect("/login");
-
-  const userData = {
-    id: user.id,
-    email: user.email ?? "",
-    nickname: profile?.nickname ?? user.email?.split("@")[0] ?? "User",
-    role: (profile?.role ?? "user") as "user" | "rescuer" | "admin",
-  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -36,10 +32,42 @@ export default async function AppLayout({
       </Suspense>
       <AuthListener />
       <PrecachePages />
-      <TopNav user={userData} />
+      <Suspense fallback={<TopNav user={fallbackUser(user)} />}>
+        <TopNavWithProfile user={user} />
+      </Suspense>
       <OfflineBanner />
       <main className="flex-1 overflow-y-auto pb-36">{children}</main>
       <AppFooter />
     </div>
   );
+}
+
+/** Nav data we can render immediately from the auth user, before the
+ *  profile RPC resolves (Suspense fallback). */
+function fallbackUser(user: { id: string; email?: string }) {
+  return {
+    id: user.id,
+    email: user.email ?? "",
+    nickname: user.email?.split("@")[0] ?? "User",
+    role: "user" as "user" | "rescuer" | "admin",
+  };
+}
+
+/** Resolves the profile in parallel with the page's children (it sits in
+ *  its own Suspense boundary) and renders the nav with nickname/role. */
+async function TopNavWithProfile({
+  user,
+}: {
+  user: { id: string; email?: string };
+}) {
+  const profile = await getCurrentProfile();
+
+  const userData = {
+    id: user.id,
+    email: user.email ?? "",
+    nickname: profile?.nickname ?? user.email?.split("@")[0] ?? "User",
+    role: (profile?.role ?? "user") as "user" | "rescuer" | "admin",
+  };
+
+  return <TopNav user={userData} />;
 }

@@ -167,60 +167,76 @@ export async function POST(request: Request) {
     // on non-images, so a request claiming image/png with HTML/SVG body is
     // caught here. Output is normalized JPEG with metadata stripped,
     // dimensions clamped to 2048×2048.
-    const dogProcessed = await processUploadedImage(dogImageFile);
+    //
+    // The dog and ear-tag re-encodes are independent CPU-bound sharp passes,
+    // so run them together rather than serially.
+    const hasEarTag = !!(earTagImageFile && earTagImageFile.size > 0);
+    const [dogProcessed, earTagResult] = await Promise.all([
+      processUploadedImage(dogImageFile),
+      hasEarTag
+        ? processUploadedImage(earTagImageFile!)
+        : Promise.resolve(null),
+    ]);
+    mark("sharp");
+
     if (!dogProcessed.ok) {
       return NextResponse.json(
         { error: dogProcessed.error },
         { status: dogProcessed.status }
       );
     }
-    mark("sharp-dog");
 
     let earTagProcessed:
       | { buffer: Buffer; contentType: string; ext: string }
       | null = null;
-    if (earTagImageFile && earTagImageFile.size > 0) {
-      const result = await processUploadedImage(earTagImageFile);
-      if (!result.ok) {
+    if (earTagResult) {
+      if (!earTagResult.ok) {
         return NextResponse.json(
-          { error: result.error },
-          { status: result.status }
+          { error: earTagResult.error },
+          { status: earTagResult.status }
         );
       }
       earTagProcessed = {
-        buffer: result.buffer,
-        contentType: result.contentType,
-        ext: result.ext,
+        buffer: earTagResult.buffer,
+        contentType: earTagResult.contentType,
+        ext: earTagResult.ext,
       };
-      mark("sharp-eartag");
     }
 
     // Use admin client for storage uploads (server-side)
     const admin = createAdminClient();
 
-    // Upload dog image. Path uses our server-derived ext, never the
+    // The three storage writes — full-size dog, webp thumbnail, optional
+    // ear tag — are independent (distinct paths/buckets, no data flows
+    // between them) so run them concurrently. The thumbnail sub-task also
+    // owns its own sharp re-encode (buildThumbnail), which overlaps with
+    // the dog/ear-tag uploads instead of running after them. Path suffixes
+    // (.jpg / _thumb.webp / _et.jpg) stay distinct even at the same Date.now().
+
+    // Dog image. Path uses our server-derived ext, never the
     // client-supplied filename.
     const dogPath = `${user.id}/${Date.now()}.${dogProcessed.ext}`;
-    const { error: dogUploadErr } = await admin.storage
-      .from("dogs")
-      .upload(dogPath, dogProcessed.buffer, {
-        contentType: dogProcessed.contentType,
-        // 30 days + immutable. Path embeds Date.now() so the URL is
-        // content-addressed — bumping a dog's photo writes a new path.
-        cacheControl: "2592000, immutable",
-      });
-    if (dogUploadErr) throw dogUploadErr;
-
-    const {
-      data: { publicUrl: dogImageUrl },
-    } = admin.storage.from("dogs").getPublicUrl(dogPath);
-    mark("upload-dog");
+    const dogUploadTask = (async (): Promise<string> => {
+      const { error: dogUploadErr } = await admin.storage
+        .from("dogs")
+        .upload(dogPath, dogProcessed.buffer, {
+          contentType: dogProcessed.contentType,
+          // 30 days + immutable. Path embeds Date.now() so the URL is
+          // content-addressed — bumping a dog's photo writes a new path.
+          cacheControl: "2592000, immutable",
+        });
+      if (dogUploadErr) throw dogUploadErr;
+      const {
+        data: { publicUrl },
+      } = admin.storage.from("dogs").getPublicUrl(dogPath);
+      return publicUrl;
+    })();
 
     // Optional 320x320 webp thumbnail. Best-effort — thumb failure
     // doesn't fail the sighting; clients fall back to images[0].
-    let dogThumbnailUrl: string | null = null;
-    const thumbBuffer = await buildThumbnail(dogProcessed.buffer);
-    if (thumbBuffer) {
+    const thumbUploadTask = (async (): Promise<string | null> => {
+      const thumbBuffer = await buildThumbnail(dogProcessed.buffer);
+      if (!thumbBuffer) return null;
       const thumbPath = `${user.id}/${Date.now()}_thumb.webp`;
       const { error: thumbErr } = await admin.storage
         .from("dogs")
@@ -228,20 +244,19 @@ export async function POST(request: Request) {
           contentType: "image/webp",
           cacheControl: "2592000, immutable",
         });
-      if (!thumbErr) {
-        const {
-          data: { publicUrl },
-        } = admin.storage.from("dogs").getPublicUrl(thumbPath);
-        dogThumbnailUrl = publicUrl;
-      } else {
+      if (thumbErr) {
         console.error("[sightings] thumb upload failed:", thumbErr);
+        return null;
       }
-    }
-    mark("upload-thumb");
+      const {
+        data: { publicUrl },
+      } = admin.storage.from("dogs").getPublicUrl(thumbPath);
+      return publicUrl;
+    })();
 
-    // Upload ear tag image if provided
-    let earTagImageUrl: string | null = null;
-    if (earTagProcessed) {
+    // Ear tag image if provided.
+    const earTagUploadTask = (async (): Promise<string | null> => {
+      if (!earTagProcessed) return null;
       const etPath = `${user.id}/${Date.now()}_et.${earTagProcessed.ext}`;
       const { error: etUploadErr } = await admin.storage
         .from("ear-tags")
@@ -250,12 +265,18 @@ export async function POST(request: Request) {
           cacheControl: "2592000, immutable",
         });
       if (etUploadErr) throw etUploadErr;
-
       const {
         data: { publicUrl },
       } = admin.storage.from("ear-tags").getPublicUrl(etPath);
-      earTagImageUrl = publicUrl;
-    }
+      return publicUrl;
+    })();
+
+    const [dogImageUrl, dogThumbnailUrl, earTagImageUrl] = await Promise.all([
+      dogUploadTask,
+      thumbUploadTask,
+      earTagUploadTask,
+    ]);
+    mark("uploads");
 
     // Check if dog exists by ear tag
     let dogId: string;

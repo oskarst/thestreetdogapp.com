@@ -8,7 +8,11 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { GalleryFilters } from "@/components/dog/gallery-filters";
 import type { DogListRow } from "@/types/database";
 
-const GALLERY_LIMIT = 1000;
+// Capped at 200 for the initial payload: the page renders 12 cards and the
+// rest feed the client-side filter/search/pagination over the capped set.
+// Server-side search across the full table is the future step once the
+// catalog outgrows 200 dogs.
+const GALLERY_LIMIT = 200;
 const GALLERY_CACHE_SECONDS = 60;
 
 /**
@@ -57,6 +61,9 @@ export default async function GalleryPage() {
   const userId = user?.id ?? "";
   const t = await getTranslations("gallery");
 
+  // Single parallel round-trip: the cached dog list plus the two
+  // user-specific id sets (caught + favorites). Batched into one Promise.all
+  // so the per-user queries fire concurrently rather than serially.
   const [dogs, caughtRes, favsRes] = await Promise.all([
     getGalleryDogs(),
     userId

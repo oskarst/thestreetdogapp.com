@@ -1,10 +1,20 @@
 import OpenAI from "openai";
+import sharp from "sharp";
 
 interface ModerationResult {
   ok: boolean;
   /** Short reason why the image was rejected, when ok=false. */
   reason?: string;
 }
+
+// Module-level client so the underlying HTTP keep-alive agent is reused
+// across invocations instead of reconnecting per request.
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Hard ceiling on the OpenAI call so a slow/flaky endpoint fails fast
+// instead of holding the lambda open. On timeout we fail closed, same as
+// any other API error below.
+const OPENAI_TIMEOUT_MS = 6000;
 
 /**
  * Run an image through OpenAI's omni-moderation-latest classifier to
@@ -26,23 +36,34 @@ export async function moderateImage(file: File): Promise<ModerationResult> {
     };
   }
 
+  // Resize down to ~512px on the long edge before base64-encoding. The
+  // moderation classifier doesn't need full resolution, and this cuts the
+  // base64 payload 10-40x — a 10MB upload becomes a few tens of KB.
   let dataUrl: string;
   try {
-    const bytes = await file.arrayBuffer();
-    const base64 = Buffer.from(bytes).toString("base64");
-    dataUrl = `data:${file.type};base64,${base64}`;
+    const raw = Buffer.from(await file.arrayBuffer());
+    const small = await sharp(raw)
+      .rotate() // respect EXIF orientation
+      .resize({ width: 512, height: 512, fit: "inside", withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer();
+    dataUrl = `data:image/jpeg;base64,${small.toString("base64")}`;
   } catch (err) {
     console.error("[image-moderation] failed to read file:", err);
     return { ok: false, reason: "Image could not be read." };
   }
 
-  const openai = new OpenAI({ apiKey });
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), OPENAI_TIMEOUT_MS);
 
   try {
-    const response = await openai.moderations.create({
-      model: "omni-moderation-latest",
-      input: [{ type: "image_url", image_url: { url: dataUrl } }],
-    });
+    const response = await client.moderations.create(
+      {
+        model: "omni-moderation-latest",
+        input: [{ type: "image_url", image_url: { url: dataUrl } }],
+      },
+      { signal: ac.signal }
+    );
 
     const result = response.results[0];
     if (!result) {
@@ -63,10 +84,13 @@ export async function moderateImage(file: File): Promise<ModerationResult> {
 
     return { ok: true };
   } catch (err) {
+    // Abort (timeout) lands here too — fail closed like any other error.
     console.error("[image-moderation] OpenAI error — failing closed:", err);
     return {
       ok: false,
       reason: "Image moderation is temporarily unavailable. Try again later.",
     };
+  } finally {
+    clearTimeout(timer);
   }
 }
