@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { moderateImage } from "@/lib/image-moderation";
-import { classifyDogPhoto } from "@/lib/dog-photo-classifier";
+import { checkNotHuman } from "@/lib/dog-photo-classifier";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -66,13 +66,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // Run moderation + dog classification in parallel. Moderation is
-    // free and authoritative for explicit content; the gpt-5-nano
-    // classifier handles "this is actually a dog" + a second safety
-    // signal. Reject as soon as either fails.
-    const [moderation, classification] = await Promise.all([
+    // Run the two checks in parallel. moderateImage is the authoritative
+    // safety gate (explicit content, fail-closed); checkNotHuman is a light
+    // quality gate that only bounces photos of people (fail-open). Reject
+    // as soon as either says no.
+    const [moderation, subject] = await Promise.all([
       moderateImage(imageFile),
-      classifyDogPhoto(imageFile),
+      checkNotHuman(imageFile),
     ]);
 
     if (!moderation.ok) {
@@ -81,9 +81,9 @@ export async function POST(request: Request) {
         { status: 200 }
       );
     }
-    if (!classification.ok) {
+    if (!subject.ok) {
       return NextResponse.json(
-        { ok: false, error: classification.reason },
+        { ok: false, error: subject.reason },
         { status: 200 }
       );
     }
