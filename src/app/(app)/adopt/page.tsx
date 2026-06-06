@@ -5,10 +5,10 @@ export default function AdoptPage() {
   return (
     <div className="px-4 py-4 space-y-4 max-w-2xl mx-auto">
       <div className="px-1">
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
           Pack · Adoption
         </div>
-        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">
+        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight">
           Adopt a street dog
         </h1>
         <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
@@ -60,7 +60,7 @@ export default function AdoptPage() {
             },
           ].map((s) => (
             <div key={s.n} className="flex gap-3">
-              <span className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground shrink-0 pt-0.5">
+              <span className="font-mono text-[12.1px] tracking-[0.06em] text-muted-foreground shrink-0 pt-0.5">
                 {s.n}
               </span>
               <div>
@@ -96,15 +96,15 @@ export default function AdoptPage() {
             Contact our adoption coordinator to start the process:
           </p>
           <div className="space-y-2">
-            <div className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.04em] text-ink">
+            <div className="flex items-center gap-2.5 font-mono text-[13.2px] tracking-[0.04em] text-ink">
               <Mail className="size-4 text-muted-foreground" />
               adopt@streetdog.app
             </div>
-            <div className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.04em] text-ink">
+            <div className="flex items-center gap-2.5 font-mono text-[13.2px] tracking-[0.04em] text-ink">
               <Phone className="size-4 text-muted-foreground" />
               +995 XXX XXX XXX
             </div>
-            <div className="flex items-center gap-2.5 font-mono text-[12px] tracking-[0.04em] text-muted-foreground">
+            <div className="flex items-center gap-2.5 font-mono text-[13.2px] tracking-[0.04em] text-muted-foreground">
               <Clock className="size-4" />
               Mon–Fri, 10:00–18:00
             </div>

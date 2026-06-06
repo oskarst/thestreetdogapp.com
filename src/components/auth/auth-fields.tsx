@@ -33,7 +33,7 @@ export function AuthField({
 
   return (
     <div className="mb-3">
-      <label className="block font-mono text-[10px] font-medium tracking-[0.16em] uppercase text-muted-foreground mb-1.5">
+      <label className="block font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-muted-foreground mb-1.5">
         {label}
       </label>
       <div className="relative">
@@ -63,7 +63,7 @@ export function AuthField({
         <p className="mt-1 text-xs text-destructive">{error}</p>
       )}
       {!error && hint && (
-        <div className="mt-1 font-mono text-[10px] tracking-[0.04em] text-muted-foreground text-right">
+        <div className="mt-1 font-mono text-[11px] tracking-[0.04em] text-muted-foreground text-right">
           {hint}
         </div>
       )}
@@ -90,7 +90,7 @@ export function PrimaryAuthButton({
     <button
       className={cn(
         "w-full mt-1 flex items-center justify-center gap-2 px-4 py-3.5",
-        "rounded-xl bg-ink text-background text-[15px] font-semibold",
+        "rounded-xl bg-ink text-background text-[16.5px] font-semibold",
         "transition-transform active:scale-[0.98] disabled:opacity-60",
         className
       )}
@@ -107,7 +107,7 @@ export function PrimaryAuthButton({
 
 export function AuthDivider({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3 my-4 font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/70">
+    <div className="flex items-center gap-3 my-4 font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground/70">
       <span className="flex-1 h-px bg-rule" />
       <span>{children}</span>
       <span className="flex-1 h-px bg-rule" />

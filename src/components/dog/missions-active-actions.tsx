@@ -28,14 +28,14 @@ export function MissionsActiveActions({ slug }: { slug: string }) {
     <div className="flex items-center gap-2">
       <Link
         href={`/map?mission=${slug}`}
-        className="flex-1 text-center bg-ink text-background py-2 rounded-lg font-mono text-[11px] font-medium tracking-[0.06em] uppercase no-underline active:scale-[0.98] transition-transform"
+        className="flex-1 text-center bg-ink text-background py-2 rounded-lg font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase no-underline active:scale-[0.98] transition-transform"
       >
         {t("openOnMap")}
       </Link>
       <button
         onClick={cancel}
         disabled={pending}
-        className="px-3 py-2 rounded-lg font-mono text-[11px] font-medium tracking-[0.06em] uppercase text-muted-foreground hover:text-ink hover:bg-muted transition-colors disabled:opacity-50"
+        className="px-3 py-2 rounded-lg font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase text-muted-foreground hover:text-ink hover:bg-muted transition-colors disabled:opacity-50"
       >
         {t("cancelMission")}
       </button>

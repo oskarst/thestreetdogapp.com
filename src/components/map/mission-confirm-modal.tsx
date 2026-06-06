@@ -93,7 +93,7 @@ export function MissionConfirmModal({
           className="px-4 py-2 flex items-center justify-between"
           style={{ background: color, color: "#fff" }}
         >
-          <span className="text-[10px] font-medium tracking-[0.32em] uppercase">
+          <span className="text-[11px] font-medium tracking-[0.32em] uppercase">
             TBILISI · MISSION ALLOC
           </span>
           <span
@@ -103,17 +103,17 @@ export function MissionConfirmModal({
         </div>
 
         <div className="px-5 py-4">
-          <div className="text-[10px] tracking-[0.32em] uppercase text-muted-foreground mb-1">
+          <div className="text-[11px] tracking-[0.32em] uppercase text-muted-foreground mb-1">
             QUADRANT_ID
           </div>
           <div className="text-2xl font-medium tracking-[0.04em] leading-tight text-ink mb-1">
             {slugUpper}
           </div>
-          <div className="text-[11px] tracking-[0.18em] uppercase text-muted-foreground mb-4">
+          <div className="text-[12.1px] tracking-[0.18em] uppercase text-muted-foreground mb-4">
             {parent} · cell #{chunk.index}
           </div>
 
-          <div className="space-y-1.5 mb-5 text-[11px] tracking-[0.06em] text-ink">
+          <div className="space-y-1.5 mb-5 text-[12.1px] tracking-[0.06em] text-ink">
             <Row label="LAT" value={lat.toFixed(5)} />
             <Row label="LON" value={lon.toFixed(5)} />
             <Row
@@ -131,7 +131,7 @@ export function MissionConfirmModal({
           </div>
 
           {error && (
-            <div className="mb-4 px-2.5 py-2 text-[10px] tracking-[0.06em] uppercase border border-destructive/50 bg-destructive/10 text-destructive">
+            <div className="mb-4 px-2.5 py-2 text-[11px] tracking-[0.06em] uppercase border border-destructive/50 bg-destructive/10 text-destructive">
               ⚠ {error.replace(/_/g, " ")}
             </div>
           )}
@@ -141,7 +141,7 @@ export function MissionConfirmModal({
               type="button"
               onClick={onCancel}
               disabled={loading}
-              className="text-[11px] tracking-[0.32em] font-medium uppercase py-2.5 rounded-lg border border-rule-2 text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
+              className="text-[12.1px] tracking-[0.32em] font-medium uppercase py-2.5 rounded-lg border border-rule-2 text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
             >
               {t("modalAbort")}
             </button>
@@ -149,7 +149,7 @@ export function MissionConfirmModal({
               type="button"
               onClick={onConfirm}
               disabled={loading}
-              className="text-[11px] tracking-[0.32em] font-medium uppercase py-2.5 rounded-lg transition-transform active:scale-95 disabled:opacity-60"
+              className="text-[12.1px] tracking-[0.32em] font-medium uppercase py-2.5 rounded-lg transition-transform active:scale-95 disabled:opacity-60"
               style={{
                 color: "#fff",
                 background: color,

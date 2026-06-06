@@ -70,14 +70,14 @@ export async function MissionsBlock() {
 
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 leading-none">
-                <span className="font-mono text-[40px] font-medium tracking-[-0.04em] text-amber-brand">
+                <span className="font-mono text-[44px] font-medium tracking-[-0.04em] text-amber-brand">
                   {active.progress}
                 </span>
-                <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-amber-brand/80">
+                <span className="font-mono text-[11px] tracking-[0.22em] uppercase text-amber-brand/80">
                   / {active.target} subjects
                 </span>
               </div>
-              <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-amber-brand/80 mt-1.5 truncate">
+              <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-amber-brand/80 mt-1.5 truncate">
                 {activeLabel}
               </div>
               <div className="flex items-center gap-1 mt-2">
@@ -93,7 +93,7 @@ export async function MissionsBlock() {
                   />
                 ))}
               </div>
-              <div className="font-mono text-[10px] tracking-[0.06em] text-amber-brand/80 mt-2 flex items-center justify-between gap-2">
+              <div className="font-mono text-[11px] tracking-[0.06em] text-amber-brand/80 mt-2 flex items-center justify-between gap-2">
                 <span>
                   {active.awardsToday >= active.dailyCap
                     ? t("dailyCapReached", { cap: active.dailyCap })
@@ -111,7 +111,7 @@ export async function MissionsBlock() {
         </div>
       ) : allCompleted ? (
         <div className="card-soft p-4 text-center">
-          <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
+          <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
             {t("allCompletedLabel")}
           </div>
           <p className="text-sm">{t("allCompletedBody")}</p>
@@ -126,13 +126,13 @@ export async function MissionsBlock() {
               <Icon name="target" size={26} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-mono text-[10px] tracking-[0.32em] uppercase text-amber-brand/80">
+              <div className="font-mono text-[11px] tracking-[0.32em] uppercase text-amber-brand/80">
                 {t("title")}
               </div>
-              <div className="text-[18px] font-semibold leading-tight mt-0.5">
+              <div className="text-[19.8px] font-semibold leading-tight mt-0.5">
                 {t("startMission")}
               </div>
-              <div className="font-mono text-[10.5px] tracking-[0.06em] text-amber-brand/80 mt-1">
+              <div className="font-mono text-[11.6px] tracking-[0.06em] text-amber-brand/80 mt-1">
                 {t("pickerSubtitleMap")}
               </div>
             </div>
@@ -146,7 +146,7 @@ export async function MissionsBlock() {
       <div className="mt-2 flex justify-end">
         <Link
           href="/missions"
-          className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink no-underline transition-colors"
+          className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink no-underline transition-colors"
         >
           {t("seeAll")} →
         </Link>

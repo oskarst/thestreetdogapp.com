@@ -49,12 +49,12 @@ export function MissionStartButton({
       <button
         onClick={start}
         disabled={disabled || pending}
-        className="px-3 py-1.5 rounded-full bg-ink text-background font-mono text-[10px] font-medium tracking-[0.06em] uppercase active:scale-95 transition-transform disabled:opacity-40"
+        className="px-3 py-1.5 rounded-full bg-ink text-background font-mono text-[11px] font-medium tracking-[0.06em] uppercase active:scale-95 transition-transform disabled:opacity-40"
       >
         {pending ? "…" : label}
       </button>
       {error && (
-        <span className="font-mono text-[9px] text-destructive">
+        <span className="font-mono text-[9.9px] text-destructive">
           {error.replace(/_/g, " ")}
         </span>
       )}

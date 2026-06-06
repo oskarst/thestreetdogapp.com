@@ -25,7 +25,7 @@ export async function PartnerClinicsList() {
   return (
     <section className="rounded-2xl border border-rule bg-card p-4 space-y-3">
       <div>
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
           {t("eyebrow")}
         </div>
         <p className="text-sm leading-relaxed text-ink">{t("intro")}</p>
@@ -42,10 +42,10 @@ export async function PartnerClinicsList() {
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                  <div className="font-medium text-[14px] text-ink leading-tight">
+                  <div className="font-medium text-[15.4px] text-ink leading-tight">
                     {c.name}
                   </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground">
                     <a
                       href={`tel:${c.phone.replace(/\s+/g, "")}`}
                       className="text-ink underline underline-offset-2 hover:text-amber-brand"
@@ -56,7 +56,7 @@ export async function PartnerClinicsList() {
                     <span>{c.addr}</span>
                   </div>
                   {c.note && (
-                    <div className="mt-1 font-mono text-[10.5px] tracking-[0.04em] text-amber-brand/90">
+                    <div className="mt-1 font-mono text-[11.6px] tracking-[0.04em] text-amber-brand/90">
                       {c.note}
                     </div>
                   )}

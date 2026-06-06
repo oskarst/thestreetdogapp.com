@@ -34,10 +34,10 @@ export default async function MissionsStartPage() {
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
       <header>
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
           {t("chooserSubtitle")}
         </div>
-        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight mt-1">
+        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight mt-1">
           {t("chooserTitle")}
         </h1>
       </header>
@@ -53,13 +53,13 @@ export default async function MissionsStartPage() {
             <Icon name="pin" size={28} />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
+            <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
               {t("chooserMapTitle")}
             </div>
-            <div className="text-[16px] font-semibold leading-tight mt-1">
+            <div className="text-[17.6px] font-semibold leading-tight mt-1">
               {t("openMapPicker")}
             </div>
-            <p className="text-[13px] text-muted-foreground leading-snug mt-1.5">
+            <p className="text-[14.3px] text-muted-foreground leading-snug mt-1.5">
               {t("chooserMapBody")}
             </p>
           </div>
@@ -78,16 +78,16 @@ export default async function MissionsStartPage() {
             <Icon name="dog" size={28} />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-amber-brand/80">
+            <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-amber-brand/80">
               {t("chooserFindTitle")}
             </div>
-            <div className="text-[16px] font-semibold leading-tight mt-1">
+            <div className="text-[17.6px] font-semibold leading-tight mt-1">
               {t("finddoggoStart")}
             </div>
-            <p className="text-[13px] text-muted-foreground leading-snug mt-1.5">
+            <p className="text-[14.3px] text-muted-foreground leading-snug mt-1.5">
               {t("chooserFindBody")}
             </p>
-            <p className="font-mono text-[10px] tracking-[0.06em] uppercase text-green-deep mt-1.5">
+            <p className="font-mono text-[11px] tracking-[0.06em] uppercase text-green-deep mt-1.5">
               {t("finddoggoReward")}
             </p>
           </div>

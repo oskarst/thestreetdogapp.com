@@ -59,10 +59,10 @@ export function Achievements({ achievements, score }: AchievementsProps) {
         className="w-full flex items-baseline justify-between gap-3 px-1 py-1 group"
         aria-expanded={open}
       >
-        <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-ink group-hover:text-ink transition-colors">
+        <span className="font-mono text-[12.1px] font-medium tracking-[0.22em] uppercase text-ink group-hover:text-ink transition-colors">
           {t("achievements")}
         </span>
-        <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.12em] uppercase text-muted-foreground group-hover:text-ink transition-colors">
+        <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-muted-foreground group-hover:text-ink transition-colors">
           <span className="text-ink">
             {pad(score.new_dogs)}
             <span className="text-muted-foreground/50 px-1">·</span>
@@ -91,16 +91,16 @@ export function Achievements({ achievements, score }: AchievementsProps) {
                 key={stat.label}
                 className="rounded-xl border border-rule bg-background p-2.5 pt-3"
               >
-                <div className="font-mono text-[9px] text-muted-foreground tracking-[0.06em]">
+                <div className="font-mono text-[9.9px] text-muted-foreground tracking-[0.06em]">
                   {stat.mult}
                 </div>
-                <div className="font-mono text-[22px] font-medium leading-none tracking-[-0.02em] mt-1">
+                <div className="font-mono text-[24.2px] font-medium leading-none tracking-[-0.02em] mt-1">
                   {pad(stat.count)}
                 </div>
-                <div className="font-mono text-[9px] font-medium tracking-[0.16em] uppercase text-ink mt-1.5">
+                <div className="font-mono text-[9.9px] font-medium tracking-[0.16em] uppercase text-ink mt-1.5">
                   {stat.label}
                 </div>
-                <div className="font-mono text-[9px] text-green-deep mt-0.5 tracking-[0.04em]">
+                <div className="font-mono text-[9.9px] text-green-deep mt-0.5 tracking-[0.04em]">
                   +{stat.points} {t("pts")}
                 </div>
               </div>
@@ -127,7 +127,7 @@ export function Achievements({ achievements, score }: AchievementsProps) {
               </div>
               <div
                 className={cn(
-                  "text-[10px] font-semibold leading-tight",
+                  "text-[11px] font-semibold leading-tight",
                   !ach.unlocked && "text-muted-foreground"
                 )}
               >
@@ -135,7 +135,7 @@ export function Achievements({ achievements, score }: AchievementsProps) {
                   ? t(ACHIEVEMENT_LABEL_KEY[ach.id])
                   : ach.name}
               </div>
-              <div className="font-mono text-[9px] tracking-[0.16em] uppercase text-muted-foreground mt-1">
+              <div className="font-mono text-[9.9px] tracking-[0.16em] uppercase text-muted-foreground mt-1">
                 {ach.unlocked
                   ? t("achievementUnlocked")
                   : t("achievementToGo", { n: ach.threshold - ach.progress })}

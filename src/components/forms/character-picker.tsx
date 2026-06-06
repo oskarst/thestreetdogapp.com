@@ -42,7 +42,7 @@ export function CharacterPicker({ value, onChange }: CharacterPickerProps) {
             />
             <span
               className={cn(
-                "font-mono text-[9px] tracking-[0.1em] uppercase",
+                "font-mono text-[9.9px] tracking-[0.1em] uppercase",
                 active ? "text-background" : "text-muted-foreground"
               )}
             >

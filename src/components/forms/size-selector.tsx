@@ -30,13 +30,13 @@ export function SizeSelector({ value, onChange }: SizeSelectorProps) {
                 : "border-rule-2 bg-card text-ink hover:bg-muted"
             )}
           >
-            <span className="font-mono text-[15px] font-semibold tracking-[0.04em]">
+            <span className="font-mono text-[16.5px] font-semibold tracking-[0.04em]">
               {opt.label}
             </span>
             {opt.hint && (
               <span
                 className={cn(
-                  "text-[9px] leading-tight tracking-[0.02em]",
+                  "text-[9.9px] leading-tight tracking-[0.02em]",
                   selected ? "text-background/70" : "text-muted-foreground"
                 )}
               >

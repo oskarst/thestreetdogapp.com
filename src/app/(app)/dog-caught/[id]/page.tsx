@@ -74,10 +74,10 @@ export default async function DogCaughtPage({
               "linear-gradient(0deg, rgba(34,197,94,0.4) 0%, transparent 50%)",
           }}
         />
-        <span className="absolute top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-white/25 bg-black/50 backdrop-blur-sm px-3 py-1.5 font-mono text-[10px] tracking-[0.22em] uppercase text-white">
+        <span className="absolute top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-white/25 bg-black/50 backdrop-blur-sm px-3 py-1.5 font-mono text-[11px] tracking-[0.22em] uppercase text-white">
           {labels.eyebrow}
         </span>
-        <div className="absolute bottom-3.5 left-4 font-mono text-[64px] font-medium leading-none tracking-[-0.03em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+        <div className="absolute bottom-3.5 left-4 font-mono text-[70.4px] font-medium leading-none tracking-[-0.03em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
           +{points}
           <span className="text-lg tracking-[0.16em] uppercase ml-1 align-[12px] opacity-85">
             XP
@@ -91,17 +91,17 @@ export default async function DogCaughtPage({
           {dog?.names?.[0] ?? "New Subject"}
         </h1>
         {dog?.ear_tag_id && (
-          <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-1">
+          <div className="font-mono text-[12.1px] tracking-[0.06em] text-muted-foreground mt-1">
             id {dog.ear_tag_id}
           </div>
         )}
         {catchType === "new" && (
-          <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-1">
+          <div className="font-mono text-[12.1px] tracking-[0.06em] text-muted-foreground mt-1">
             first registered by you
           </div>
         )}
         {catchType === "untagged" && (
-          <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-1">
+          <div className="font-mono text-[12.1px] tracking-[0.06em] text-muted-foreground mt-1">
             untagged · field sighting
           </div>
         )}
@@ -138,10 +138,10 @@ export default async function DogCaughtPage({
               />
             )}
             <div className="flex justify-between items-baseline px-3.5 py-3 pt-3">
-              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+              <span className="font-mono text-[12.1px] uppercase tracking-[0.16em] text-muted-foreground">
                 Total earned
               </span>
-              <span className="font-mono text-[22px] font-medium tracking-[-0.02em] text-ink">
+              <span className="font-mono text-[24.2px] font-medium tracking-[-0.02em] text-ink">
                 +{points + missionXp + (missionCompleted ? missionFinishXp : 0)}{" "}
                 pt
               </span>
@@ -151,10 +151,10 @@ export default async function DogCaughtPage({
 
         {missionCompleted && (
           <div className="mt-3 rounded-xl border border-[var(--green-brand)]/40 bg-green-soft p-3 text-center">
-            <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-green-deep">
+            <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-green-deep">
               Mission Passed
             </div>
-            <div className="text-[14px] font-semibold text-ink mt-0.5">
+            <div className="text-[15.4px] font-semibold text-ink mt-0.5">
               Raion cleared — pick another from the dashboard
             </div>
           </div>
@@ -184,10 +184,10 @@ export default async function DogCaughtPage({
 
         {catchType === "untagged" && (
           <div className="mt-3 rounded-xl border border-rule-2 bg-card p-3 text-center">
-            <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
+            <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
               Untagged
             </div>
-            <div className="text-[13px] text-ink mt-1 leading-snug">
+            <div className="text-[14.3px] text-ink mt-1 leading-snug">
               No ear tag — logged as a field sighting, not a catalogued subject.
             </div>
           </div>
@@ -196,7 +196,7 @@ export default async function DogCaughtPage({
         <div className="flex flex-col gap-2.5 mt-6">
           <Link
             href={`/dog/${id}`}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[16.5px] font-semibold transition-transform active:scale-[0.98]"
           >
             <span className="font-mono text-[var(--green-brand)] font-medium">
               &gt;
@@ -224,7 +224,7 @@ function BreakdownRow({
   value: string;
 }) {
   return (
-    <div className="flex justify-between items-baseline px-3.5 py-2.5 border-b border-dashed border-rule font-mono text-[12px] tracking-[0.04em]">
+    <div className="flex justify-between items-baseline px-3.5 py-2.5 border-b border-dashed border-rule font-mono text-[13.2px] tracking-[0.04em]">
       <span className="text-ink uppercase tracking-[0.1em] font-medium">
         {label}
       </span>

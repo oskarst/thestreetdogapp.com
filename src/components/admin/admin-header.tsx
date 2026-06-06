@@ -11,15 +11,15 @@ interface AdminHeaderProps {
 export function AdminHeader({ eyebrow, title, meta }: AdminHeaderProps) {
   return (
     <div className="mb-5">
-      <div className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-muted-foreground mb-1">
+      <div className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-muted-foreground mb-1">
         {eyebrow}
       </div>
       <div className="flex items-baseline justify-between gap-3 flex-wrap">
-        <h1 className="text-[22px] font-bold tracking-[-0.02em] leading-tight">
+        <h1 className="text-[24.2px] font-bold tracking-[-0.02em] leading-tight">
           {title}
         </h1>
         {meta && (
-          <span className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground">
+          <span className="font-mono text-[12.1px] tracking-[0.06em] text-muted-foreground">
             {meta}
           </span>
         )}

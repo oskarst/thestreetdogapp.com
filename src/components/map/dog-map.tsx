@@ -484,14 +484,14 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
             )}
             <div className="flex-1 min-w-0">
               <div
-                className="font-mono text-[10px] tracking-[0.32em] uppercase"
+                className="font-mono text-[11px] tracking-[0.32em] uppercase"
                 style={{ opacity: picker.hasActive ? 0.85 : 0.6 }}
               >
                 {tMissions(
                   picker.hasActive ? "pickerBlockedLabel" : "pickerLabel"
                 )}
               </div>
-              <div className="text-[14px] font-semibold leading-tight mt-0.5">
+              <div className="text-[15.4px] font-semibold leading-tight mt-0.5">
                 {tMissions(
                   picker.hasActive ? "pickerBlocked" : "pickerPrompt"
                 )}
@@ -499,7 +499,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
               {picker.hasActive && (
                 <Link
                   href="/dashboard"
-                  className="inline-block mt-1.5 font-mono text-[10px] tracking-[0.16em] uppercase underline underline-offset-2 text-white/95"
+                  className="inline-block mt-1.5 font-mono text-[11px] tracking-[0.16em] uppercase underline underline-offset-2 text-white/95"
                 >
                   {tMissions("pickerBlockedCta")} →
                 </Link>
@@ -542,16 +542,16 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       {mission && (
         <div className="absolute top-3 left-3 right-3 z-[500] flex items-center gap-2.5 rounded-xl bg-background/95 backdrop-blur-sm border border-rule-2 shadow-lg px-3 py-2.5">
           <div className="flex-1 min-w-0">
-            <div className="font-mono text-[9.5px] tracking-[0.22em] uppercase text-muted-foreground">
+            <div className="font-mono text-[10.5px] tracking-[0.22em] uppercase text-muted-foreground">
               {mission.previewOnly
                 ? tMissions("bannerPreviewLabel")
                 : tMissions("bannerLabel")}
             </div>
-            <div className="font-semibold text-[14px] leading-tight truncate">
+            <div className="font-semibold text-[15.4px] leading-tight truncate">
               {localizedMissionName(mission)}
             </div>
             {!mission.previewOnly && (
-              <div className="font-mono text-[10.5px] tracking-[0.04em] text-muted-foreground mt-0.5">
+              <div className="font-mono text-[11.6px] tracking-[0.04em] text-muted-foreground mt-0.5">
                 {tMissions("bannerProgressV2", {
                   progress: mission.progress,
                   target: mission.target,

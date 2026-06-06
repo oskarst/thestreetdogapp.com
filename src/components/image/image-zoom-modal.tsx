@@ -35,7 +35,7 @@ export function ImageZoomModal({ src, alt = "Photo", onClose }: ImageZoomModalPr
       aria-label={alt}
     >
       <div className="flex items-center justify-between px-4 py-3 text-white">
-        <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-white/70">
+        <span className="font-mono text-[12.1px] tracking-[0.16em] uppercase text-white/70">
           {Math.round(scale * 100)}%
         </span>
         <button

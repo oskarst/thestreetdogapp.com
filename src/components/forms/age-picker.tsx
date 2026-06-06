@@ -27,7 +27,7 @@ export function AgePicker({ value, onChange }: AgePickerProps) {
             onClick={() => onChange(opt.value)}
             className={cn(
               "rounded-full border px-2 py-2.5 text-center transition-colors",
-              "font-mono text-[11px] font-medium tracking-[0.1em] uppercase",
+              "font-mono text-[12.1px] font-medium tracking-[0.1em] uppercase",
               active
                 ? "border-ink bg-ink text-background"
                 : "border-rule bg-card text-muted-foreground hover:border-rule-2"

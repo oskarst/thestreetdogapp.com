@@ -373,7 +373,7 @@ export function AddDogForm() {
           invalid={Boolean(fieldErrors.dogImage) || Boolean(dogImageError)}
         />
         {dogImageChecking && (
-          <div className="mt-2 flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+          <div className="mt-2 flex items-center gap-2 font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground">
             <Loader2 className="size-3.5 animate-spin" />
             {t("checkingImage")}
           </div>
@@ -414,7 +414,7 @@ export function AddDogForm() {
             }
           />
           {earTagImageChecking && (
-            <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+            <div className="flex items-center gap-2 font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground">
               <Loader2 className="size-3.5 animate-spin" />
               {t("checkingImage")}
             </div>
@@ -448,15 +448,15 @@ export function AddDogForm() {
               aria-pressed={noEarTag}
               className={
                 noEarTag
-                  ? "h-10 px-3 rounded-xl border border-ink bg-ink text-background font-mono text-[11px] tracking-[0.08em] uppercase whitespace-nowrap transition-colors"
-                  : "h-10 px-3 rounded-xl border border-rule-2 bg-card text-ink font-mono text-[11px] tracking-[0.08em] uppercase whitespace-nowrap transition-colors hover:bg-muted"
+                  ? "h-10 px-3 rounded-xl border border-ink bg-ink text-background font-mono text-[12.1px] tracking-[0.08em] uppercase whitespace-nowrap transition-colors"
+                  : "h-10 px-3 rounded-xl border border-rule-2 bg-card text-ink font-mono text-[12.1px] tracking-[0.08em] uppercase whitespace-nowrap transition-colors hover:bg-muted"
               }
             >
               {t("noEarTag")}
             </button>
           </div>
           {!noEarTag && (
-            <p className="text-[12px] leading-snug text-muted-foreground">
+            <p className="text-[13.2px] leading-snug text-muted-foreground">
               {t.rich("earTagHint", {
                 id: (chunks) => (
                   <>
@@ -555,7 +555,7 @@ export function AddDogForm() {
       <button
         type="submit"
         disabled={submitting || dogImageChecking || earTagImageChecking}
-        className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
+        className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[16.5px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
       >
         <span className="font-mono text-[var(--green-brand)] font-medium">&gt;</span>
         {submitting ? (

@@ -20,7 +20,7 @@ export default function AppRouteLoading() {
           />
         ))}
       </div>
-      <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+      <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground">
         loading
       </div>
     </div>

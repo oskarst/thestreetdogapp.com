@@ -62,10 +62,10 @@ export default function NameDogPage() {
           <Icon name="paw" size={32} />
         </div>
         <div>
-          <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
+          <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
             subject_{id.slice(0, 4).toUpperCase()}
           </div>
-          <h1 className="text-[22px] font-bold tracking-[-0.02em] leading-tight">
+          <h1 className="text-[24.2px] font-bold tracking-[-0.02em] leading-tight">
             You can&apos;t name this dog
           </h1>
           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
@@ -104,10 +104,10 @@ export default function NameDogPage() {
       </div>
 
       <div className="text-center">
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
           subject_{id.slice(0, 4).toUpperCase()}
         </div>
-        <h1 className="text-[22px] font-bold tracking-[-0.02em] leading-tight">
+        <h1 className="text-[24.2px] font-bold tracking-[-0.02em] leading-tight">
           Name this dog
         </h1>
         <p className="text-sm text-muted-foreground mt-1.5">
@@ -120,7 +120,7 @@ export default function NameDogPage() {
         <button
           type="button"
           onClick={() => router.back()}
-          className="w-full font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink py-2"
+          className="w-full font-mono text-[12.1px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink py-2"
         >
           Cancel
         </button>

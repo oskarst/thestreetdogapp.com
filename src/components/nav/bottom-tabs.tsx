@@ -52,7 +52,7 @@ export function BottomTabs() {
             href={tab.href}
             className={cn(
               "flex flex-col items-center gap-0.5 px-3.5 py-2 rounded-lg no-underline transition-colors",
-              "font-mono text-[9.5px] tracking-[0.16em] uppercase",
+              "font-mono text-[10.5px] tracking-[0.16em] uppercase",
               isActive ? "text-ink" : "text-muted-foreground/60 hover:text-ink"
             )}
           >

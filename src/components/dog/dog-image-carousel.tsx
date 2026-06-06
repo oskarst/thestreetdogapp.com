@@ -57,7 +57,7 @@ export function DogImageCarousel({
                   priority={i === 0}
                 />
                 {slide.isEarTag && (
-                  <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-medium text-white">
+                  <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2.5 py-1 text-[12.1px] font-medium text-white">
                     Ear tag
                   </span>
                 )}

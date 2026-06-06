@@ -26,10 +26,10 @@ export default function VeterinaryPage() {
   return (
     <div className="px-4 py-4 space-y-4 max-w-2xl mx-auto">
       <div className="px-1">
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
           Pack · Veterinary
         </div>
-        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">
+        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight">
           Veterinary care
         </h1>
         <p className="text-sm text-muted-foreground mt-2">
@@ -51,15 +51,15 @@ export default function VeterinaryPage() {
               className="rounded-xl border border-rule bg-card p-3 space-y-1.5"
             >
               <p className="font-semibold text-ink text-sm">{c.name}</p>
-              <div className="flex items-center gap-2 font-mono text-[12px] tracking-[0.04em] text-ink">
+              <div className="flex items-center gap-2 font-mono text-[13.2px] tracking-[0.04em] text-ink">
                 <Phone className="size-3.5 text-muted-foreground" />
                 {c.phone}
               </div>
-              <div className="flex items-center gap-2 font-mono text-[12px] tracking-[0.04em] text-muted-foreground">
+              <div className="flex items-center gap-2 font-mono text-[13.2px] tracking-[0.04em] text-muted-foreground">
                 <MapPin className="size-3.5" />
                 {c.addr}
               </div>
-              <div className="flex items-center gap-2 font-mono text-[12px] tracking-[0.04em] text-muted-foreground">
+              <div className="flex items-center gap-2 font-mono text-[13.2px] tracking-[0.04em] text-muted-foreground">
                 <Clock className="size-3.5" />
                 {c.hours}
               </div>
@@ -121,7 +121,7 @@ export default function VeterinaryPage() {
                 className="flex justify-between rounded-xl bg-background border border-rule px-3 py-2.5"
               >
                 <span className="font-semibold text-ink">{k}</span>
-                <span className="font-mono text-[12px] tracking-[0.04em] text-muted-foreground">
+                <span className="font-mono text-[13.2px] tracking-[0.04em] text-muted-foreground">
                   {v}
                 </span>
               </div>

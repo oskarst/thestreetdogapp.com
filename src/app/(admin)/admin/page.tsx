@@ -50,10 +50,10 @@ export default async function AdminDashboardPage() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
         {stats.map((s) => (
           <div key={s.label} className="card-soft p-4">
-            <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+            <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground">
               {s.label}
             </div>
-            <div className="font-mono text-[28px] font-medium leading-none tracking-[-0.02em] mt-2">
+            <div className="font-mono text-[30.8px] font-medium leading-none tracking-[-0.02em] mt-2">
               {String(s.value).padStart(2, "0")}
             </div>
           </div>
@@ -84,7 +84,7 @@ export default async function AdminDashboardPage() {
                       "Unknown dog"}
                   </span>
                 </div>
-                <time className="shrink-0 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+                <time className="shrink-0 font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground">
                   {new Date(s.timestamp).toLocaleDateString()}
                 </time>
               </div>

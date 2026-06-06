@@ -22,10 +22,10 @@ export default async function ReportHealthPage({ params }: Params) {
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
       <div>
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
           {t("eyebrow")}
         </div>
-        <h1 className="text-[22px] font-semibold leading-tight">
+        <h1 className="text-[24.2px] font-semibold leading-tight">
           {t("title", { name: dogName })}
         </h1>
         <p className="text-sm text-muted-foreground mt-2 leading-relaxed">

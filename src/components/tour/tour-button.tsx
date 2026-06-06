@@ -249,27 +249,27 @@ export function TourPrompt({ userId }: TourComponentProps) {
     >
       <div className="flex items-start gap-3">
         <div className="flex-1 min-w-0">
-          <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-amber-brand/80 mb-1">
+          <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-amber-brand/80 mb-1">
             {t("promptEyebrow")}
           </div>
-          <p className="text-[14px] font-semibold leading-snug text-amber-brand">
+          <p className="text-[15.4px] font-semibold leading-snug text-amber-brand">
             {t("promptTitle")}
           </p>
-          <p className="text-[12.5px] leading-snug text-amber-brand/85 mt-1">
+          <p className="text-[13.8px] leading-snug text-amber-brand/85 mt-1">
             {t("promptBody")}
           </p>
           <div className="flex items-center gap-2 mt-3">
             <button
               type="button"
               onClick={start}
-              className="font-mono text-[11px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full bg-amber-brand text-amber-soft hover:brightness-110 transition-all"
+              className="font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full bg-amber-brand text-amber-soft hover:brightness-110 transition-all"
             >
               {t("promptYes")}
             </button>
             <button
               type="button"
               onClick={handleDismiss}
-              className="font-mono text-[11px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full text-amber-brand/80 hover:text-amber-brand hover:bg-amber-brand/10 transition-colors"
+              className="font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full text-amber-brand/80 hover:text-amber-brand hover:bg-amber-brand/10 transition-colors"
             >
               {t("promptDismiss")}
             </button>

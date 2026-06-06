@@ -102,7 +102,7 @@ export function CameraUpload({
               className="h-40 w-auto rounded-lg object-cover"
             />
             {zoomable && (
-              <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-medium text-white">
+              <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[12.1px] font-medium text-white">
                 <Search className="size-3.5" /> Zoom
               </span>
             )}
@@ -112,14 +112,14 @@ export function CameraUpload({
               <button
                 type="button"
                 onClick={() => cameraInputRef.current?.click()}
-                className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-[12px] font-medium text-ink hover:bg-muted transition-colors"
+                className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-[13.2px] font-medium text-ink hover:bg-muted transition-colors"
               >
                 <RefreshCw className="size-3.5" /> Retake
               </button>
               <button
                 type="button"
                 onClick={() => galleryInputRef.current?.click()}
-                className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-[12px] font-medium text-ink hover:bg-muted transition-colors"
+                className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-[13.2px] font-medium text-ink hover:bg-muted transition-colors"
               >
                 <ImageIcon className="size-3.5" /> Gallery
               </button>
@@ -137,7 +137,7 @@ export function CameraUpload({
               type="button"
               onClick={() => cameraInputRef.current?.click()}
               disabled={disabled}
-              className="flex items-center justify-center gap-1.5 rounded-xl border border-ink bg-ink px-3.5 py-2 text-[12px] font-medium text-background active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-transform"
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-ink bg-ink px-3.5 py-2 text-[13.2px] font-medium text-background active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-transform"
             >
               <Camera className="size-3.5" /> Take photo
             </button>
@@ -145,7 +145,7 @@ export function CameraUpload({
               type="button"
               onClick={() => galleryInputRef.current?.click()}
               disabled={disabled}
-              className="flex items-center justify-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3.5 py-2 text-[12px] font-medium text-ink hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3.5 py-2 text-[13.2px] font-medium text-ink hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <ImageIcon className="size-3.5" /> Gallery
             </button>

@@ -61,10 +61,10 @@ export default async function MissionsPage() {
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
       <header>
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
           {t("subtitle")}
         </div>
-        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight mt-1">
+        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight mt-1">
           {t("title")}
         </h1>
       </header>
@@ -75,10 +75,10 @@ export default async function MissionsPage() {
       >
         <div className="flex items-center justify-between gap-3">
           <div>
-            <div className="font-semibold text-[14px] leading-tight">
+            <div className="font-semibold text-[15.4px] leading-tight">
               {t("chooserTitle")}
             </div>
-            <div className="font-mono text-[10px] tracking-[0.06em] text-muted-foreground mt-0.5">
+            <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-0.5">
               {t("chooserSubtitle")}
             </div>
           </div>
@@ -88,7 +88,7 @@ export default async function MissionsPage() {
         </div>
       </Link>
 
-      <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground px-1 flex justify-between">
+      <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground px-1 flex justify-between">
         <span>{t("raionsLabel")}</span>
         <span>
           {completedCount} / {list.length}
@@ -107,10 +107,10 @@ export default async function MissionsPage() {
                 className="size-3 rounded-sm shrink-0"
                 style={{ background: color }}
               />
-              <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-ink">
+              <span className="font-mono text-[12.1px] tracking-[0.16em] uppercase text-ink">
                 {p.parentName}
               </span>
-              <span className="font-mono text-[10px] tracking-[0.06em] text-muted-foreground ml-auto">
+              <span className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground ml-auto">
                 {sectionDone} / {p.items.length}
               </span>
             </div>
@@ -129,14 +129,14 @@ export default async function MissionsPage() {
                     )}
                   >
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-[13px] leading-tight">
+                      <div className="font-semibold text-[14.3px] leading-tight">
                         {m.parentNameEn === m.parentNameEn // placeholder
                           ? `${p.parentName} ${m.index}`
                           : m.index}
                       </div>
                       <div
                         className={cn(
-                          "font-mono text-[9px] tracking-[0.16em] uppercase mt-0.5",
+                          "font-mono text-[9.9px] tracking-[0.16em] uppercase mt-0.5",
                           isCompleted
                             ? "text-green-deep"
                             : isActive
@@ -158,7 +158,7 @@ export default async function MissionsPage() {
                         className="text-[var(--green-brand)] shrink-0"
                       />
                     ) : isActive ? (
-                      <span className="font-mono text-[10px] tracking-[0.06em] text-ink shrink-0">
+                      <span className="font-mono text-[11px] tracking-[0.06em] text-ink shrink-0">
                         {active && (
                           <>
                             <b className="font-medium">{active.progress}</b>/
@@ -181,7 +181,7 @@ export default async function MissionsPage() {
         );
       })}
 
-      <p className="font-mono text-[10px] tracking-[0.06em] text-muted-foreground px-1 leading-relaxed">
+      <p className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground px-1 leading-relaxed">
         {t("howItWorks")}
       </p>
     </div>

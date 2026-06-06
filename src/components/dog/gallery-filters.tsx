@@ -91,7 +91,7 @@ export function GalleryFilters({
               onClick={() => setFilter(f.value)}
               className={cn(
                 "shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full border",
-                "font-mono text-[10.5px] font-medium tracking-[0.12em] uppercase",
+                "font-mono text-[11.6px] font-medium tracking-[0.12em] uppercase",
                 active
                   ? "border-ink bg-ink text-background"
                   : "border-rule-2 bg-card text-muted-foreground hover:border-rule"
@@ -125,13 +125,13 @@ export function GalleryFilters({
 
           {remaining > 0 ? (
             <div className="flex items-center justify-between gap-3 pt-1">
-              <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+              <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground">
                 {t("showingOf", { shown: shown.length, total: filtered.length })}
               </span>
               <button
                 type="button"
                 onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                className="rounded-lg border border-rule-2 bg-card px-3.5 py-2 font-mono text-[11px] font-medium tracking-[0.06em] uppercase text-ink hover:bg-muted transition-colors"
+                className="rounded-lg border border-rule-2 bg-card px-3.5 py-2 font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase text-ink hover:bg-muted transition-colors"
               >
                 {t("loadMore", { n: Math.min(PAGE_SIZE, remaining) })}
               </button>
@@ -142,7 +142,7 @@ export function GalleryFilters({
                 <button
                   type="button"
                   onClick={() => setVisible(PAGE_SIZE)}
-                  className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink transition-colors"
+                  className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink transition-colors"
                 >
                   {t("collapse")} ↑
                 </button>

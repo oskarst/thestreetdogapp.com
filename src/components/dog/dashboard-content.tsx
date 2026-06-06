@@ -80,10 +80,10 @@ export function DashboardContent({
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            <span className="text-[12.5px] font-medium leading-[1.15] text-center break-words hyphens-auto">
+            <span className="text-[13.8px] font-medium leading-[1.15] text-center break-words hyphens-auto">
               {tab.label}
             </span>
-            <span className="font-mono text-[9px] tracking-[0.04em] leading-tight text-muted-foreground/80 text-center break-words w-full">
+            <span className="font-mono text-[9.9px] tracking-[0.04em] leading-tight text-muted-foreground/80 text-center break-words w-full">
               {tab.caption}
             </span>
           </button>
@@ -110,7 +110,7 @@ export function DashboardContent({
 
           {remaining > 0 ? (
             <div className="flex items-center justify-between gap-3 pt-1">
-              <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+              <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground">
                 {t("showingOf", {
                   shown: shown.length,
                   total: filteredDogs.length,
@@ -119,7 +119,7 @@ export function DashboardContent({
               <button
                 type="button"
                 onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                className="rounded-lg border border-rule-2 bg-card px-3.5 py-2 font-mono text-[11px] font-medium tracking-[0.06em] uppercase text-ink hover:bg-muted transition-colors"
+                className="rounded-lg border border-rule-2 bg-card px-3.5 py-2 font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase text-ink hover:bg-muted transition-colors"
               >
                 {t("loadMore", { n: Math.min(PAGE_SIZE, remaining) })}
               </button>
@@ -130,7 +130,7 @@ export function DashboardContent({
                 <button
                   type="button"
                   onClick={() => setVisible(PAGE_SIZE)}
-                  className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink transition-colors"
+                  className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink transition-colors"
                 >
                   {t("collapseList")} ↑
                 </button>

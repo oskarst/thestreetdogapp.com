@@ -86,7 +86,7 @@ export function TopNav({ user }: TopNavProps) {
             className="h-8 w-8 object-contain"
             priority
           />
-          <span className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-ink">
+          <span className="font-mono text-[12.1px] font-semibold tracking-[0.16em] uppercase text-ink">
             Street-Dog
             <span className="font-medium text-muted-foreground ml-1">
               // {section}
@@ -100,10 +100,10 @@ export function TopNav({ user }: TopNavProps) {
 
           <DropdownMenu>
             <DropdownMenuTrigger className="inline-flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 bg-muted text-ink hover:bg-rule transition-colors outline-none cursor-pointer">
-              <span className="grid size-[22px] place-items-center rounded-full bg-ink text-background font-mono text-[11px] font-medium">
+              <span className="grid size-[22px] place-items-center rounded-full bg-ink text-background font-mono text-[12.1px] font-medium">
                 {initial}
               </span>
-              <span className="font-mono text-[11px] font-medium tracking-[0.04em] max-w-[100px] truncate">
+              <span className="font-mono text-[12.1px] font-medium tracking-[0.04em] max-w-[100px] truncate">
                 {user.nickname}
               </span>
             </DropdownMenuTrigger>

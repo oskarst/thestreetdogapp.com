@@ -43,14 +43,14 @@ export function DogGalleryCard({ dog }: DogGalleryCardProps) {
         </div>
       )}
 
-      <span className="absolute top-2 right-2 rounded-full bg-black/65 px-2 py-0.5 font-mono text-[9.5px] font-medium tracking-[0.06em] text-white backdrop-blur-sm">
+      <span className="absolute top-2 right-2 rounded-full bg-black/65 px-2 py-0.5 font-mono text-[10.5px] font-medium tracking-[0.06em] text-white backdrop-blur-sm">
         {relativeDay(dog.last_sighting_date ?? dog.created_at)}
       </span>
 
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-2.5 pt-7 pb-2.5 text-white">
-        <p className="truncate text-[13px] font-bold leading-tight">{name}</p>
+        <p className="truncate text-[14.3px] font-bold leading-tight">{name}</p>
         {dog.ear_tag_id && (
-          <p className="font-mono text-[9.5px] tracking-[0.06em] text-white/70 mt-0.5">
+          <p className="font-mono text-[10.5px] tracking-[0.06em] text-white/70 mt-0.5">
             id {dog.ear_tag_id}
           </p>
         )}

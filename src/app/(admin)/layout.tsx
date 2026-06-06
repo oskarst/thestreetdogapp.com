@@ -55,7 +55,7 @@ export default async function AdminLayout({
             height={28}
             className="size-7 object-contain"
           />
-          <span className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-ink">
+          <span className="font-mono text-[12.1px] font-semibold tracking-[0.16em] uppercase text-ink">
             Street-Dog
             <span className="font-medium text-muted-foreground ml-1">
               // admin
@@ -67,7 +67,7 @@ export default async function AdminLayout({
             <Link
               key={link.href}
               href={link.href}
-              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 font-mono text-[11px] tracking-[0.06em] uppercase text-muted-foreground transition-colors hover:bg-muted hover:text-ink"
+              className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 font-mono text-[12.1px] tracking-[0.06em] uppercase text-muted-foreground transition-colors hover:bg-muted hover:text-ink"
             >
               <link.icon className="size-4" />
               {link.label}
@@ -77,7 +77,7 @@ export default async function AdminLayout({
         <div className="border-t border-rule p-2">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 rounded-lg px-2.5 py-2 font-mono text-[11px] tracking-[0.06em] uppercase text-muted-foreground hover:bg-muted hover:text-ink"
+            className="flex items-center gap-2 rounded-lg px-2.5 py-2 font-mono text-[12.1px] tracking-[0.06em] uppercase text-muted-foreground hover:bg-muted hover:text-ink"
           >
             <ArrowLeft className="size-3.5" />
             Back to app
@@ -94,7 +94,7 @@ export default async function AdminLayout({
             height={28}
             className="size-7 object-contain"
           />
-          <span className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase">
+          <span className="font-mono text-[12.1px] font-semibold tracking-[0.16em] uppercase">
             Admin
           </span>
           <nav className="ml-auto flex items-center gap-0.5 overflow-x-auto">

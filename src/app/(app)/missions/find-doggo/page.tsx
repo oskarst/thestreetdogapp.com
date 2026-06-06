@@ -39,14 +39,14 @@ export default async function FindDoggoPage() {
       <header>
         <Link
           href="/missions/start"
-          className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink no-underline transition-colors"
+          className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink no-underline transition-colors"
         >
           ← {t("finddoggoBack")}
         </Link>
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mt-2">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mt-2">
           {t("finddoggoSubtitle")}
         </div>
-        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight mt-1">
+        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight mt-1">
           {t("finddoggoTitle")}
         </h1>
       </header>
@@ -76,7 +76,7 @@ export default async function FindDoggoPage() {
             <div className="p-4 space-y-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-amber-brand inline-flex items-center gap-1.5">
+                  <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-amber-brand inline-flex items-center gap-1.5">
                     <span
                       className="size-1.5 rounded-full bg-amber-brand"
                       style={{
@@ -85,22 +85,22 @@ export default async function FindDoggoPage() {
                     />
                     {t("finddoggoHuntingLabel")}
                   </div>
-                  <div className="text-[18px] font-semibold leading-tight mt-1 truncate">
+                  <div className="text-[19.8px] font-semibold leading-tight mt-1 truncate">
                     {target.names[0] ?? t("finddoggoUnnamed")}
                   </div>
                 </div>
                 <div className="shrink-0 text-right">
-                  <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+                  <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground">
                     {t("finddoggoEartag")}
                   </div>
-                  <div className="font-mono text-[14px] font-medium text-ink mt-0.5">
+                  <div className="font-mono text-[15.4px] font-medium text-ink mt-0.5">
                     {target.earTagId ?? t("finddoggoNoTag")}
                   </div>
                 </div>
               </div>
 
               {target.lastSightingDate && (
-                <div className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+                <div className="font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground">
                   {t("finddoggoLastSeen")}: {formatDateShort(target.lastSightingDate)}
                 </div>
               )}
@@ -109,7 +109,7 @@ export default async function FindDoggoPage() {
 
           {target.recentSightings.length > 0 && (
             <section>
-              <div className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-ink mb-2 px-1">
+              <div className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-ink mb-2 px-1">
                 {t("finddoggoMovement")}
               </div>
               <div className="rounded-xl border border-rule overflow-hidden h-[260px]">
@@ -127,11 +127,11 @@ export default async function FindDoggoPage() {
           )}
 
           <section className="card-soft p-4">
-            <div className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-ink mb-3">
+            <div className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-ink mb-3">
               {t("finddoggoSightings")}
             </div>
             {target.recentSightings.length === 0 ? (
-              <p className="text-[13px] text-muted-foreground">
+              <p className="text-[14.3px] text-muted-foreground">
                 {t("finddoggoNoSightings")}
               </p>
             ) : (
@@ -144,10 +144,10 @@ export default async function FindDoggoPage() {
                     className="py-2 flex items-center justify-between gap-3 first:pt-0 last:pb-0"
                   >
                     <div className="min-w-0">
-                      <div className="font-mono text-[12px] text-ink">
+                      <div className="font-mono text-[13.2px] text-ink">
                         {formatDateShort(s.timestamp)}
                       </div>
-                      <div className="font-mono text-[10px] tracking-[0.04em] text-muted-foreground mt-0.5">
+                      <div className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground mt-0.5">
                         {s.latitude.toFixed(4)}, {s.longitude.toFixed(4)}
                       </div>
                     </div>
@@ -155,7 +155,7 @@ export default async function FindDoggoPage() {
                       href={`https://www.google.com/maps?q=${s.latitude},${s.longitude}`}
                       target="_blank"
                       rel="noopener"
-                      className="shrink-0 font-mono text-[10px] tracking-[0.06em] uppercase text-muted-foreground hover:text-ink no-underline"
+                      className="shrink-0 font-mono text-[11px] tracking-[0.06em] uppercase text-muted-foreground hover:text-ink no-underline"
                     >
                       map ›
                     </a>

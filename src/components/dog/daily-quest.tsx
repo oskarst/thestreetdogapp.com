@@ -87,10 +87,10 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="text-[15px] font-semibold leading-tight">
+          <div className="text-[16.5px] font-semibold leading-tight">
             {t("spotOneDog")}
           </div>
-          <div className="font-mono text-[11px] tracking-[0.04em] text-muted-foreground mt-1">
+          <div className="font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground mt-1">
             {isClaimed
               ? t("questClaimed")
               : complete
@@ -98,7 +98,7 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
                 : t("questNotMet")}
           </div>
           {error && (
-            <div className="font-mono text-[11px] tracking-[0.04em] text-destructive mt-1">
+            <div className="font-mono text-[12.1px] tracking-[0.04em] text-destructive mt-1">
               {error}
             </div>
           )}
@@ -109,7 +109,7 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
             onClick={handleClaim}
             disabled={pending}
             className={cn(
-              "shrink-0 font-mono text-[12px] font-medium tracking-[0.04em]",
+              "shrink-0 font-mono text-[13.2px] font-medium tracking-[0.04em]",
               "px-3 py-1.5 rounded-full bg-ink text-background",
               "transition-transform active:scale-95 disabled:opacity-60"
             )}
@@ -119,7 +119,7 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
         ) : (
           <span
             className={cn(
-              "shrink-0 font-mono text-[12px] font-medium tracking-[0.04em]",
+              "shrink-0 font-mono text-[13.2px] font-medium tracking-[0.04em]",
               "px-2.5 py-1.5 rounded-full",
               isClaimed
                 ? "bg-muted text-muted-foreground line-through decoration-1"

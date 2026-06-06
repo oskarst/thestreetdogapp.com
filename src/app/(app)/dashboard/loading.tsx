@@ -23,10 +23,10 @@ export default function DashboardLoading() {
       </div>
 
       <div className="space-y-1.5">
-        <div className="font-mono text-[11px] font-semibold tracking-[0.32em] uppercase text-ink">
+        <div className="font-mono text-[12.1px] font-semibold tracking-[0.32em] uppercase text-ink">
           Street-Dog
         </div>
-        <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+        <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground">
           loading dashboard
         </div>
       </div>

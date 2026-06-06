@@ -40,23 +40,23 @@ export function SightingList({ sightings }: SightingListProps) {
               key={s.id}
               className="grid grid-cols-[88px_1fr_auto] gap-2.5 items-center bg-card rounded-xl px-3 py-2.5"
             >
-              <span className="font-mono text-[10.5px] tracking-[0.04em] text-muted-foreground">
+              <span className="font-mono text-[11.6px] tracking-[0.04em] text-muted-foreground">
                 {relativeOffset(s.timestamp)} · #{id}
               </span>
               <div className="min-w-0">
-                <div className="text-[13px] font-semibold leading-tight">
+                <div className="text-[14.3px] font-semibold leading-tight">
                   {nickname === "anon" ? "Sighting" : `by ${nickname}`}
                 </div>
-                <div className="font-mono text-[10.5px] tracking-[0.04em] text-muted-foreground mt-0.5 flex items-center gap-1.5">
+                <div className="font-mono text-[11.6px] tracking-[0.04em] text-muted-foreground mt-0.5 flex items-center gap-1.5">
                   size {sizeLabel(s.size)}
                 </div>
                 {s.notes && (
-                  <div className="text-[12px] text-muted-foreground mt-1 truncate">
+                  <div className="text-[13.2px] text-muted-foreground mt-1 truncate">
                     {s.notes}
                   </div>
                 )}
               </div>
-              <span className="font-mono text-[12px] font-medium text-ink shrink-0">
+              <span className="font-mono text-[13.2px] font-medium text-ink shrink-0">
                 #{idx + 1}
               </span>
             </div>

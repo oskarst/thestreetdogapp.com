@@ -37,16 +37,16 @@ export function SettingsForm({
       <button
         type="button"
         onClick={() => router.back()}
-        className="inline-flex items-center gap-1 font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink mb-5"
+        className="inline-flex items-center gap-1 font-mono text-[12.1px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink mb-5"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         Back
       </button>
 
-      <div className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
+      <div className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
         {eyebrow}
       </div>
-      <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight mb-1.5">
+      <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight mb-1.5">
         {title}
       </h1>
       {description && (

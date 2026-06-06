@@ -24,7 +24,7 @@ export function AuthShell({
 }: AuthShellProps) {
   return (
     <div className="flex flex-col gap-0">
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.06em] uppercase text-muted-foreground border-b border-rule pb-3 mb-7">
+      <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.06em] uppercase text-muted-foreground border-b border-rule pb-3 mb-7">
         <div className="flex items-center gap-2">
           <span
             className="inline-block size-1.5 rounded-full bg-[var(--destructive)]"
@@ -44,10 +44,10 @@ export function AuthShell({
         className="size-16 object-contain mb-4"
       />
 
-      <div className="font-mono text-[10px] font-medium tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
+      <div className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
         {eyebrow}
       </div>
-      <h1 className="text-[28px] font-bold tracking-[-0.02em] leading-[1.1] mb-1.5">
+      <h1 className="text-[30.8px] font-bold tracking-[-0.02em] leading-[1.1] mb-1.5">
         {title}
       </h1>
       <p className="text-sm text-muted-foreground leading-relaxed mb-5">
@@ -57,7 +57,7 @@ export function AuthShell({
       {children}
 
       {footer && (
-        <div className="text-center font-mono text-[11px] tracking-[0.04em] text-muted-foreground mt-3.5">
+        <div className="text-center font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground mt-3.5">
           {footer}
         </div>
       )}

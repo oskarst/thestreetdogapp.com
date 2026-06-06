@@ -124,7 +124,7 @@ export default async function DogProfilePage({
           </SectionLabel>
           <div className="rounded-xl border border-rule overflow-hidden">
             <DailyActivityMap sightings={dailySightings} />
-            <div className="px-3 py-2 border-t border-rule bg-background font-mono text-[10px] tracking-[0.04em] text-muted-foreground">
+            <div className="px-3 py-2 border-t border-rule bg-background font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
               markers numbered oldest (1) to newest ({recentSightings.length})
             </div>
           </div>

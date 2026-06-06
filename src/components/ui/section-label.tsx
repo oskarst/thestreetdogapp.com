@@ -18,11 +18,11 @@ export function SectionLabel({ children, meta, className }: SectionLabelProps) {
         className
       )}
     >
-      <span className="font-mono text-[11px] font-medium tracking-[0.22em] uppercase text-muted-foreground">
+      <span className="font-mono text-[12.1px] font-medium tracking-[0.22em] uppercase text-muted-foreground">
         {children}
       </span>
       {meta != null && (
-        <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/70">
+        <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground/70">
           {meta}
         </span>
       )}

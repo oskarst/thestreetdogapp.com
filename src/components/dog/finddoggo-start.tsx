@@ -71,13 +71,13 @@ export function FindDoggoStart() {
       <div className="size-14 mx-auto grid place-items-center rounded-2xl bg-amber-brand text-amber-soft">
         <Icon name="dog" size={32} />
       </div>
-      <h2 className="text-[20px] font-semibold leading-tight">
+      <h2 className="text-[22px] font-semibold leading-tight">
         {t("chooserFindTitle")}
       </h2>
-      <p className="text-[14px] text-muted-foreground leading-relaxed max-w-sm mx-auto">
+      <p className="text-[15.4px] text-muted-foreground leading-relaxed max-w-sm mx-auto">
         {t("chooserFindBody")}
       </p>
-      <p className="font-mono text-[10px] tracking-[0.06em] uppercase text-green-deep">
+      <p className="font-mono text-[11px] tracking-[0.06em] uppercase text-green-deep">
         {t("finddoggoReward")}
       </p>
       <button
@@ -86,7 +86,7 @@ export function FindDoggoStart() {
         disabled={pending}
         className={cn(
           "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full",
-          "bg-ink text-background font-semibold text-[14px]",
+          "bg-ink text-background font-semibold text-[15.4px]",
           "transition-transform active:scale-95 disabled:opacity-60"
         )}
       >
@@ -99,7 +99,7 @@ export function FindDoggoStart() {
         {pending ? t("finddoggoStarting") : t("finddoggoStart")}
       </button>
       {error && (
-        <div className="font-mono text-[11px] tracking-[0.04em] text-destructive">
+        <div className="font-mono text-[12.1px] tracking-[0.04em] text-destructive">
           {error}
         </div>
       )}

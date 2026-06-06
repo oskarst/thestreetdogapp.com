@@ -24,7 +24,7 @@ export async function PartnerOrgsList() {
   return (
     <section className="rounded-2xl border border-rule bg-card p-4 space-y-3">
       <div>
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1">
           {t("eyebrow")}
         </div>
         <p className="text-sm leading-relaxed text-ink">{t("intro")}</p>
@@ -40,18 +40,18 @@ export async function PartnerOrgsList() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   <Building2 className="size-3.5 text-muted-foreground shrink-0" />
-                  <div className="font-medium text-[14px] text-ink leading-tight">
+                  <div className="font-medium text-[15.4px] text-ink leading-tight">
                     {o.name}
                   </div>
                 </div>
-                <div className="mt-0.5 font-mono text-[10px] tracking-[0.04em] uppercase text-muted-foreground">
+                <div className="mt-0.5 font-mono text-[11px] tracking-[0.04em] uppercase text-muted-foreground">
                   {o.type}
                 </div>
-                <p className="mt-1.5 text-[13px] leading-snug text-ink/85">
+                <p className="mt-1.5 text-[14.3px] leading-snug text-ink/85">
                   {o.mission}
                 </p>
                 {(o.phone || o.note) && (
-                  <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground">
                     {o.phone && (
                       <a
                         href={`tel:${o.phone.replace(/\s+/g, "")}`}

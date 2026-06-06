@@ -47,7 +47,7 @@ export async function DogDetails({
   return (
     <div className="space-y-3">
       <div className="px-1">
-        <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-muted-foreground mb-1.5 flex items-center gap-2 flex-wrap">
+        <div className="font-mono text-[11px] tracking-[0.18em] uppercase text-muted-foreground mb-1.5 flex items-center gap-2 flex-wrap">
           <span>subject_{dog.id.slice(0, 4).toUpperCase()}</span>
           {registrarIsYou ? (
             <span className="text-green-deep bg-green-soft px-1.5 py-0.5 rounded font-medium">
@@ -63,7 +63,7 @@ export async function DogDetails({
             </span>
           )}
         </div>
-        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">
+        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight">
           {name}
         </h1>
         {altNames.length > 0 && (
@@ -73,19 +73,19 @@ export async function DogDetails({
         )}
         {dog.ear_tag_id ? (
           <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-rule-2 bg-card px-2.5 py-1.5">
-            <span className="font-mono text-[9px] tracking-[0.22em] uppercase text-muted-foreground">
+            <span className="font-mono text-[9.9px] tracking-[0.22em] uppercase text-muted-foreground">
               ear_tag
             </span>
-            <span className="font-mono text-[15px] font-semibold tracking-[0.04em] text-ink">
+            <span className="font-mono text-[16.5px] font-semibold tracking-[0.04em] text-ink">
               {dog.ear_tag_id}
             </span>
           </div>
         ) : (
-          <div className="mt-2 font-mono text-[11px] tracking-[0.06em] text-muted-foreground">
+          <div className="mt-2 font-mono text-[12.1px] tracking-[0.06em] text-muted-foreground">
             no ear tag
           </div>
         )}
-        <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-2">
+        <div className="font-mono text-[12.1px] tracking-[0.06em] text-muted-foreground mt-2">
           first seen {createdStr}
         </div>
       </div>
@@ -139,10 +139,10 @@ function StatCell({
 }) {
   return (
     <div className="bg-card text-center py-3">
-      <div className="font-mono text-[22px] font-medium leading-none tracking-[-0.02em]">
+      <div className="font-mono text-[24.2px] font-medium leading-none tracking-[-0.02em]">
         {valueText ?? value}
       </div>
-      <div className="font-mono text-[9px] tracking-[0.16em] uppercase text-muted-foreground mt-1">
+      <div className="font-mono text-[9.9px] tracking-[0.16em] uppercase text-muted-foreground mt-1">
         {label}
       </div>
     </div>
@@ -163,10 +163,10 @@ function ProfileRow({
       <div className="size-7 rounded-lg bg-background grid place-items-center text-ink-soft">
         {icon}
       </div>
-      <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground">
+      <span className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground">
         {label}
       </span>
-      <span className="text-[13px] font-semibold text-right">{value}</span>
+      <span className="text-[14.3px] font-semibold text-right">{value}</span>
     </div>
   );
 }

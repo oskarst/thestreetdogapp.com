@@ -49,7 +49,7 @@ export function FindDoggoActions({
         }
         className={cn(
           "block w-full text-center px-4 py-3 rounded-full",
-          "bg-ink text-background font-semibold text-[14px] no-underline",
+          "bg-ink text-background font-semibold text-[15.4px] no-underline",
           "transition-transform active:scale-[0.98]"
         )}
       >
@@ -61,14 +61,14 @@ export function FindDoggoActions({
         disabled={pending}
         className={cn(
           "block w-full text-center px-4 py-3 rounded-full",
-          "bg-transparent border border-rule text-muted-foreground font-medium text-[13px]",
+          "bg-transparent border border-rule text-muted-foreground font-medium text-[14.3px]",
           "transition-colors hover:text-ink hover:border-ink/40 disabled:opacity-60"
         )}
       >
         {pending ? "…" : t("finddoggoGiveUp")}
       </button>
       {error && (
-        <div className="font-mono text-[11px] tracking-[0.04em] text-destructive text-center">
+        <div className="font-mono text-[12.1px] tracking-[0.04em] text-destructive text-center">
           {error}
         </div>
       )}

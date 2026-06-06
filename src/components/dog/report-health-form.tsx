@@ -61,7 +61,7 @@ export function ReportHealthForm({ dogId, dogName }: ReportHealthFormProps) {
       <div className="rounded-2xl border border-[var(--green-brand)]/40 bg-green-soft p-5 text-center space-y-3">
         <CheckCircle2 className="h-10 w-10 mx-auto text-[var(--green-deep)]" />
         <div>
-          <h2 className="font-semibold text-[16px] text-[var(--green-deep)]">
+          <h2 className="font-semibold text-[17.6px] text-[var(--green-deep)]">
             {t("thanksTitle")}
           </h2>
           <p className="text-sm text-[var(--green-deep)]/80 mt-1">
@@ -71,14 +71,14 @@ export function ReportHealthForm({ dogId, dogName }: ReportHealthFormProps) {
         <div className="flex items-center justify-center gap-2 pt-1">
           <Link
             href={`/dog/${dogId}`}
-            className="rounded-full px-3.5 py-2 text-[12px] font-mono font-medium tracking-[0.06em] uppercase bg-ink text-background no-underline hover:brightness-110 transition-all"
+            className="rounded-full px-3.5 py-2 text-[13.2px] font-mono font-medium tracking-[0.06em] uppercase bg-ink text-background no-underline hover:brightness-110 transition-all"
           >
             {t("backToDog")}
           </Link>
           <button
             type="button"
             onClick={() => router.push("/dashboard")}
-            className="rounded-full px-3.5 py-2 text-[12px] font-mono font-medium tracking-[0.06em] uppercase text-muted-foreground hover:text-ink transition-colors"
+            className="rounded-full px-3.5 py-2 text-[13.2px] font-mono font-medium tracking-[0.06em] uppercase text-muted-foreground hover:text-ink transition-colors"
           >
             {t("backHome")}
           </button>
@@ -92,7 +92,7 @@ export function ReportHealthForm({ dogId, dogName }: ReportHealthFormProps) {
       <div>
         <label
           htmlFor="health-report-body"
-          className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground"
+          className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground"
         >
           {t("formLabel")}
         </label>
@@ -103,9 +103,9 @@ export function ReportHealthForm({ dogId, dogName }: ReportHealthFormProps) {
           rows={5}
           maxLength={MAX_LEN + 50}
           placeholder={t("placeholder")}
-          className="mt-1.5 w-full rounded-xl border border-rule bg-background px-3 py-2.5 text-[14px] leading-snug text-ink placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-amber-brand/40 focus:border-amber-brand"
+          className="mt-1.5 w-full rounded-xl border border-rule bg-background px-3 py-2.5 text-[15.4px] leading-snug text-ink placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-amber-brand/40 focus:border-amber-brand"
         />
-        <div className="flex justify-between mt-1 font-mono text-[10px] text-muted-foreground">
+        <div className="flex justify-between mt-1 font-mono text-[11px] text-muted-foreground">
           <span>{t("minHint", { n: MIN_LEN })}</span>
           <span>
             {body.trim().length} / {MAX_LEN}
@@ -122,14 +122,14 @@ export function ReportHealthForm({ dogId, dogName }: ReportHealthFormProps) {
       <div className="flex items-center justify-end gap-2 pt-1">
         <Link
           href={`/dog/${dogId}`}
-          className="font-mono text-[11px] tracking-[0.06em] uppercase text-muted-foreground hover:text-ink transition-colors no-underline px-2 py-1.5"
+          className="font-mono text-[12.1px] tracking-[0.06em] uppercase text-muted-foreground hover:text-ink transition-colors no-underline px-2 py-1.5"
         >
           {t("cancel")}
         </Link>
         <button
           type="submit"
           disabled={pending || tooShort}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-[11px] font-medium tracking-[0.06em] uppercase bg-ink text-background disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 transition-all"
+          className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase bg-ink text-background disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 transition-all"
         >
           {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {t("submit")}

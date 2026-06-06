@@ -79,14 +79,14 @@ export default function ReportPage() {
   return (
     <div className="px-4 py-4 max-w-lg mx-auto space-y-4">
       <div className="px-1">
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-1.5">
           Operator · Report
         </div>
-        <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">
+        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight">
           Submit a report
         </h1>
         {dogId && (
-          <div className="mt-3 font-mono text-[11px] tracking-[0.04em] text-muted-foreground rounded-xl bg-card border border-rule px-3 py-2">
+          <div className="mt-3 font-mono text-[12.1px] tracking-[0.04em] text-muted-foreground rounded-xl bg-card border border-rule px-3 py-2">
             re subject:{" "}
             <span className="text-ink font-medium">{dogId}</span>
           </div>
@@ -133,7 +133,7 @@ export default function ReportPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[16.5px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
           >
             <span className="font-mono text-[var(--green-brand)] font-medium">
               &gt;

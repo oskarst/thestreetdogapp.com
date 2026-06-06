@@ -127,11 +127,11 @@ export default function AdminHealthReportsPage() {
                 <div className="min-w-0">
                   <Link
                     href={`/dog/${r.dog_id}`}
-                    className="font-semibold text-[15px] text-ink hover:underline"
+                    className="font-semibold text-[16.5px] text-ink hover:underline"
                   >
                     {r.dog_name || "Unnamed dog"}
                   </Link>
-                  <div className="font-mono text-[11px] text-muted-foreground mt-0.5">
+                  <div className="font-mono text-[12.1px] text-muted-foreground mt-0.5">
                     {r.dog_ear_tag ? `tag ${r.dog_ear_tag} · ` : ""}
                     reported by {r.reporter_name ?? "anon"} ·{" "}
                     {new Date(r.created_at).toLocaleString()}

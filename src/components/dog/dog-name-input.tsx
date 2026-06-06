@@ -58,10 +58,10 @@ export function DogNameInput({
   if (savedName) {
     return (
       <div className="rounded-xl border border-[var(--green-brand)]/40 bg-green-soft px-3.5 py-3 text-center">
-        <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-green-deep">
+        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-green-deep">
           Named
         </div>
-        <div className="text-[14px] font-semibold text-ink mt-0.5">
+        <div className="text-[15.4px] font-semibold text-ink mt-0.5">
           Subject named &ldquo;{savedName}&rdquo;
         </div>
       </div>
@@ -86,7 +86,7 @@ export function DogNameInput({
       <button
         type="submit"
         disabled={submitting || !name.trim()}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[15px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
+        className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[16.5px] font-semibold transition-transform active:scale-[0.98] disabled:opacity-60"
       >
         <span className="font-mono text-[var(--green-brand)] font-medium">
           &gt;

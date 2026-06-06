@@ -50,13 +50,12 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
         attributionControl: false,
       });
 
-      // CARTO dark_all: keeps the dark theme but bakes in street names and
-      // supports native zoom to 20 (the old Esri Dark Gray Canvas capped at
-      // 16 with sparse labels), so users can zoom right down to the street
-      // to place the marker accurately.
+      // CARTO Voyager: light theme with clear street names, native zoom to
+      // 20, so users can zoom right down to the street to place the marker
+      // accurately.
       const tileLayer = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        { maxZoom: 20, subdomains: "abcd", className: "map-base-accessible" }
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        { maxZoom: 20, subdomains: "abcd" }
       ).addTo(map);
 
       // Detect if tiles fail to load (offline, no cache)
