@@ -1,9 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { BadgePlus, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FavoriteButton } from "@/components/dog/favorite-button";
+
+/** Classic medical "red cross": a solid equal-armed plus. Fills with
+ *  currentColor so the button's red text colour drives it. */
+function RedCrossIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+      <path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" />
+    </svg>
+  );
+}
 
 interface DogActionIconsProps {
   userId: string;
@@ -16,7 +26,7 @@ interface DogActionIconsProps {
 /**
  * Three-icon action row on dog cards / dog detail header:
  *   - Heart       → existing favourite toggle
- *   - BadgePlus   → /dog/{id}/report-health (flag injuries / illness)
+ *   - RedCross    → /dog/{id}/report-health (flag injuries / illness)
  *   - Home        → /dog/{id}/adopt        (adoption info + vet contacts)
  *
  * Each button stops propagation so taps inside a clickable card don't fall
@@ -52,7 +62,7 @@ export function DogActionIcons({
         aria-label={t("reportHealth")}
         title={t("reportHealth")}
       >
-        <BadgePlus className={iconClass} strokeWidth={1.75} />
+        <RedCrossIcon className={iconClass} />
       </Link>
       <Link
         href={`/dog/${dogId}/adopt`}
