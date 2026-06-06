@@ -31,19 +31,19 @@ export function CharacterPicker({ value, onChange }: CharacterPickerProps) {
             className={cn(
               "flex flex-col items-center gap-1 rounded-xl border bg-card py-2.5 px-1.5 transition-colors",
               active
-                ? "border-ink bg-background text-ink"
+                ? "border-ink bg-ink text-background"
                 : "border-rule text-ink-soft hover:border-rule-2"
             )}
           >
             <CharacterIcon
               character={opt.value}
               size={22}
-              className={cn(active ? "text-ink" : "text-ink-soft")}
+              className={cn(active ? "text-background" : "text-ink-soft")}
             />
             <span
               className={cn(
                 "font-mono text-[9px] tracking-[0.1em] uppercase",
-                active ? "text-ink" : "text-muted-foreground"
+                active ? "text-background" : "text-muted-foreground"
               )}
             >
               {opt.label}

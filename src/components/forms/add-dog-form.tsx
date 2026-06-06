@@ -52,7 +52,7 @@ export function AddDogForm() {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
-  const [character, setCharacter] = useState<DogCharacter | "">("");
+  const [character, setCharacter] = useState<DogCharacter | "">("friendly");
   const [size, setSize] = useState(DEFAULT_SIZE);
   const [gender, setGender] = useState<DogGender | "">("");
   const [age, setAge] = useState<DogAge | "">("");
