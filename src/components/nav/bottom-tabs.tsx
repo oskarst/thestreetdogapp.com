@@ -29,9 +29,9 @@ export function BottomTabs() {
         (p === "/map" || p.startsWith("/map/")) && q.get("picker") !== "1",
     },
     {
-      // Missions tab opens the picker map, not the /missions list — the
-      // map is what the user actually interacts with to start a mission.
-      href: "/map?picker=1",
+      // Missions tab opens the mission-type chooser (Find a Doggo / map
+      // mission), not the map picker or the district list directly.
+      href: "/missions/start",
       label: t("missions"),
       icon: "flag",
       isMatch: (p, q) =>
