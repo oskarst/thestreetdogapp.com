@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Home } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FavoriteButton } from "@/components/dog/favorite-button";
 
 /** Classic medical "red cross": a solid equal-armed plus. Fills with
  *  currentColor so the button's red text colour drives it. */
@@ -24,18 +23,17 @@ interface DogActionIconsProps {
 }
 
 /**
- * Three-icon action row on dog cards / dog detail header:
- *   - Heart       → existing favourite toggle
+ * Action row on dog cards / dog detail header:
  *   - RedCross    → /dog/{id}/report-health (flag injuries / illness)
  *   - Home        → /dog/{id}/adopt        (adoption info + vet contacts)
+ *
+ * (The favourite/heart toggle is hidden for now.)
  *
  * Each button stops propagation so taps inside a clickable card don't fall
  * through to the row-level navigate-to-dog handler.
  */
 export function DogActionIcons({
-  userId,
   dogId,
-  isFavorited,
   size = "sm",
 }: DogActionIconsProps) {
   const t = useTranslations("dogActions");
@@ -50,11 +48,6 @@ export function DogActionIcons({
       className="flex items-center gap-0.5"
       onClick={(e) => e.stopPropagation()}
     >
-      <FavoriteButton
-        userId={userId}
-        dogId={dogId}
-        initialFavorited={isFavorited}
-      />
       <Link
         href={`/dog/${dogId}/report-health`}
         prefetch={false}

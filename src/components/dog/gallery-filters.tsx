@@ -67,7 +67,6 @@ export function GalleryFilters({
     { value: "all", label: t("filterAll") },
     { value: "found", label: t("filterFound") },
     { value: "toFind", label: t("filterToFind") },
-    { value: "favorites", label: t("filterFavorites") },
   ];
 
   return (

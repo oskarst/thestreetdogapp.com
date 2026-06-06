@@ -41,7 +41,6 @@ export function DashboardContent({
       label: t("mySpottings"),
       caption: t("mySpottingsCaption"),
     },
-    { value: "favorites", label: t("favorites"), caption: t("favoritesCaption") },
   ];
 
   const filteredDogs = useMemo(() => {
