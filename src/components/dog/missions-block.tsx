@@ -142,15 +142,6 @@ export async function MissionsBlock() {
           </div>
         </Link>
       )}
-
-      <div className="mt-2 flex justify-end">
-        <Link
-          href="/missions"
-          className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground hover:text-ink no-underline transition-colors"
-        >
-          {t("seeAll")} →
-        </Link>
-      </div>
     </section>
   );
 }

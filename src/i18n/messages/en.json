@@ -341,11 +341,7 @@
     "finddoggoBack": "Back to missions",
     "finddoggoUnnamed": "Unnamed dog",
     "finddoggoMovement": "Recent movement",
-    "finddoggoTrackerNickname": "Tracker",
-    "dailyTitle": "Daily Directive",
-    "dailyStart": "Find as many dogs as possible",
-    "dailyBody": "Log every street dog you can spot today. Each one grows your score.",
-    "dailyReward": "+15 XP for your first find of the day"
+    "finddoggoTrackerNickname": "Tracker"
   },
   "tour": {
     "openTour": "Take a quick tour",
