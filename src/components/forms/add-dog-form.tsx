@@ -187,14 +187,9 @@ export function AddDogForm() {
       flagField("dogImage", t("errorPhoto"));
       return;
     }
-    // Ear tag is optional only when the user has explicitly ticked
-    // "No ear tag". If they leave it blank without ticking the toggle,
-    // it's ambiguous whether the dog truly has no tag — force them to
-    // decide. Either a manually-entered ID or an ear-tag photo satisfies.
-    if (!noEarTag && !earTagId.trim() && !earTagImage) {
-      flagField("earTag", t("errorEarTag"));
-      return;
-    }
+    // Ear tag is fully optional: a dog can be logged with no tag photo and
+    // no tag ID. Whatever the user does provide (photo and/or ID) is sent;
+    // a blank ear-tag section no longer blocks submission.
     if (!location) {
       flagField("location", t("errorLocation"));
       return;
