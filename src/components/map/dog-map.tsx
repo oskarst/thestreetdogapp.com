@@ -210,25 +210,14 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       .attribution({ prefix: '<a href="https://leafletjs.com">Leaflet</a>' })
       .addTo(map);
 
-    // Esri Light Gray Canvas, raster, with CSS filters that approximate
-    // the WCAG-AA "Accessible Basemap Gray v2" styling: bumped contrast on
-    // the base, faux halos around labels via repeated drop-shadows. See
-    // .map-base-accessible / .map-labels-accessible in globals.css.
+    // CARTO Voyager: light theme with street names baked in, native zoom
+    // to 20 (replaces the Esri Dark Gray Canvas dual-layer setup).
     L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
       {
-        attribution: "Tiles &copy; Esri",
-        maxZoom: 16,
-        className: "map-base-accessible",
-      }
-    ).addTo(map);
-    L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution: "",
-        maxZoom: 16,
-        pane: "shadowPane",
-        className: "map-labels-accessible",
+        attribution: "&copy; OpenStreetMap &copy; CARTO",
+        subdomains: "abcd",
+        maxZoom: 20,
       }
     ).addTo(map);
 
