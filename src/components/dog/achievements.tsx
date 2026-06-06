@@ -25,8 +25,6 @@ const ACHIEVEMENT_LABEL_KEY: Record<string, string> = {
 export function Achievements({ achievements, score }: AchievementsProps) {
   const t = useTranslations("dashboard");
   const [open, setOpen] = useState(false);
-  const unlockedCount = achievements.filter((a) => a.unlocked).length;
-  const total = achievements.length;
 
   const stats = [
     {
@@ -73,7 +71,6 @@ export function Achievements({ achievements, score }: AchievementsProps) {
           <span className="text-green-deep">
             {t("ptTotal", { n: score.total_score })}
           </span>
-          <span>{t("achievementsLogged", { n: unlockedCount, total })}</span>
           <ChevronDown
             className={cn(
               "size-3.5 transition-transform",

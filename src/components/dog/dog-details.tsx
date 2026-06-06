@@ -92,7 +92,7 @@ export async function DogDetails({
 
       {/* Stats grid */}
       <div className="grid grid-cols-3 gap-px bg-rule rounded-xl overflow-hidden">
-        <StatCell value={totalSightings} label="Findings" />
+        <StatCell value={totalSightings} label="Sightings" />
         <StatCell value={totalCatchers} label="Catchers" />
         <StatCell label="Last seen" valueText={timeAgo(dog.last_sighting_date)} />
       </div>
