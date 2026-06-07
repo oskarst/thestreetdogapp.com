@@ -25,10 +25,14 @@ interface HealthReport {
   dog_ear_tag: string | null;
   reporter_id: string;
   reporter_name: string | null;
+  reporter_email: string | null;
   body: string;
   status: Status;
   admin_note: string | null;
   created_at: string;
+  sighting_id: string | null;
+  sighting_lat: number | null;
+  sighting_lng: number | null;
 }
 
 const STATUS_VARIANT: Record<Status, "outline" | "default" | "secondary"> = {
@@ -135,6 +139,32 @@ export default function AdminHealthReportsPage() {
                     {r.dog_ear_tag ? `tag ${r.dog_ear_tag} · ` : ""}
                     reported by {r.reporter_name ?? "anon"} ·{" "}
                     {new Date(r.created_at).toLocaleString()}
+                  </div>
+                  {r.reporter_email && (
+                    <a
+                      href={`mailto:${r.reporter_email}`}
+                      className="font-mono text-[12.1px] text-ink hover:underline"
+                    >
+                      {r.reporter_email}
+                    </a>
+                  )}
+                  <div className="mt-1.5 flex flex-wrap items-center gap-3">
+                    <Link
+                      href={`/dog/${r.dog_id}`}
+                      className="font-mono text-[11.6px] tracking-[0.06em] uppercase text-green-deep hover:underline"
+                    >
+                      View dog ›
+                    </Link>
+                    {r.sighting_lat != null && r.sighting_lng != null && (
+                      <a
+                        href={`https://www.google.com/maps?q=${r.sighting_lat},${r.sighting_lng}`}
+                        target="_blank"
+                        rel="noopener"
+                        className="font-mono text-[11.6px] tracking-[0.06em] uppercase text-green-deep hover:underline"
+                      >
+                        Find on map ›
+                      </a>
+                    )}
                   </div>
                 </div>
                 <Badge variant={STATUS_VARIANT[r.status]}>{r.status}</Badge>
