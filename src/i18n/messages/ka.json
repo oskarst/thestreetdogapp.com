@@ -346,7 +346,21 @@
     "finddoggoBack": "მისიებზე დაბრუნება",
     "finddoggoUnnamed": "უსახელო ძაღლი",
     "finddoggoMovement": "ბოლო მოძრაობა",
-    "finddoggoTrackerNickname": "მკვლევარი"
+    "finddoggoTrackerNickname": "მკვლევარი",
+    "freeRoamEyebrow": "თავისუფალი რეჟიმი",
+    "freeRoamCardTitle": "დაამატე ძაღლები ნებისმიერ დროს",
+    "freeRoamCardBody": "მისია არ სჭირდება. დაინახე ქუჩის ძაღლი, დააჭირე „დაამატე ძაღლი“ და მიიღე ქულები.",
+    "freeRoamTitle": "თავისუფალი რეჟიმი",
+    "freeRoamSubtitle": "მისია არ არის საჭირო",
+    "freeRoamIntro": "აქ მისიის დაწყება არ არის საჭირო. როცა ქუჩის ძაღლს დაინახავ, დააჭირე ღილაკს „დაამატე ძაღლი“ და ჩაწერე. ყოველი დამატებული ძაღლი XP-ს გაძლევს მკვლევარის დონისთვის.",
+    "freeRoamPointsTitle": "როგორ მუშაობს ქულები",
+    "freeRoamPtSighting": "ყოველი ჩაწერილი ძაღლი",
+    "freeRoamPtUnique": "შენთვის ახალი ძაღლი",
+    "freeRoamPtDiscover": "ძაღლი, რომელსაც პირველი იპოვი",
+    "freeRoamPtDaily": "დღის პირველი ძაღლი",
+    "freeRoamPtTag": "ყურის ტეგის ფოტოს დამატება",
+    "freeRoamFootnote": "ბონუსები ჯამდება, ასე რომ სრულიად ახალი, ტეგიანი ძაღლის აღმოჩენამ შესაძლოა ერთბაშად 60+ XP მოგიტანოს.",
+    "freeRoamCta": "დაამატე ძაღლი"
   },
   "tour": {
     "openTour": "სწრაფი ტური",

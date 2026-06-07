@@ -346,7 +346,21 @@
     "finddoggoBack": "Back to missions",
     "finddoggoUnnamed": "Unnamed dog",
     "finddoggoMovement": "Recent movement",
-    "finddoggoTrackerNickname": "Tracker"
+    "finddoggoTrackerNickname": "Tracker",
+    "freeRoamEyebrow": "Free Roam",
+    "freeRoamCardTitle": "Add dogs any time",
+    "freeRoamCardBody": "No mission needed. Spot a street dog, tap Add Dog, earn points.",
+    "freeRoamTitle": "Free Roam",
+    "freeRoamSubtitle": "No mission required",
+    "freeRoamIntro": "There's no mission to start here. Whenever you spot a street dog, tap the Add Dog button and log it. Every dog you add earns XP toward your researcher level.",
+    "freeRoamPointsTitle": "How points work",
+    "freeRoamPtSighting": "Every dog you log",
+    "freeRoamPtUnique": "A dog that's new to you",
+    "freeRoamPtDiscover": "A dog you're first to find",
+    "freeRoamPtDaily": "Your first dog each day",
+    "freeRoamPtTag": "Add an ear-tag photo",
+    "freeRoamFootnote": "Bonuses stack, so discovering a brand-new tagged dog can earn 60+ XP at once.",
+    "freeRoamCta": "Add a dog"
   },
   "tour": {
     "openTour": "Take a quick tour",

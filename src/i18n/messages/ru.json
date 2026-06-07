@@ -346,7 +346,21 @@
     "finddoggoBack": "К миссиям",
     "finddoggoUnnamed": "Собака без имени",
     "finddoggoMovement": "Недавние перемещения",
-    "finddoggoTrackerNickname": "Следопыт"
+    "finddoggoTrackerNickname": "Следопыт",
+    "freeRoamEyebrow": "Свободный режим",
+    "freeRoamCardTitle": "Добавляй собак в любое время",
+    "freeRoamCardBody": "Миссия не нужна. Заметил уличную собаку, нажми «Добавить собаку», получай очки.",
+    "freeRoamTitle": "Свободный режим",
+    "freeRoamSubtitle": "Миссия не нужна",
+    "freeRoamIntro": "Здесь не нужно начинать миссию. Когда заметишь уличную собаку, нажми кнопку «Добавить собаку» и запиши её. Каждая добавленная собака приносит XP к твоему уровню исследователя.",
+    "freeRoamPointsTitle": "Как начисляются очки",
+    "freeRoamPtSighting": "Каждая записанная собака",
+    "freeRoamPtUnique": "Новая для тебя собака",
+    "freeRoamPtDiscover": "Собака, которую ты нашёл первым",
+    "freeRoamPtDaily": "Первая собака за день",
+    "freeRoamPtTag": "Добавить фото ушной бирки",
+    "freeRoamFootnote": "Бонусы суммируются: за совершенно новую собаку с биркой можно получить 60+ XP сразу.",
+    "freeRoamCta": "Добавить собаку"
   },
   "tour": {
     "openTour": "Краткий тур",

@@ -27,6 +27,31 @@ export default async function MissionsStartPage() {
       </header>
 
       <Link
+        href="/missions/free-roam"
+        className="card-soft block w-full px-4 py-4 no-underline text-inherit transition-colors hover:border-ink/30"
+      >
+        <div className="flex items-start gap-3">
+          <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-green-brand text-background">
+            <Icon name="paw" size={28} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-green-deep">
+              {t("freeRoamEyebrow")}
+            </div>
+            <div className="text-[17.6px] font-semibold leading-tight mt-1">
+              {t("freeRoamCardTitle")}
+            </div>
+            <p className="text-[14.3px] text-muted-foreground leading-snug mt-1.5">
+              {t("freeRoamCardBody")}
+            </p>
+          </div>
+          <span className="font-mono text-lg text-muted-foreground shrink-0">
+            ›
+          </span>
+        </div>
+      </Link>
+
+      <Link
         href="/map?picker=1"
         className="card-soft block w-full px-4 py-4 no-underline text-inherit transition-colors hover:border-ink/30"
       >
