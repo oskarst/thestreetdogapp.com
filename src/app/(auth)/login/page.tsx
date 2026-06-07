@@ -48,14 +48,33 @@ export default function LoginPage() {
     setLoading(false);
 
     if (otpError) {
+      const status = otpError.status ?? 0;
       const lower = otpError.message.toLowerCase();
-      if (lower.includes("rate limit")) {
-        setError("Too many attempts. Please try again in a few minutes.");
+      // Rate limit / per-email cooldown — surface it so the user knows to
+      // wait instead of staring at a "check your email" that never arrives.
+      if (
+        status === 429 ||
+        lower.includes("rate limit") ||
+        lower.includes("60 seconds") ||
+        lower.includes("security purposes") ||
+        lower.includes("only request this")
+      ) {
+        setError("Too many requests. Please wait a minute, then try again.");
         return;
       }
-      // Don't reflect "no such user" etc. — show the sent state regardless
-      // so the link request can't be used to enumerate accounts.
-      console.warn("[login] magic link silent error:", otpError.message);
+      // Server / SMTP send failure — surface it too (a 5xx doesn't reveal
+      // whether an account exists, so it's safe to show).
+      if (
+        status >= 500 ||
+        lower.includes("error sending") ||
+        lower.includes("smtp")
+      ) {
+        setError("Couldn't send the link right now. Please try again.");
+        return;
+      }
+      // Anything else (e.g. no account for this email) — stay silent so the
+      // request can't be used to check whether an account exists.
+      console.warn("[login] magic link silent error:", status, otpError.message);
     }
     setMagicSent(true);
   }
