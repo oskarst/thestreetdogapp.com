@@ -118,7 +118,7 @@ export default function LoginPage() {
             setMagicSent(false);
             setMode("password");
           }}
-          className="mt-4 w-full text-center text-sm text-muted-foreground hover:text-ink underline underline-offset-2"
+          className="mt-4 w-full rounded-xl border border-rule-2 bg-card py-3 text-center text-sm font-medium text-ink hover:bg-muted transition-colors"
         >
           {t("usePassword")}
         </button>
@@ -153,7 +153,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => switchMode("password")}
-            className="mt-3 w-full text-center text-sm text-muted-foreground hover:text-ink underline underline-offset-2"
+            className="mt-3 w-full rounded-xl border border-rule-2 bg-card py-3 text-center text-sm font-medium text-ink hover:bg-muted transition-colors"
           >
             {t("usePassword")}
           </button>
@@ -192,7 +192,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => switchMode("magic")}
-            className="mt-3 w-full text-center text-sm text-muted-foreground hover:text-ink underline underline-offset-2"
+            className="mt-3 w-full rounded-xl border border-rule-2 bg-card py-3 text-center text-sm font-medium text-ink hover:bg-muted transition-colors"
           >
             {t("useMagicLink")}
           </button>
