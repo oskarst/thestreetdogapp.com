@@ -485,6 +485,14 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
                   picker.hasActive ? "pickerBlocked" : "pickerPrompt"
                 )}
               </div>
+              {!picker.hasActive && (
+                <div
+                  className="font-mono text-[11px] tracking-[0.04em] mt-1"
+                  style={{ opacity: 0.7 }}
+                >
+                  {tMissions("pickerPoints")}
+                </div>
+              )}
               {picker.hasActive && (
                 <Link
                   href="/dashboard"

@@ -104,6 +104,9 @@ export default async function FindDoggoPage() {
                   {t("finddoggoLastSeen")}: {formatDateShort(target.lastSightingDate)}
                 </div>
               )}
+              <div className="font-mono text-[11px] tracking-[0.06em] uppercase text-green-deep">
+                {t("finddoggoReward")}
+              </div>
             </div>
           </section>
 
