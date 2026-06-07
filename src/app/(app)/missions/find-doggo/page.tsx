@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth-cache";
+import { createClient } from "@/lib/supabase/server";
 import {
   getActiveFindDoggo,
   FINDDOGGO_VISIBLE_SIGHTINGS_LIMIT,
@@ -34,6 +35,22 @@ export default async function FindDoggoPage() {
     getActiveFindDoggo(),
   ]);
 
+  // No active target → show the start screen with a photo of the latest dog.
+  let latestDogImage: string | null = null;
+  if (!target) {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("dogs")
+      .select("thumbnail, images")
+      .eq("status", "approved")
+      .not("images", "eq", "{}")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    latestDogImage =
+      data?.thumbnail ?? (data?.images as string[] | undefined)?.[0] ?? null;
+  }
+
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
       <header>
@@ -52,7 +69,7 @@ export default async function FindDoggoPage() {
       </header>
 
       {!target ? (
-        <FindDoggoStart />
+        <FindDoggoStart dogImage={latestDogImage} />
       ) : (
         <>
           <section className="card-soft overflow-hidden p-0">

@@ -16,12 +16,18 @@ export function IconSprite() {
       <defs>
         {/* Achievement / content icons (filled duotone) */}
         <symbol id="i-dog" viewBox="0 0 24 24">
-          <path d="M5 5 L8 4 L8 10 Z" fill="currentColor" opacity="0.35" />
-          <path d="M19 5 L16 4 L16 10 Z" fill="currentColor" opacity="0.35" />
-          <circle cx="12" cy="13" r="6" fill="currentColor" opacity="0.35" />
-          <circle cx="9.5" cy="12" r="0.9" fill="currentColor" />
-          <circle cx="14.5" cy="12" r="0.9" fill="currentColor" />
-          <ellipse cx="12" cy="15.4" rx="1.5" ry="1" fill="currentColor" />
+          {/* floppy ears */}
+          <ellipse cx="6.4" cy="11" rx="2.4" ry="4.6" fill="currentColor" opacity="0.35" />
+          <ellipse cx="17.6" cy="11" rx="2.4" ry="4.6" fill="currentColor" opacity="0.35" />
+          {/* head */}
+          <circle cx="12" cy="12" r="5.9" fill="currentColor" opacity="0.35" />
+          {/* snout */}
+          <ellipse cx="12" cy="15" rx="2.7" ry="2.1" fill="currentColor" opacity="0.5" />
+          {/* eyes */}
+          <circle cx="9.9" cy="11" r="0.95" fill="currentColor" />
+          <circle cx="14.1" cy="11" r="0.95" fill="currentColor" />
+          {/* nose */}
+          <ellipse cx="12" cy="14.2" rx="1.5" ry="1.05" fill="currentColor" />
         </symbol>
         <symbol id="i-paw" viewBox="0 0 24 24">
           <ellipse cx="12" cy="16" rx="5.5" ry="4" fill="currentColor" opacity="0.35" />
