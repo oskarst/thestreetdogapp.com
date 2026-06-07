@@ -59,16 +59,6 @@ export default async function FreeRoamPage() {
           {t("freeRoamFootnote")}
         </p>
       </section>
-
-      <Link
-        href="/add-dog"
-        className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-ink text-background text-[16.5px] font-semibold no-underline transition-transform active:scale-[0.98]"
-      >
-        <span className="font-mono text-[var(--green-brand)] font-medium">
-          &gt;
-        </span>
-        {t("freeRoamCta")}
-      </Link>
     </div>
   );
 }

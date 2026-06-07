@@ -115,7 +115,7 @@ export default function RegisterPage() {
       description="Sign up to log street dogs in your city and climb the leaderboard."
       footer={
         <>
-          already an operator?{" "}
+          already a researcher?{" "}
           <Link
             href="/login"
             className="text-ink underline underline-offset-[3px] font-medium"

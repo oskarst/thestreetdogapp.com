@@ -107,7 +107,7 @@ export default function LoginPage() {
 
   const footer = (
     <>
-      new operator?{" "}
+      new researcher?{" "}
       <Link
         href="/register"
         className="text-ink underline underline-offset-[3px] font-medium"
