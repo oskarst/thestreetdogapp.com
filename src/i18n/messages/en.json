@@ -187,7 +187,11 @@
     "resetInstructions": "Enter your email address and we'll send you instructions to reset your password.",
     "backToLogin": "Back to login",
     "or": "or",
-    "fillAllFields": "Please fill in all fields."
+    "fillAllFields": "Please fill in all fields.",
+    "sendMagicLink": "Send magic link",
+    "usePassword": "Log in with email and password",
+    "useMagicLink": "Use a magic link instead",
+    "magicSentDesc": "If an account exists for {email}, a sign-in link is on its way."
   },
   "admin": {
     "adminRequired": "You need administrator privileges to access this page.",

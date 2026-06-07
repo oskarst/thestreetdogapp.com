@@ -29,7 +29,11 @@ export default function ResetPasswordPage() {
     const supabase = createClient();
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(
       email,
-      { redirectTo: `${window.location.origin}/auth/callback` }
+      // Land on the change-password screen after the link logs them in, so
+      // they actually set a new password instead of dropping on /dashboard.
+      {
+        redirectTo: `${window.location.origin}/auth/callback?next=/change-password`,
+      }
     );
 
     // Always show the generic success state — never differentiate between
