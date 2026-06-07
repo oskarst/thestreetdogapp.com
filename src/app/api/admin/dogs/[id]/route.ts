@@ -177,6 +177,16 @@ export async function PATCH(
     }
   }
 
+  // status — moderation approve/decline (approved / pending / rejected).
+  if ("status" in body) {
+    const v = body.status;
+    if (v === "approved" || v === "pending" || v === "rejected") {
+      update.status = v;
+    } else {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    }
+  }
+
   if (Object.keys(update).length === 1) {
     // Only updated_at — nothing meaningful to patch.
     return NextResponse.json(

@@ -17,6 +17,9 @@ export type DogCharacter =
   | "aggressive";
 export type DogGender = "male" | "female" | "unknown";
 export type DogAge = "puppy" | "young" | "adult" | "old";
+/** Moderation status — photos with no visible dog are 'pending' until an
+ *  admin approves ('approved') or declines ('rejected'). */
+export type DogStatus = "approved" | "pending" | "rejected";
 
 // -- Table Row / Insert / Update types --
 
@@ -81,6 +84,7 @@ export interface DogRow {
   gender: DogGender | null;
   age: DogAge | null;
   first_registered_by_id: string | null;
+  status: DogStatus;
   created_at: string;
   updated_at: string;
 }
@@ -145,6 +149,7 @@ export interface DogInsert {
   gender?: DogGender | null;
   age?: DogAge | null;
   first_registered_by_id?: string | null;
+  status?: DogStatus;
   created_at?: string;
   updated_at?: string;
 }
@@ -162,6 +167,7 @@ export interface DogUpdate {
   gender?: DogGender | null;
   age?: DogAge | null;
   first_registered_by_id?: string | null;
+  status?: DogStatus;
   updated_at?: string;
 }
 

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { moderateImage } from "@/lib/image-moderation";
-import { checkNotHuman } from "@/lib/dog-photo-classifier";
+import { checkHasDog } from "@/lib/dog-photo-classifier";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -66,13 +66,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Run the two checks in parallel. moderateImage is the authoritative
-    // safety gate (explicit content, fail-closed); checkNotHuman is a light
-    // quality gate that only bounces photos of people (fail-open). Reject
-    // as soon as either says no.
-    const [moderation, subject] = await Promise.all([
+    // Run both checks in parallel. moderateImage is the authoritative safety
+    // gate (explicit content, fail-closed) and still hard-blocks. checkHasDog
+    // does NOT block: a "no dog" photo is allowed through but reported back so
+    // the form can warn that it will be reviewed by an admin before going
+    // public (the sightings route makes the authoritative call server-side).
+    const [moderation, dogCheck] = await Promise.all([
       moderateImage(imageFile),
-      checkNotHuman(imageFile),
+      checkHasDog(imageFile),
     ]);
 
     if (!moderation.ok) {
@@ -81,14 +82,8 @@ export async function POST(request: Request) {
         { status: 200 }
       );
     }
-    if (!subject.ok) {
-      return NextResponse.json(
-        { ok: false, error: subject.reason },
-        { status: 200 }
-      );
-    }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, hasDog: dogCheck.hasDog });
   } catch (err) {
     console.error("[POST /api/dog-photo-check]", err);
     return NextResponse.json(

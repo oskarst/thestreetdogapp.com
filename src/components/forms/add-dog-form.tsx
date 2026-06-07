@@ -43,6 +43,9 @@ export function AddDogForm() {
   const [dogImage, setDogImage] = useState<File | null>(null);
   const [dogImageChecking, setDogImageChecking] = useState(false);
   const [dogImageError, setDogImageError] = useState("");
+  // No dog detected in the photo: not blocked, but the entry will be saved
+  // privately and reviewed by an admin before it appears publicly.
+  const [dogImagePendingReview, setDogImagePendingReview] = useState(false);
   const [earTagImage, setEarTagImage] = useState<File | null>(null);
   const [earTagImageChecking, setEarTagImageChecking] = useState(false);
   const [earTagImageError, setEarTagImageError] = useState("");
@@ -139,6 +142,7 @@ export function AddDogForm() {
   async function handleDogImage(file: File | null) {
     setDogImage(file);
     setDogImageError("");
+    setDogImagePendingReview(false);
 
     if (!file || shouldSkipImageCheck()) return;
 
@@ -146,8 +150,14 @@ export function AddDogForm() {
     try {
       const result = await checkDogPhoto(file);
       if (!result.ok) {
+        // Hard block: explicit-content moderation failed (or the check
+        // errored). Drop the photo and surface the reason.
         setDogImage(null);
         setDogImageError(result.error ?? t("errorGeneric"));
+      } else if (result.hasDog === false) {
+        // No dog detected: keep the photo, but flag that it will be saved
+        // privately and reviewed by an admin before going public.
+        setDogImagePendingReview(true);
       }
     } catch {
       setDogImage(null);
@@ -392,6 +402,11 @@ export function AddDogForm() {
             className="mt-2 text-sm font-medium text-destructive"
           >
             {fieldErrors.dogImage}
+          </p>
+        )}
+        {dogImagePendingReview && dogImage && (
+          <p className="mt-2 rounded-lg border border-amber-brand/40 bg-amber-soft px-3 py-2 text-[13px] leading-snug text-amber-brand">
+            {t("photoPendingReview")}
           </p>
         )}
       </section>

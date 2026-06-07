@@ -1,6 +1,9 @@
 interface CheckResult {
   ok: boolean;
   error?: string;
+  /** dog-photo-check only: whether a dog was detected. When false, the
+   *  upload is still allowed but will be reviewed by an admin. */
+  hasDog?: boolean;
 }
 
 async function postImage(
@@ -20,7 +23,7 @@ async function postImage(
   }
 
   const data = (await res.json().catch(() => null)) as
-    | { ok?: boolean; error?: string }
+    | { ok?: boolean; error?: string; hasDog?: boolean }
     | null;
 
   if (!res.ok) {
@@ -36,7 +39,7 @@ async function postImage(
   if (data?.ok === false) {
     return { ok: false, error: data.error ?? "Image rejected." };
   }
-  return { ok: true };
+  return { ok: true, hasDog: data?.hasDog };
 }
 
 export function checkEarTagImage(file: File): Promise<CheckResult> {

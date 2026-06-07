@@ -30,6 +30,7 @@ async function getDogMarkers(): Promise<DogMarker[]> {
   const { data, error } = await supabase
     .from("dogs")
     .select(MAP_MARKER_COLUMNS)
+    .eq("status", "approved")
     .not("last_latitude", "is", null)
     .not("last_longitude", "is", null)
     .order("last_sighting_date", { ascending: false })

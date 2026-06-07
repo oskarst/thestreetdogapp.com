@@ -61,8 +61,11 @@ export async function GET(request: Request) {
     const { data, error } = await admin
       .from("sightings")
       .select(
-        "id, dog_id, image_url, timestamp, character, latitude, longitude, profiles:user_id(nickname), dogs:dog_id(names, created_at)"
+        "id, dog_id, image_url, timestamp, character, latitude, longitude, profiles:user_id(nickname), dogs:dog_id!inner(names, created_at, status)"
       )
+      // Inner join + filter: only sightings of publicly approved dogs surface
+      // in the marketing feed (pending/rejected dogs stay private).
+      .eq("dogs.status", "approved")
       .order("timestamp", { ascending: false })
       .limit(ITEM_LIMIT);
 

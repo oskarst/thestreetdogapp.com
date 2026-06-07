@@ -120,7 +120,8 @@
     "metaScale": "scale 1–10",
     "noEarTag": "No Ear Tag",
     "pageTitle": "Find a Dog",
-    "earTagHint": "Enter the dog ID only — the last 3–7 digits on the ear tag. e.g. AMA 111 <id>334523</id>"
+    "earTagHint": "Enter the dog ID only — the last 3–7 digits on the ear tag. e.g. AMA 111 <id>334523</id>",
+    "photoPendingReview": "No dog detected in this photo. It will still be saved, but an admin will review it before it appears publicly."
   },
   "dogProfile": {
     "adoptInfo": "Adopt Info",

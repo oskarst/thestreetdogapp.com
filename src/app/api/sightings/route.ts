@@ -3,6 +3,7 @@ import sharp from "sharp";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getDistricts, pointInDistrict } from "@/lib/missions";
+import { checkHasDog } from "@/lib/dog-photo-classifier";
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -322,8 +323,12 @@ export async function POST(request: Request) {
           })
           .eq("id", dogId);
       } else {
-        // Create new dog
+        // Create new dog. If no dog is visible in the photo, save it
+        // privately as 'pending' for admin review instead of publishing it.
         isNewDog = true;
+        const newDogStatus = (await checkHasDog(dogImageFile)).hasDog
+          ? "approved"
+          : "pending";
         const { data: newDog, error: createErr } = await supabase
           .from("dogs")
           .insert({
@@ -340,6 +345,7 @@ export async function POST(request: Request) {
             gender,
             age,
             first_registered_by_id: user.id,
+            status: newDogStatus,
           })
           .select("id")
           .single();
@@ -348,8 +354,12 @@ export async function POST(request: Request) {
         dogId = newDog.id;
       }
     } else {
-      // No ear tag — always create new dog
+      // No ear tag — always create new dog. Hide it for admin review when
+      // the photo has no visible dog.
       isNewDog = true;
+      const newDogStatus = (await checkHasDog(dogImageFile)).hasDog
+        ? "approved"
+        : "pending";
       const { data: newDog, error: createErr } = await supabase
         .from("dogs")
         .insert({
@@ -365,6 +375,7 @@ export async function POST(request: Request) {
           gender,
           age,
           first_registered_by_id: user.id,
+          status: newDogStatus,
         })
         .select("id")
         .single();
