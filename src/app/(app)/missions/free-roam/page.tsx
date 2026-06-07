@@ -26,10 +26,7 @@ export default async function FreeRoamPage() {
         >
           ← {t("finddoggoBack")}
         </Link>
-        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mt-2">
-          {t("freeRoamSubtitle")}
-        </div>
-        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight mt-1">
+        <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight mt-2">
           {t("freeRoamTitle")}
         </h1>
       </header>
