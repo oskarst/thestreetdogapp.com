@@ -60,7 +60,7 @@ export function DogActionIcons({
       <Link
         href={`/dog/${dogId}/adopt`}
         prefetch={false}
-        className={`${btnClass} text-muted-foreground hover:text-amber-brand hover:bg-amber-soft`}
+        className={`${btnClass} text-green-deep hover:text-green-brand hover:bg-green-soft`}
         aria-label={t("adoptInfo")}
         title={t("adoptInfo")}
       >
