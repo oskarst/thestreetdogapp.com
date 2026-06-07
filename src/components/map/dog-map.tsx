@@ -359,7 +359,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
     // than fitting every chunk, which was too zoomed out to pick one.
     if (!hasFitBoundsRef.current && allLatLngs.length > 0) {
       const bounds = L.latLngBounds(allLatLngs);
-      map.setView(bounds.getCenter(), 15);
+      map.setView(bounds.getCenter(), 14);
       hasFitBoundsRef.current = true;
     }
   }, [picker]);
@@ -412,7 +412,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
           !picker.hasActive &&
           !hasCenteredOnUserRef.current
         ) {
-          map.setView([latitude, longitude], 16);
+          map.setView([latitude, longitude], 15);
           hasCenteredOnUserRef.current = true;
         }
       },
