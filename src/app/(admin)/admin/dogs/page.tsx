@@ -40,6 +40,7 @@ import type {
   DogCharacter,
   DogGender,
   DogRow,
+  DogStatus,
 } from "@/types/database";
 import { toast } from "sonner";
 import { AdminHeader } from "@/components/admin/admin-header";
@@ -57,6 +58,7 @@ interface EditDraft {
   gender: DogGender | "unset";
   age: DogAge | "unset";
   size: number | null;
+  status: DogStatus;
 }
 
 const CHARACTER_OPTIONS: DogCharacter[] = [
@@ -69,6 +71,7 @@ const CHARACTER_OPTIONS: DogCharacter[] = [
 ];
 const GENDER_OPTIONS: DogGender[] = ["male", "female", "unknown"];
 const AGE_OPTIONS: DogAge[] = ["puppy", "young", "adult", "old"];
+const STATUS_OPTIONS: DogStatus[] = ["approved", "pending", "rejected"];
 
 export default function AdminDogsPage() {
   const [dogs, setDogs] = useState<DogWithMeta[]>([]);
@@ -118,6 +121,7 @@ export default function AdminDogsPage() {
       gender: (dog.gender ?? "unset") as EditDraft["gender"],
       age: (dog.age ?? "unset") as EditDraft["age"],
       size: dog.size ?? null,
+      status: dog.status ?? "approved",
     });
   }
 
@@ -133,6 +137,7 @@ export default function AdminDogsPage() {
       gender: editDraft.gender === "unset" ? null : editDraft.gender,
       age: editDraft.age === "unset" ? null : editDraft.age,
       size: editDraft.size,
+      status: editDraft.status,
     };
     setSavingEdit(true);
     const res = await fetch(`/api/admin/dogs/${editDraft.id}`, {
@@ -432,6 +437,35 @@ export default function AdminDogsPage() {
                       })
                     }
                   />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">
+                    Visibility / status
+                  </label>
+                  <Select
+                    value={editDraft.status}
+                    onValueChange={(v) =>
+                      setEditDraft({
+                        ...editDraft,
+                        status: v as DogStatus,
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STATUS_OPTIONS.map((s) => (
+                        <SelectItem key={s} value={s}>
+                          {s === "approved"
+                            ? "Approved (public)"
+                            : s === "pending"
+                              ? "Pending review (hidden)"
+                              : "Rejected (hidden)"}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>
