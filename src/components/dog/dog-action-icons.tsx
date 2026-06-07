@@ -49,15 +49,6 @@ export function DogActionIcons({
       onClick={(e) => e.stopPropagation()}
     >
       <Link
-        href={`/dog/${dogId}/report-health`}
-        prefetch={false}
-        className={`${btnClass} text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950`}
-        aria-label={t("reportHealth")}
-        title={t("reportHealth")}
-      >
-        <RedCrossIcon className={iconClass} />
-      </Link>
-      <Link
         href={`/dog/${dogId}/adopt`}
         prefetch={false}
         className={`${btnClass} text-green-deep hover:text-green-brand hover:bg-green-soft`}
@@ -65,6 +56,15 @@ export function DogActionIcons({
         title={t("adoptInfo")}
       >
         <Home className={iconClass} strokeWidth={1.75} />
+      </Link>
+      <Link
+        href={`/dog/${dogId}/report-health`}
+        prefetch={false}
+        className={`${btnClass} text-red-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950`}
+        aria-label={t("reportHealth")}
+        title={t("reportHealth")}
+      >
+        <RedCrossIcon className={iconClass} />
       </Link>
     </div>
   );
