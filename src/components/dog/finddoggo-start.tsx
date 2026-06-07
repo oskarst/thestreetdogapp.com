@@ -67,42 +67,44 @@ export function FindDoggoStart() {
   }
 
   return (
-    <div className="card-soft p-6 text-center space-y-4">
-      <div className="size-14 mx-auto grid place-items-center rounded-2xl bg-amber-brand text-amber-soft">
-        <Icon name="dog" size={32} />
-      </div>
-      <h2 className="text-[22px] font-semibold leading-tight">
-        {t("chooserFindTitle")}
-      </h2>
-      <p className="text-[15.4px] text-muted-foreground leading-relaxed max-w-sm mx-auto">
-        {t("chooserFindBody")}
-      </p>
-      <p className="font-mono text-[11px] tracking-[0.06em] uppercase text-green-deep">
-        {t("finddoggoReward")}
-      </p>
-      <button
-        type="button"
-        onClick={handleStart}
-        disabled={pending}
-        className={cn(
-          "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full",
-          "bg-ink text-background font-semibold text-[15.4px]",
-          "transition-transform active:scale-95 disabled:opacity-60"
-        )}
-      >
-        {pending && (
-          <span
-            className="size-3 rounded-full border-2 border-background/40 border-t-background animate-spin"
-            aria-hidden
-          />
-        )}
-        {pending ? t("finddoggoStarting") : t("finddoggoStart")}
-      </button>
-      {error && (
-        <div className="font-mono text-[12.1px] tracking-[0.04em] text-destructive">
-          {error}
+    <div className="card-soft p-5">
+      <div className="flex items-start gap-4">
+        {/* Static dog graphic on the left of the content. */}
+        <div className="size-24 shrink-0 grid place-items-center rounded-2xl bg-amber-brand text-amber-soft">
+          <Icon name="dog" size={52} />
         </div>
-      )}
+        <div className="flex-1 min-w-0 space-y-3">
+          <p className="text-[15.4px] text-muted-foreground leading-relaxed">
+            {t("chooserFindBody")}
+          </p>
+          <p className="font-mono text-[11px] tracking-[0.06em] uppercase text-green-deep">
+            {t("finddoggoReward")}
+          </p>
+          <button
+            type="button"
+            onClick={handleStart}
+            disabled={pending}
+            className={cn(
+              "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full",
+              "bg-ink text-background font-semibold text-[15.4px]",
+              "transition-transform active:scale-95 disabled:opacity-60"
+            )}
+          >
+            {pending && (
+              <span
+                className="size-3 rounded-full border-2 border-background/40 border-t-background animate-spin"
+                aria-hidden
+              />
+            )}
+            {pending ? t("finddoggoStarting") : t("finddoggoStart")}
+          </button>
+          {error && (
+            <div className="font-mono text-[12.1px] tracking-[0.04em] text-destructive">
+              {error}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
