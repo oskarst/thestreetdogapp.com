@@ -1,6 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { SectionLabel } from "@/components/ui/section-label";
 import { getMissionsView, PARENT_COLORS } from "@/lib/missions";
 import { MissionsActiveActions } from "@/components/dog/missions-active-actions";
 import { Icon } from "@/components/ui/icon";
@@ -45,10 +44,6 @@ export async function MissionsBlock() {
 
   return (
     <section data-tour-id="missions-block">
-      <SectionLabel meta={`${completedCount} / ${list.length}`}>
-        {t("title")}
-      </SectionLabel>
-
       {active ? (
         <div className="rounded-2xl border border-amber-brand/40 bg-amber-soft p-4">
           <div className="flex items-center gap-4 mb-3">
