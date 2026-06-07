@@ -7,8 +7,11 @@
 -- Qualify every column reference (alias profiles AS pr) so it no longer
 -- depends on the #variable_conflict directive. Output column names are
 -- unchanged.
--- Idempotent.
+-- Idempotent. DROP first because the live function's OUT-parameter row type
+-- differs, and CREATE OR REPLACE cannot change a function's return type.
 -- ============================================================================
+
+DROP FUNCTION IF EXISTS public.get_health_reports_admin(TEXT);
 
 CREATE OR REPLACE FUNCTION public.get_health_reports_admin(
   p_status TEXT DEFAULT NULL
