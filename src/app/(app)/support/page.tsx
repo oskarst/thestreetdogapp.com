@@ -64,6 +64,9 @@ export default async function SupportPage() {
           </h2>
         </div>
         <p className="text-sm text-ink leading-relaxed">{t("donateBody")}</p>
+        <p className="text-[13.2px] text-muted-foreground leading-relaxed">
+          {t("donateUsage")}
+        </p>
         <a
           href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
             t("donateSubject")
