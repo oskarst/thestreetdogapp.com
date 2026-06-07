@@ -170,6 +170,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
   );
 
   const pickerLayerRef = useRef<L.LayerGroup | null>(null);
+  const hasCenteredOnUserRef = useRef(false);
   const [picking, startPicking] = useTransition();
   const [pickerError, setPickerError] = useState<string | null>(null);
   const [pendingPick, setPendingPick] = useState<PickerChunk | null>(null);
@@ -353,10 +354,12 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
     }
 
     // Fit only on the first render of the picker — subsequent re-runs
-    // must NOT snap the user out of their pinch-zoom.
+    // must NOT snap the user out of their pinch-zoom. Start zoomed in on the
+    // chunk-area centre (geolocation recenters on the user below) rather
+    // than fitting every chunk, which was too zoomed out to pick one.
     if (!hasFitBoundsRef.current && allLatLngs.length > 0) {
       const bounds = L.latLngBounds(allLatLngs);
-      map.fitBounds(bounds, { padding: [40, 40] });
+      map.setView(bounds.getCenter(), 15);
       hasFitBoundsRef.current = true;
     }
   }, [picker]);
@@ -401,6 +404,16 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
           }).addTo(map);
         } else {
           userMarkerRef.current.setLatLng([latitude, longitude]);
+        }
+        // On the picker, recenter on the user once (zoomed in) so they pick
+        // a chunk near them. First fix only, so we never fight a manual pan.
+        if (
+          picker &&
+          !picker.hasActive &&
+          !hasCenteredOnUserRef.current
+        ) {
+          map.setView([latitude, longitude], 16);
+          hasCenteredOnUserRef.current = true;
         }
       },
       undefined,
