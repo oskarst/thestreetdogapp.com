@@ -80,6 +80,16 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid notes" }, { status: 400 });
     }
   }
+  if ("health_flag" in body) {
+    if (typeof body.health_flag === "boolean") {
+      update.health_flag = body.health_flag;
+    } else {
+      return NextResponse.json(
+        { error: "health_flag must be boolean" },
+        { status: 400 }
+      );
+    }
+  }
 
   if (Object.keys(update).length === 0) {
     return NextResponse.json(

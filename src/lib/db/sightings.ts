@@ -30,6 +30,8 @@ export interface SightingWithUser {
   nickname: string | null;
   /** True if the calling user is the spotter. */
   is_mine: boolean;
+  /** True when this sighting has an unresolved health report. */
+  health_flag: boolean;
 }
 
 /**

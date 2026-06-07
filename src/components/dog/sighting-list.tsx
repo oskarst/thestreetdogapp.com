@@ -44,8 +44,15 @@ export function SightingList({ sightings }: SightingListProps) {
                 {relativeOffset(s.timestamp)} · #{id}
               </span>
               <div className="min-w-0">
-                <div className="text-[14.3px] font-semibold leading-tight">
-                  {nickname === "anon" ? "Sighting" : `by ${nickname}`}
+                <div className="text-[14.3px] font-semibold leading-tight flex items-center gap-1.5">
+                  <span className="truncate">
+                    {nickname === "anon" ? "Sighting" : `by ${nickname}`}
+                  </span>
+                  {s.health_flag && (
+                    <span className="shrink-0 inline-flex items-center rounded-full bg-red-50 px-1.5 py-0.5 font-mono text-[9.9px] uppercase tracking-[0.08em] text-red-500">
+                      health
+                    </span>
+                  )}
                 </div>
                 <div className="font-mono text-[11.6px] tracking-[0.04em] text-muted-foreground mt-0.5 flex items-center gap-1.5">
                   size {sizeLabel(s.size)}

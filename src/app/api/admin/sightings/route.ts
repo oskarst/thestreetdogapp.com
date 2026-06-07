@@ -11,7 +11,7 @@ export async function GET() {
   const { data, error } = await admin
     .from("sightings")
     .select(
-      "id, timestamp, latitude, longitude, image_url, character, size, gender, age, notes, profiles:user_id(nickname, email), dogs:dog_id(ear_tag_id, names)"
+      "id, timestamp, latitude, longitude, image_url, character, size, gender, age, notes, health_flag, profiles:user_id(nickname, email), dogs:dog_id(ear_tag_id, names)"
     )
     .order("timestamp", { ascending: false })
     .limit(200);
@@ -34,6 +34,7 @@ export async function GET() {
       gender: s.gender,
       age: s.age,
       notes: s.notes ?? null,
+      health_flag: s.health_flag ?? false,
       user_nickname: profiles?.nickname ?? null,
       user_email: profiles?.email ?? "",
       dog_ear_tag: dogs?.ear_tag_id ?? null,

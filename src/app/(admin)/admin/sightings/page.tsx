@@ -35,6 +35,7 @@ interface AdminSighting {
   gender: DogGender;
   age: DogAge;
   notes: string | null;
+  health_flag: boolean;
   user_nickname: string | null;
   user_email: string;
   dog_ear_tag: string | null;
@@ -47,6 +48,7 @@ interface EditDraft {
   gender: DogGender;
   age: DogAge;
   notes: string;
+  health_flag: boolean;
 }
 
 const CHARACTERS: DogCharacter[] = [
@@ -83,6 +85,7 @@ export default function AdminSightingsPage() {
       gender: s.gender,
       age: s.age,
       notes: s.notes ?? "",
+      health_flag: s.health_flag,
     });
   }
 
@@ -103,6 +106,7 @@ export default function AdminSightingsPage() {
         gender: draft.gender,
         age: draft.age,
         notes: draft.notes.trim() || null,
+        health_flag: draft.health_flag,
       }),
     });
     setSaving(false);
@@ -154,7 +158,14 @@ export default function AdminSightingsPage() {
                 <TableRow>
                   <TableCell>{s.user_nickname ?? s.user_email}</TableCell>
                   <TableCell>
-                    {s.dog_names?.[0] ?? s.dog_ear_tag ?? "-"}
+                    <span className="inline-flex items-center gap-1.5">
+                      {s.dog_names?.[0] ?? s.dog_ear_tag ?? "-"}
+                      {s.health_flag && (
+                        <span className="inline-flex items-center rounded-full bg-red-50 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-red-500">
+                          health
+                        </span>
+                      )}
+                    </span>
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
                     {s.character.replace(/_/g, " ")} · {s.gender} · {s.age} · sz{" "}
@@ -284,6 +295,21 @@ export default function AdminSightingsPage() {
                             }
                             placeholder="Notes"
                           />
+                        </Field>
+                        <Field label="Health">
+                          <label className="inline-flex h-9 items-center gap-2 text-sm">
+                            <input
+                              type="checkbox"
+                              checked={draft.health_flag}
+                              onChange={(e) =>
+                                setDraft({
+                                  ...draft,
+                                  health_flag: e.target.checked,
+                                })
+                              }
+                            />
+                            <span>Needs attention</span>
+                          </label>
                         </Field>
                         <div className="flex gap-2">
                           <Button
