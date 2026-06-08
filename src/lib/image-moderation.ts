@@ -71,11 +71,18 @@ export async function moderateImage(file: File): Promise<ModerationResult> {
       return { ok: false, reason: "Image moderation failed. Try again." };
     }
 
-    if (result.flagged) {
+    // Only block genuinely publishable-blocking content (sexual). We
+    // deliberately ignore violence / violence-graphic / self-harm: street-dog
+    // welfare photos legitimately show injuries, ear-tag notches, and dogs
+    // lying still/sleeping, which omni-moderation false-flags as graphic.
+    const cats = result.categories as unknown as Record<string, boolean>;
+    const blocked = cats["sexual"] === true || cats["sexual/minors"] === true;
+
+    if (blocked) {
       const categories = Object.entries(result.categories)
         .filter(([, flagged]) => flagged)
         .map(([name]) => name);
-      console.warn("[image-moderation] flagged:", categories.join(", "));
+      console.warn("[image-moderation] blocked:", categories.join(", "));
       return {
         ok: false,
         reason: "Image flagged as inappropriate.",
