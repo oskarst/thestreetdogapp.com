@@ -13,6 +13,7 @@ import { DogActionIcons } from "@/components/dog/dog-action-icons";
 import { LocationHistoryMap } from "@/components/map/location-history-map";
 import { DailyActivityMap } from "@/components/map/daily-activity-map";
 import { SectionLabel } from "@/components/ui/section-label";
+import { sampleN } from "@/lib/sample";
 
 export default async function DogProfilePage({
   params,
@@ -77,8 +78,11 @@ export default async function DogProfilePage({
 
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
+      {/* Cap the gallery at 8 randomly-sampled photos so a heavily-sighted
+          dog (one image per sighting, unbounded) doesn't mount dozens of
+          slides + optimizer transforms. The ear-tag shot is always shown. */}
       <DogImageCarousel
-        images={dog.images ?? []}
+        images={sampleN(dog.images ?? [], 8)}
         name={dog.names?.[0] ?? "Dog"}
         earTagImage={dog.ear_tag_image}
       />
