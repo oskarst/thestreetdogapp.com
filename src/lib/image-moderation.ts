@@ -5,6 +5,12 @@ interface ModerationResult {
   ok: boolean;
   /** Short reason why the image was rejected, when ok=false. */
   reason?: string;
+  /**
+   * True when the classifier could not run (key missing, timeout, API error)
+   * and we let the image through anyway. The image is NOT confirmed safe —
+   * callers should log an incident for later review.
+   */
+  degraded?: boolean;
 }
 
 // Module-level client so the underlying HTTP keep-alive agent is reused
@@ -22,18 +28,17 @@ const OPENAI_TIMEOUT_MS = 6000;
  * storage. The moderation endpoint is free and accepts base64 image
  * inputs alongside text.
  *
- * Fails CLOSED on any API/network error — same posture as
- * checkNameForProfanity() in src/lib/moderation.ts. Letting a flagged
- * image through is worse than asking the user to retry.
+ * Fails OPEN when the classifier can't run (key missing, timeout, API/network
+ * error): the image is let through with `degraded: true` so a flaky moderation
+ * endpoint never blocks a legitimate upload. Callers log an incident on
+ * `degraded` so admins can review what slipped through during the outage. A
+ * *successful* check that flags sexual content still hard-blocks (ok: false).
  */
 export async function moderateImage(file: File): Promise<ModerationResult> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    console.warn("[image-moderation] OPENAI_API_KEY not set — failing closed");
-    return {
-      ok: false,
-      reason: "Image moderation is temporarily unavailable. Try again later.",
-    };
+    console.warn("[image-moderation] OPENAI_API_KEY not set — letting through (degraded)");
+    return { ok: true, degraded: true, reason: "moderation_no_api_key" };
   }
 
   // Resize down to ~512px on the long edge before base64-encoding. The
@@ -49,8 +54,9 @@ export async function moderateImage(file: File): Promise<ModerationResult> {
       .toBuffer();
     dataUrl = `data:image/jpeg;base64,${small.toString("base64")}`;
   } catch (err) {
-    console.error("[image-moderation] failed to read file:", err);
-    return { ok: false, reason: "Image could not be read." };
+    // Can't read/re-encode for the check — don't block on our own hiccup.
+    console.error("[image-moderation] failed to read file — letting through (degraded):", err);
+    return { ok: true, degraded: true, reason: "moderation_read_failed" };
   }
 
   const ac = new AbortController();
@@ -67,8 +73,8 @@ export async function moderateImage(file: File): Promise<ModerationResult> {
 
     const result = response.results[0];
     if (!result) {
-      console.error("[image-moderation] empty moderation response");
-      return { ok: false, reason: "Image moderation failed. Try again." };
+      console.error("[image-moderation] empty moderation response — letting through (degraded)");
+      return { ok: true, degraded: true, reason: "moderation_empty_response" };
     }
 
     // Only block genuinely publishable-blocking content (sexual). We
@@ -91,12 +97,10 @@ export async function moderateImage(file: File): Promise<ModerationResult> {
 
     return { ok: true };
   } catch (err) {
-    // Abort (timeout) lands here too — fail closed like any other error.
-    console.error("[image-moderation] OpenAI error — failing closed:", err);
-    return {
-      ok: false,
-      reason: "Image moderation is temporarily unavailable. Try again later.",
-    };
+    // Abort (timeout) lands here too — fail OPEN so an outage never blocks a
+    // legitimate upload; the caller logs an incident on `degraded`.
+    console.error("[image-moderation] OpenAI error — letting through (degraded):", err);
+    return { ok: true, degraded: true, reason: "moderation_api_error" };
   } finally {
     clearTimeout(timer);
   }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { moderateImage } from "@/lib/image-moderation";
+import { logModerationIncident } from "@/lib/moderation-incident";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -74,6 +75,15 @@ export async function POST(request: Request) {
         { ok: false, error: moderation.reason },
         { status: 200 }
       );
+    }
+
+    // Moderation couldn't run but we let the image through — record it.
+    if (moderation.degraded) {
+      await logModerationIncident({
+        userId: user.id,
+        stage: "ear-tag-check",
+        detail: moderation.reason,
+      });
     }
 
     return NextResponse.json({ ok: true });
