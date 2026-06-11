@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { PenLine } from "lucide-react";
+import { PenLine, SlidersHorizontal, Flag } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth-cache";
 import { getDogById } from "@/lib/db/dogs";
 import { getSightingsForDog, countDogCatchers } from "@/lib/db/sightings";
@@ -49,6 +49,7 @@ export default async function DogProfilePage({
     ]);
 
   const caughtByYou = sightings.some((s) => s.is_mine);
+  const canEdit = caughtByYou || dog.first_registered_by_id === user.id;
 
   // Derive last-24h subset from the same fetched list.
   const dayAgoMs = Date.now() - 24 * 60 * 60 * 1000;
@@ -82,7 +83,7 @@ export default async function DogProfilePage({
         earTagImage={dog.ear_tag_image}
       />
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center flex-wrap gap-2">
         <DogActionIcons
           userId={user.id}
           dogId={dog.id}
@@ -95,6 +96,22 @@ export default async function DogProfilePage({
         >
           <PenLine className="h-4 w-4" />
           Name this dog
+        </Link>
+        {canEdit && (
+          <Link
+            href={`/dog/${dog.id}/edit`}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-sm font-medium text-ink hover:bg-muted transition-colors no-underline"
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            Edit details
+          </Link>
+        )}
+        <Link
+          href={`/dog/${dog.id}/report`}
+          className="inline-flex items-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-sm font-medium text-muted-foreground hover:text-ink hover:bg-muted transition-colors no-underline"
+        >
+          <Flag className="h-4 w-4" />
+          Report bad data
         </Link>
       </div>
 
