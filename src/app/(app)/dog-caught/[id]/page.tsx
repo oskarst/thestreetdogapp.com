@@ -55,8 +55,12 @@ export default async function DogCaughtPage({
 
   return (
     <div className="flex flex-col">
-      {/* Hero photo with green flash overlay */}
-      <div className="relative aspect-[4/3] w-full bg-gradient-to-br from-[#b89876] via-[#8b6b48] to-[#5d4528] overflow-hidden">
+      {/* Hero photo with green flash overlay — tap to open the dog profile. */}
+      <Link
+        href={`/dog/${id}`}
+        aria-label="View dog profile"
+        className="relative block aspect-[4/3] w-full bg-gradient-to-br from-[#b89876] via-[#8b6b48] to-[#5d4528] overflow-hidden"
+      >
         {heroImage && (
           <Image
             src={heroImage}
@@ -77,13 +81,16 @@ export default async function DogCaughtPage({
         <span className="absolute top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-white/25 bg-black/50 backdrop-blur-sm px-3 py-1.5 font-mono text-[11px] tracking-[0.22em] uppercase text-white">
           {labels.eyebrow}
         </span>
+        <span className="absolute top-3.5 right-3.5 inline-flex items-center gap-1 rounded-full border border-white/25 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 font-mono text-[10.5px] tracking-[0.16em] uppercase text-white">
+          view ›
+        </span>
         <div className="absolute bottom-3.5 left-4 font-mono text-[70.4px] font-medium leading-none tracking-[-0.03em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
           +{points}
           <span className="text-lg tracking-[0.16em] uppercase ml-1 align-[12px] opacity-85">
             XP
           </span>
         </div>
-      </div>
+      </Link>
 
       {/* Body */}
       <div className="px-4 pt-4 pb-6 max-w-lg w-full mx-auto">
