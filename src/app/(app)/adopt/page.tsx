@@ -1,5 +1,5 @@
-import { Mail, Phone, Clock } from "lucide-react";
 import { SectionLabel } from "@/components/ui/section-label";
+import { PartnerOrgsList } from "@/components/dog/partner-orgs-list";
 
 export default function AdoptPage() {
   return (
@@ -91,25 +91,11 @@ export default function AdoptPage() {
 
       <section>
         <SectionLabel meta="contact">Ready to Adopt?</SectionLabel>
-        <div className="card-soft p-4 space-y-3 text-sm">
-          <p className="text-muted-foreground">
-            Contact our adoption coordinator to start the process:
-          </p>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5 font-mono text-[13.2px] tracking-[0.04em] text-ink">
-              <Mail className="size-4 text-muted-foreground" />
-              adopt@streetdog.app
-            </div>
-            <div className="flex items-center gap-2.5 font-mono text-[13.2px] tracking-[0.04em] text-ink">
-              <Phone className="size-4 text-muted-foreground" />
-              +995 XXX XXX XXX
-            </div>
-            <div className="flex items-center gap-2.5 font-mono text-[13.2px] tracking-[0.04em] text-muted-foreground">
-              <Clock className="size-4" />
-              Mon–Fri, 10:00–18:00
-            </div>
-          </div>
-        </div>
+        <p className="text-sm text-muted-foreground mb-3 px-1">
+          Adoptions in Tbilisi go through these organisations — reach out to
+          start the process:
+        </p>
+        <PartnerOrgsList />
       </section>
     </div>
   );

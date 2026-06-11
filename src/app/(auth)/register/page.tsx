@@ -179,6 +179,14 @@ export default function RegisterPage() {
               className="text-ink underline underline-offset-[3px] font-medium"
             >
               Terms &amp; Conditions
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/privacy-policy"
+              target="_blank"
+              className="text-ink underline underline-offset-[3px] font-medium"
+            >
+              Privacy Policy
             </Link>
             , including how my data is shared and that I take part at my own
             risk.

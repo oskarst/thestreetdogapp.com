@@ -49,8 +49,7 @@ export default async function DogProfilePage({
       safe(countDogCatchers(id), "countDogCatchers", 0),
     ]);
 
-  const caughtByYou = sightings.some((s) => s.is_mine);
-  const canEdit = caughtByYou || dog.first_registered_by_id === user.id;
+  const isOwner = dog.first_registered_by_id === user.id;
 
   // Derive last-24h subset from the same fetched list.
   const dayAgoMs = Date.now() - 24 * 60 * 60 * 1000;
@@ -101,13 +100,13 @@ export default async function DogProfilePage({
           <PenLine className="h-4 w-4" />
           Name this dog
         </Link>
-        {canEdit && (
+        {isOwner && (
           <Link
             href={`/dog/${dog.id}/edit`}
             className="inline-flex items-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-sm font-medium text-ink hover:bg-muted transition-colors no-underline"
           >
             <SlidersHorizontal className="h-4 w-4" />
-            Edit details
+            Edit tag / delete
           </Link>
         )}
         <Link

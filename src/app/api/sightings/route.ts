@@ -308,7 +308,11 @@ export async function POST(request: Request) {
         // profile, so surface any failure instead of silently swallowing it
         // (a swallowed error left re-sighted dogs stuck at an old date).
         const updatedImages = [...(existingDog.images ?? []), dogImageUrl];
-        const { error: dogUpdateErr } = await supabase
+        // Use the service-role client: re-sighting a dog you didn't register
+        // is legitimate, but the tightened dogs_update RLS (owner-or-admin)
+        // would block a non-owner's user-context update. The route has already
+        // authenticated the user, so this is a trusted server write.
+        const { error: dogUpdateErr } = await admin
           .from("dogs")
           .update({
             images: updatedImages,

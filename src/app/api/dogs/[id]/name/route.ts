@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { checkNameForProfanity } from "@/lib/moderation";
 import { isUUID } from "@/lib/validate";
 
@@ -118,7 +119,11 @@ export async function POST(
   }
   const updated = [...existing, rawName];
 
-  const { error: updateErr } = await supabase
+  // Service-role write: a spotter naming a dog they didn't register is allowed
+  // (checked above), but the tightened owner-or-admin dogs_update RLS would
+  // block their user-context update. The route has authorised the action.
+  const admin = createAdminClient();
+  const { error: updateErr } = await admin
     .from("dogs")
     .update({ names: updated })
     .eq("id", id);

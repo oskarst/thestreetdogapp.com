@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Download, Trash2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -73,9 +74,19 @@ export default function PrivacyPage() {
       <h1 className="text-[28.6px] font-bold tracking-[-0.02em] leading-tight mb-1.5">
         Your data
       </h1>
-      <p className="text-sm text-muted-foreground mb-6">
+      <p className="text-sm text-muted-foreground mb-2">
         Take a copy of your data or remove it. These controls only affect data
         tied to your account.
+      </p>
+      <p className="text-sm text-muted-foreground mb-6">
+        See our{" "}
+        <Link
+          href="/privacy-policy"
+          className="text-ink underline underline-offset-2"
+        >
+          Privacy Policy
+        </Link>{" "}
+        for how we handle your data.
       </p>
 
       {/* Transfer / export */}

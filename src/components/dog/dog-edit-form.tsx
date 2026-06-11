@@ -3,127 +3,159 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import { CharacterPicker } from "@/components/forms/character-picker";
-import { SizeSelector } from "@/components/forms/size-selector";
-import { GenderPicker } from "@/components/forms/gender-picker";
-import { AgePicker } from "@/components/forms/age-picker";
-import { DEFAULT_SIZE } from "@/lib/size";
-import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
 interface DogEditFormProps {
   dogId: string;
-  initial: {
-    character: DogCharacter | null;
-    size: number | null;
-    gender: DogGender | null;
-    age: DogAge | null;
-  };
+  initialEarTag: string | null;
 }
 
-/**
- * Lets a catcher (spotter or registrar) correct a dog's shared details —
- * character, size, gender, age. Writes through the user-context client; RLS
- * lets any non-banned user update a dog (migration 001). Names have their own
- * flow on /dog/[id]/name.
- */
-export function DogEditForm({ dogId, initial }: DogEditFormProps) {
-  const router = useRouter();
-  const [character, setCharacter] = useState<DogCharacter | "">(
-    initial.character ?? ""
-  );
-  const [size, setSize] = useState<number>(initial.size ?? DEFAULT_SIZE);
-  const [gender, setGender] = useState<DogGender | "">(initial.gender ?? "");
-  const [age, setAge] = useState<DogAge | "">(initial.age ?? "");
-  const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+const TAG_ERRORS: Record<string, string> = {
+  tag_taken: "Another dog already uses that tag id.",
+  not_owner: "You can only edit dogs you registered.",
+  dog_not_found: "This dog no longer exists.",
+};
 
-  function handleSubmit(e: React.FormEvent) {
+/**
+ * Owner-only dog edit: change the ear tag id, or soft-delete the dog. Both go
+ * through owner-checked RPCs (update_my_dog_ear_tag / soft_delete_dog).
+ */
+export function DogEditForm({ dogId, initialEarTag }: DogEditFormProps) {
+  const router = useRouter();
+  const [earTag, setEarTag] = useState(initialEarTag ?? "");
+  const [error, setError] = useState<string | null>(null);
+  const [savingTag, startSaveTag] = useTransition();
+  const [deleting, startDelete] = useTransition();
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  function saveTag(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!gender) return setError("Pick a gender (or 'unsure').");
-    if (!age) return setError("Pick an age.");
-
-    startTransition(async () => {
+    startSaveTag(async () => {
       const supabase = createClient();
-      const { error: updErr } = await supabase
-        .from("dogs")
-        .update({
-          character: character || null,
-          size,
-          gender,
-          age,
-        })
-        .eq("id", dogId);
-      if (updErr) {
-        setError("Couldn't save changes. Please try again.");
+      const { data, error: rpcErr } = await supabase.rpc(
+        "update_my_dog_ear_tag",
+        { p_dog_id: dogId, p_ear_tag_id: earTag.trim() }
+      );
+      const r = data as { ok?: boolean; error?: string } | null;
+      if (rpcErr || !r?.ok) {
+        setError(TAG_ERRORS[r?.error ?? ""] ?? "Couldn't save the tag id.");
         return;
       }
-      toast.success("Dog details updated.");
+      toast.success("Tag id updated.");
       router.push(`/dog/${dogId}`);
       router.refresh();
     });
   }
 
+  function softDelete() {
+    setError(null);
+    startDelete(async () => {
+      const supabase = createClient();
+      const { data, error: rpcErr } = await supabase.rpc("soft_delete_dog", {
+        p_dog_id: dogId,
+      });
+      const r = data as { ok?: boolean; error?: string } | null;
+      if (rpcErr || !r?.ok) {
+        setError(TAG_ERRORS[r?.error ?? ""] ?? "Couldn't delete this dog.");
+        return;
+      }
+      toast.success("Dog removed.");
+      router.push("/dashboard");
+      router.refresh();
+    });
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <Field label="Character">
-        <CharacterPicker value={character} onChange={setCharacter} />
-      </Field>
-
-      <Field label="Size">
-        <SizeSelector value={size} onChange={setSize} />
-      </Field>
-
-      <Field label="Gender">
-        <GenderPicker value={gender} onChange={setGender} />
-      </Field>
-
-      <Field label="Age">
-        <AgePicker value={age} onChange={setAge} />
-      </Field>
-
-      {error && (
-        <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {error}
+    <div className="space-y-5">
+      <form onSubmit={saveTag} className="card-soft p-4 space-y-3">
+        <div>
+          <label
+            htmlFor="ear-tag"
+            className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground"
+          >
+            Ear tag id
+          </label>
+          <input
+            id="ear-tag"
+            value={earTag}
+            onChange={(e) => {
+              setEarTag(e.target.value);
+              setError(null);
+            }}
+            placeholder="e.g. 27610 (leave blank if untagged)"
+            className="mt-1.5 w-full rounded-xl border border-rule bg-background px-3 py-2.5 text-[15.4px] text-ink placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ink/30 focus:border-ink"
+          />
+          <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            Only the dog&apos;s registrar can change this.
+          </p>
         </div>
-      )}
 
-      <div className="flex items-center justify-end gap-2">
-        <Link
-          href={`/dog/${dogId}`}
-          className="font-mono text-[12.1px] tracking-[0.06em] uppercase text-muted-foreground hover:text-ink transition-colors no-underline px-2 py-1.5"
-        >
-          Cancel
-        </Link>
-        <button
-          type="submit"
-          disabled={pending}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase bg-ink text-background disabled:opacity-50 hover:brightness-110 transition-all"
-        >
-          {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-          Save changes
-        </button>
-      </div>
-    </form>
-  );
-}
+        {error && (
+          <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {error}
+          </div>
+        )}
 
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground mb-2">
-        {label}
+        <div className="flex items-center justify-end gap-2">
+          <Link
+            href={`/dog/${dogId}`}
+            className="font-mono text-[12.1px] tracking-[0.06em] uppercase text-muted-foreground hover:text-ink transition-colors no-underline px-2 py-1.5"
+          >
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            disabled={savingTag}
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase bg-ink text-background disabled:opacity-50 hover:brightness-110 transition-all"
+          >
+            {savingTag && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            Save tag id
+          </button>
+        </div>
+      </form>
+
+      <div className="card-soft p-4 border-destructive/30">
+        <h2 className="text-[15px] font-semibold">Remove this dog</h2>
+        <p className="text-[13.5px] text-muted-foreground mt-1 leading-snug">
+          Soft-deletes the dog you registered — it disappears from the app and
+          from scores, and is recoverable by an admin.
+        </p>
+        {!confirmDelete ? (
+          <button
+            type="button"
+            onClick={() => setConfirmDelete(true)}
+            className="mt-3 inline-flex items-center gap-2 rounded-full border border-destructive/50 px-4 py-2 text-destructive text-sm font-semibold hover:bg-destructive/10 transition"
+          >
+            <Trash2 className="size-4" /> Delete dog
+          </button>
+        ) : (
+          <div className="mt-3 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={softDelete}
+              disabled={deleting}
+              className="inline-flex items-center gap-2 rounded-full bg-destructive px-4 py-2 text-white text-sm font-semibold hover:brightness-110 transition disabled:opacity-60"
+            >
+              {deleting ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                "Yes, delete"
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmDelete(false)}
+              disabled={deleting}
+              className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-ink transition"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
-      {children}
     </div>
   );
 }
