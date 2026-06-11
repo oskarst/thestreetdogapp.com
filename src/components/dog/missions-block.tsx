@@ -45,17 +45,14 @@ export async function MissionsBlock() {
   return (
     <section data-tour-id="missions-block">
       {active ? (
-        <div className="rounded-2xl border border-amber-brand/40 bg-amber-soft p-4">
+        <div className="card-soft p-4">
           <div className="flex items-center gap-4 mb-3">
             <div className="relative shrink-0">
-              <div
-                className="size-14 rounded-full grid place-items-center bg-amber-brand text-amber-soft"
-                style={{ boxShadow: "0 6px 14px rgba(176, 122, 44, 0.25)" }}
-              >
+              <div className="size-14 rounded-full grid place-items-center bg-ink text-background">
                 <Icon name="target" size={28} />
               </div>
               <span
-                className="absolute -bottom-1 -right-1 size-4 rounded-full border-2 border-amber-soft"
+                className="absolute -bottom-1 -right-1 size-4 rounded-full border-2 border-background"
                 style={{
                   background:
                     PARENT_COLORS[active.colorIndex] ?? "var(--green-deep)",
@@ -65,14 +62,14 @@ export async function MissionsBlock() {
 
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 leading-none">
-                <span className="font-mono text-[44px] font-medium tracking-[-0.04em] text-amber-brand">
+                <span className="font-mono text-[44px] font-medium tracking-[-0.04em] text-ink">
                   {active.progress}
                 </span>
-                <span className="font-mono text-[11px] tracking-[0.22em] uppercase text-amber-brand/80">
+                <span className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
                   / {active.target} subjects
                 </span>
               </div>
-              <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-amber-brand/80 mt-1.5 truncate">
+              <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground mt-1.5 truncate">
                 {activeLabel}
               </div>
               <div className="flex items-center gap-1 mt-2">
@@ -81,14 +78,12 @@ export async function MissionsBlock() {
                     key={i}
                     className={cn(
                       "h-1.5 rounded-full flex-1",
-                      i < active.progress
-                        ? "bg-amber-brand"
-                        : "bg-amber-brand/20"
+                      i < active.progress ? "bg-ink" : "bg-rule-2"
                     )}
                   />
                 ))}
               </div>
-              <div className="font-mono text-[11px] tracking-[0.06em] text-amber-brand/80 mt-2 flex items-center justify-between gap-2">
+              <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-2 flex items-center justify-between gap-2">
                 <span>
                   {active.awardsToday >= active.dailyCap
                     ? t("dailyCapReached", { cap: active.dailyCap })
@@ -114,25 +109,25 @@ export async function MissionsBlock() {
       ) : (
         <Link
           href="/missions/start"
-          className="relative block w-full overflow-hidden rounded-2xl border border-amber-brand/40 bg-amber-soft no-underline text-amber-brand transition-transform active:scale-[0.99] hover:brightness-95"
+          className="card-soft block w-full px-5 py-4 no-underline text-inherit transition-colors hover:border-ink/30"
         >
-          <div className="relative px-5 py-4 flex items-center gap-4">
-            <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-amber-brand text-amber-soft">
+          <div className="flex items-center gap-4">
+            <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-ink text-background">
               <Icon name="target" size={26} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-mono text-[11px] tracking-[0.32em] uppercase text-amber-brand/80">
+              <div className="font-mono text-[11px] tracking-[0.32em] uppercase text-muted-foreground">
                 {t("title")}
               </div>
-              <div className="text-[19.8px] font-semibold leading-tight mt-0.5">
+              <div className="text-[19.8px] font-semibold leading-tight mt-0.5 text-ink">
                 {t("startMission")}
               </div>
-              <div className="font-mono text-[11.6px] tracking-[0.06em] text-amber-brand/80 mt-1">
+              <div className="font-mono text-[11.6px] tracking-[0.06em] text-muted-foreground mt-1">
                 {t("pickerSubtitleMap")}
               </div>
             </div>
-            <span className="grid place-items-center size-9 rounded-full shrink-0 font-mono text-base bg-amber-brand text-amber-soft">
-              ▸
+            <span className="font-mono text-lg text-muted-foreground shrink-0">
+              ›
             </span>
           </div>
         </Link>

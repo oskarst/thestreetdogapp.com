@@ -8,6 +8,7 @@ import { DashboardHero } from "@/components/dog/dashboard-hero";
 import { Achievements } from "@/components/dog/achievements";
 import { DailyQuest } from "@/components/dog/daily-quest";
 import { MissionsBlock } from "@/components/dog/missions-block";
+import { LeaderboardBlock } from "@/components/dog/leaderboard-block";
 import { DashboardContent } from "@/components/dog/dashboard-content";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import { TourPrompt } from "@/components/tour/tour-button";
@@ -84,10 +85,19 @@ export default async function DashboardPage() {
           paints. Falls back to a slim placeholder card. */}
       <Suspense
         fallback={
-          <div className="rounded-2xl border border-amber-brand/30 bg-amber-soft/60 h-24 animate-pulse" />
+          <div className="rounded-2xl border border-rule bg-muted/50 h-24 animate-pulse" />
         }
       >
         <MissionsBlock />
+      </Suspense>
+      {/* Leaderboard sits directly under missions — own round-trip, streams in
+          independently. */}
+      <Suspense
+        fallback={
+          <div className="rounded-2xl border border-rule bg-muted/50 h-40 animate-pulse" />
+        }
+      >
+        <LeaderboardBlock />
       </Suspense>
       <DashboardContent
         dogs={dogs}

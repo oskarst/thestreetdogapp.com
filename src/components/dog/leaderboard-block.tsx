@@ -36,8 +36,8 @@ export async function LeaderboardBlock() {
               className={cn(
                 "flex items-center gap-3 rounded-xl px-3 py-2",
                 row.is_me
-                  ? "bg-green-soft border border-green-deep/30"
-                  : "bg-muted/40"
+                  ? "bg-muted border border-ink/25"
+                  : "bg-muted/30"
               )}
             >
               <span className="font-mono text-[13px] font-semibold tabular-nums w-7 shrink-0 text-muted-foreground">
@@ -48,7 +48,7 @@ export async function LeaderboardBlock() {
                   <span className="font-semibold text-[14.3px] truncate">
                     {row.is_me ? t("you") : row.nickname ?? "—"}
                   </span>
-                  <span className="font-mono text-[10px] tracking-[0.06em] uppercase text-green-deep shrink-0">
+                  <span className="font-mono text-[10px] tracking-[0.06em] uppercase text-muted-foreground shrink-0">
                     {title}
                   </span>
                 </div>
