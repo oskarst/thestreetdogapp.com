@@ -78,6 +78,7 @@ export async function middleware(request: NextRequest) {
     "/support",
     "/change-nickname",
     "/change-password",
+    "/privacy",
     "/admin",
   ];
   if (

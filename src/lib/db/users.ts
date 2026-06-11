@@ -61,6 +61,29 @@ export async function getUserScore(userId: string): Promise<ScoreResult> {
   return data as ScoreResult;
 }
 
+export interface LeaderboardEntry {
+  rank: number;
+  user_id: string;
+  nickname: string | null;
+  score: number;
+  is_me: boolean;
+}
+
+/**
+ * The caller's slice of the leaderboard: up to 4 rows centred on them
+ * (one above, you, two below — clamped at the ends). Backed by the
+ * get_leaderboard_window RPC.
+ */
+export async function getLeaderboardWindow(): Promise<LeaderboardEntry[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("get_leaderboard_window");
+  if (error) {
+    console.error("[leaderboard] failed:", error.message);
+    return [];
+  }
+  return (data ?? []) as LeaderboardEntry[];
+}
+
 export async function getAllUsers(filters?: {
   search?: string;
 }): Promise<ProfileRow[]> {

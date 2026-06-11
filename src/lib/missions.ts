@@ -8,7 +8,7 @@ import { getCurrentProfile } from "@/lib/auth-cache";
 
 export const MISSION_TARGET = 5;
 export const MISSION_DAILY_CAP = 20;
-export const MISSION_COMPLETION_XP = 100;
+export const MISSION_COMPLETION_XP = 350;
 
 /**
  * 10-color palette indexed by parent_slug (color_index in mission_districts).
@@ -243,4 +243,74 @@ export async function getCreditedDogIds(
     return new Set();
   }
   return new Set(((data ?? []) as { dog_id: string }[]).map((r) => r.dog_id));
+}
+
+export interface QuadrantDominator {
+  nickname: string;
+  /** Sightings the dominator logged inside this chunk (XP-proxy). */
+  score: number;
+}
+
+interface GridCell {
+  user_id: string;
+  nickname: string | null;
+  lat: number;
+  lng: number;
+  n: number;
+}
+
+/**
+ * Quadrant domination: for each mission chunk, the user with the most
+ * sightings logged inside it. Reads the compressed sighting grid
+ * (get_sighting_grid RPC), buckets each ~111 m cell into the chunk that
+ * contains it, and keeps the top scorer per chunk. Returns a slug -> winner
+ * map; chunks with no sightings are absent.
+ */
+export async function getQuadrantDomination(): Promise<
+  Record<string, QuadrantDominator>
+> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("get_sighting_grid");
+  if (error) {
+    console.error("[missions] get_sighting_grid failed:", error.message);
+    return {};
+  }
+  const grid = (data ?? []) as GridCell[];
+  const chunks = getChunks();
+
+  // slug -> (user_id -> { nickname, score })
+  const tally = new Map<
+    string,
+    Map<string, { nickname: string; score: number }>
+  >();
+
+  for (const cell of grid) {
+    if (cell.n <= 0) continue;
+    for (const c of chunks) {
+      // pointInDistrict takes (lon, lat) and bbox-prefilters internally.
+      if (!pointInDistrict(cell.lng, cell.lat, c)) continue;
+      let perChunk = tally.get(c.slug);
+      if (!perChunk) {
+        perChunk = new Map();
+        tally.set(c.slug, perChunk);
+      }
+      const prev = perChunk.get(cell.user_id) ?? {
+        nickname: cell.nickname ?? "—",
+        score: 0,
+      };
+      prev.score += cell.n;
+      perChunk.set(cell.user_id, prev);
+      break; // a cell falls in at most one chunk
+    }
+  }
+
+  const result: Record<string, QuadrantDominator> = {};
+  for (const [slug, perChunk] of tally) {
+    let best: { nickname: string; score: number } | null = null;
+    for (const entry of perChunk.values()) {
+      if (!best || entry.score > best.score) best = entry;
+    }
+    if (best && best.score > 0) result[slug] = best;
+  }
+  return result;
 }

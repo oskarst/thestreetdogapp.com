@@ -25,6 +25,7 @@ export default function RegisterPage() {
     password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
 
   function update(field: string, value: string) {
@@ -44,6 +45,11 @@ export default function RegisterPage() {
         if (!fieldErrors[key]) fieldErrors[key] = issue.message;
       }
       setErrors(fieldErrors);
+      return;
+    }
+
+    if (!agreed) {
+      setErrors({ terms: "Please accept the Terms & Conditions to continue." });
       return;
     }
 
@@ -154,6 +160,34 @@ export default function RegisterPage() {
           togglePassword
           error={errors.password}
         />
+
+        <label className="flex items-start gap-2.5 mb-3 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(e) => {
+              setAgreed(e.target.checked);
+              setErrors((prev) => ({ ...prev, terms: "", form: "" }));
+            }}
+            className="mt-0.5 size-4 shrink-0 accent-[var(--green-brand)]"
+          />
+          <span className="text-[13px] leading-snug text-muted-foreground">
+            I agree to the{" "}
+            <Link
+              href="/terms"
+              target="_blank"
+              className="text-ink underline underline-offset-[3px] font-medium"
+            >
+              Terms &amp; Conditions
+            </Link>
+            , including how my data is shared and that I take part at my own
+            risk.
+          </span>
+        </label>
+
+        {errors.terms && (
+          <p className="text-sm text-destructive mb-2">{errors.terms}</p>
+        )}
 
         {errors.form && (
           <p className="text-sm text-destructive mb-2">{errors.form}</p>

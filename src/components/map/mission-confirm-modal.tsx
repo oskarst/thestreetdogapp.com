@@ -127,7 +127,7 @@ export function MissionConfirmModal({
               }
             />
             <Row label="TARGET" value="5 SUBJECTS" />
-            <Row label="REWARD" value="+100 XP" />
+            <Row label="REWARD" value="+350 XP" />
           </div>
 
           {error && (

@@ -6,6 +6,7 @@ import {
   getChunks,
   getMissionsView,
   getCreditedDogIds,
+  getQuadrantDomination,
   PARENT_COLORS,
   MISSION_TARGET,
   MISSION_COMPLETION_XP,
@@ -31,6 +32,7 @@ async function getDogMarkers(): Promise<DogMarker[]> {
     .from("dogs")
     .select(MAP_MARKER_COLUMNS)
     .eq("status", "approved")
+    .is("deleted_at", null)
     .not("last_latitude", "is", null)
     .not("last_longitude", "is", null)
     .order("last_sighting_date", { ascending: false })
@@ -57,9 +59,10 @@ export default async function MapPage({
 
   // ----- picker mode: tap a chunk to start a mission -----
   if (pickerMode) {
-    const [view, locale] = await Promise.all([
+    const [view, locale, domination] = await Promise.all([
       getMissionsView(),
       getLocale(),
+      getQuadrantDomination(),
     ]);
     const chunks = getChunks();
     return (
@@ -85,6 +88,7 @@ export default async function MapPage({
                 colorIndex: c.colorIndex,
                 ring: c.ring,
                 status: item?.status ?? "available",
+                dominatedBy: domination[c.slug]?.nickname ?? null,
               };
             }),
           }}

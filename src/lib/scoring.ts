@@ -11,20 +11,20 @@ export function getCatchType(
   if (isNewDog) {
     return {
       type: "new",
-      points: 10,
+      points: 100,
       message: "Congratulations! You found a new dog!",
     };
   }
   if (isFirstCatch) {
     return {
       type: "first",
-      points: 5,
+      points: 65,
       message: "You found this dog for the first time!",
     };
   }
   return {
     type: "again",
-    points: 1,
+    points: 35,
     message: "You spotted this dog again!",
   };
 }

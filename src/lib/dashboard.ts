@@ -9,16 +9,63 @@ function startOfDayMs(input: Date | string): number {
 }
 
 /**
- * Level derived from total_score: every 100 points = one level.
- * Level 1 = 0-99 pts, Level 2 = 100-199, etc.
+ * Level derived from total_score: every 350 points = one level.
+ * Level 1 = 0-349 pts, Level 2 = 350-699, etc.
+ *
+ * Was 100 pts/level; bumped to 350 alongside the ~3.3x scoring rebalance so
+ * leveling keeps the same pace (a new dog is now 100 XP, ~3.5 per level, same
+ * feel as the old 30 XP at 100-per-level).
  */
 export function deriveLevel(totalScore: number) {
-  const xpPerLevel = 100;
+  const xpPerLevel = 350;
   const level = Math.floor(totalScore / xpPerLevel) + 1;
   const xpIntoLevel = totalScore % xpPerLevel;
   const xpToNext = xpPerLevel - xpIntoLevel;
   const progress = xpIntoLevel / xpPerLevel; // 0..1
   return { level, xpIntoLevel, xpToNext, xpPerLevel, progress };
+}
+
+/**
+ * Status titles — one rank every 5 levels, shown next to the level number.
+ * Index 0 covers levels 1-5, index 1 covers 6-10, and so on; the last title
+ * holds for every level past the ladder. Plain English (not localized yet)
+ * since these are short flavour callsigns.
+ */
+export const STATUS_TITLES = [
+  "Pioneer", //                      lvl 1-5
+  "Street Scout", //                 lvl 6-10
+  "Pack Tracker", //                 lvl 11-15
+  "Alley Ranger", //                 lvl 16-20
+  "Hound Whisperer", //              lvl 21-25
+  "Doggo Guardian", //               lvl 26-30
+  "Street Dog Sage", //              lvl 31-35
+  "Pawfessor", //                    lvl 36-40
+  "Street Dog Professor", //         lvl 41-45
+  "Supreme Street Dog Professor", // lvl 46+
+] as const;
+
+export const LEVELS_PER_TITLE = 5;
+
+/**
+ * Status for a level: current title plus the next one and how many levels
+ * away it is (null once the top title is reached).
+ */
+export function deriveTitle(level: number): {
+  title: string;
+  tier: number;
+  nextTitle: string | null;
+  levelsToNextTitle: number | null;
+} {
+  const rawTier = Math.floor((Math.max(level, 1) - 1) / LEVELS_PER_TITLE);
+  const tier = Math.min(rawTier, STATUS_TITLES.length - 1);
+  const isTop = tier >= STATUS_TITLES.length - 1;
+  const nextTitleLevel = (tier + 1) * LEVELS_PER_TITLE + 1;
+  return {
+    title: STATUS_TITLES[tier],
+    tier,
+    nextTitle: isTop ? null : STATUS_TITLES[tier + 1],
+    levelsToNextTitle: isTop ? null : nextTitleLevel - level,
+  };
 }
 
 /**

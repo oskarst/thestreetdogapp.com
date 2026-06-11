@@ -42,6 +42,7 @@ const getGalleryDogs = unstable_cache(
         "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id"
       )
       .eq("status", "approved")
+      .is("deleted_at", null)
       .not("images", "eq", "{}")
       .order("created_at", { ascending: false })
       .limit(GALLERY_LIMIT);

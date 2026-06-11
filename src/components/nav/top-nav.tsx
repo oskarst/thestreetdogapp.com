@@ -4,7 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Shield, Flag, Heart, LogOut, UserPen, KeyRound } from "lucide-react";
+import {
+  Shield,
+  Flag,
+  Heart,
+  LogOut,
+  UserPen,
+  KeyRound,
+  DatabaseBackup,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,6 +51,7 @@ const SECTION_NAMES: Record<string, string> = {
   "/dog-caught": "result",
   "/change-nickname": "settings",
   "/change-password": "settings",
+  "/privacy": "settings",
   "/report": "report",
   "/support": "support",
   "/admin": "admin",
@@ -115,6 +124,10 @@ export function TopNav({ user }: TopNavProps) {
               <DropdownMenuItem onClick={() => router.push("/change-password")}>
                 <KeyRound className="mr-2 h-4 w-4" />
                 {t("changePassword")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/privacy")}>
+                <DatabaseBackup className="mr-2 h-4 w-4" />
+                {t("privacyData")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push("/report")}>
                 <Flag className="mr-2 h-4 w-4" />

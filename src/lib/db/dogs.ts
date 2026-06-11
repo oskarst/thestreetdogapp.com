@@ -20,6 +20,7 @@ export async function getDogs(filters?: {
   let query = supabase
     .from("dogs")
     .select(DOG_LIST_COLUMNS)
+    .is("deleted_at", null)
     .order("last_sighting_date", { ascending: false, nullsFirst: false });
 
   if (filters?.userId) {
@@ -40,6 +41,7 @@ export async function getDogById(id: string): Promise<DogRow | null> {
     .from("dogs")
     .select("*")
     .eq("id", id)
+    .is("deleted_at", null)
     .single();
 
   if (error) {

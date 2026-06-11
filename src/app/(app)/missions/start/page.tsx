@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth-cache";
 import { Icon } from "@/components/ui/icon";
+import { LeaderboardBlock } from "@/components/dog/leaderboard-block";
 
 export default async function MissionsStartPage() {
   const user = await getCurrentUser();
@@ -101,6 +102,8 @@ export default async function MissionsStartPage() {
           <span className="font-mono text-lg text-amber-brand shrink-0">›</span>
         </div>
       </Link>
+
+      <LeaderboardBlock />
     </div>
   );
 }

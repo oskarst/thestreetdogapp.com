@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/ui/icon";
-import { deriveLevel } from "@/lib/dashboard";
+import { deriveLevel, deriveTitle } from "@/lib/dashboard";
 import type { ScoreResult } from "@/types/database";
 
 interface DashboardHeroProps {
@@ -18,13 +18,20 @@ export async function DashboardHero({
   const { level, xpIntoLevel, xpPerLevel, xpToNext, progress } = deriveLevel(
     score.total_score
   );
+  const { title } = deriveTitle(level);
   const nextLevel = String(level + 1).padStart(2, "0");
 
   return (
     <div>
       <div className="flex items-start justify-between gap-3 mb-1">
-        <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
-          {t("level")}
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
+            {t("level")}
+          </span>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-soft text-green-deep font-mono text-[11px] font-medium tracking-[0.06em] uppercase shrink-0 truncate">
+            <Icon name="medal" size={12} />
+            {title}
+          </span>
         </div>
         {streakDays > 0 && (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-soft text-amber-brand font-mono text-[12.1px] font-medium tracking-[0.04em] shrink-0">

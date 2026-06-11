@@ -49,6 +49,8 @@ interface PickerChunk {
   colorIndex: number;
   ring: [number, number][];
   status: "completed" | "active" | "available";
+  /** Nickname of the user who owns this chunk (most sightings), or null. */
+  dominatedBy?: string | null;
 }
 
 interface PickerContext {
@@ -319,15 +321,21 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       const baseColor = picker.colors[c.colorIndex] ?? "#1a1612";
       const isCompleted = c.status === "completed";
       const isActive = c.status === "active";
+      const isDominated = !!c.dominatedBy;
       const interactive =
         !isCompleted && (!picker.hasActive || isActive);
 
+      // Dominated chunks stand out: a denser fill so "owned" turf reads at a
+      // glance over un-claimed cells.
+      let fillOpacity = isCompleted ? 0.22 : isActive ? 0.4 : 0.28;
+      if (isDominated && !isActive && !isCompleted) fillOpacity = 0.58;
+
       const polygon = L.polygon(latlngs, {
         color: isActive ? "#15803d" : baseColor,
-        weight: isActive ? 3 : 1.5,
+        weight: isActive ? 3 : isDominated ? 2.5 : 1.5,
         opacity: isCompleted ? 0.45 : 0.95,
         fillColor: baseColor,
-        fillOpacity: isCompleted ? 0.22 : isActive ? 0.4 : 0.28,
+        fillOpacity,
         // Only tappable chunks capture pointer events. Non-interactive
         // chunks let pinch / double-tap zoom land on the underlying map
         // tile so the user can drill down before committing.
@@ -335,12 +343,24 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
         bubblingMouseEvents: false,
       });
 
-      // Tooltip with the chunk label
-      polygon.bindTooltip(localizedChunkName(c, picker.locale), {
-        direction: "center",
-        permanent: false,
-        className: "chunk-tip",
-      });
+      // Dominated chunks carry a permanent "Dominated by …" badge for
+      // everyone; un-dominated chunks just show their name on hover.
+      if (isDominated) {
+        polygon.bindTooltip(
+          tMissions("dominatedBy", { name: c.dominatedBy as string }),
+          {
+            direction: "center",
+            permanent: true,
+            className: "chunk-tip chunk-tip-dominated",
+          }
+        );
+      } else {
+        polygon.bindTooltip(localizedChunkName(c, picker.locale), {
+          direction: "center",
+          permanent: false,
+          className: "chunk-tip",
+        });
+      }
 
       if (interactive) {
         // Tap → open the Alien-style confirmation modal. The actual
@@ -362,6 +382,9 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
       map.setView(bounds.getCenter(), 13);
       hasFitBoundsRef.current = true;
     }
+    // tMissions is a stable translator for the labels; re-running this effect
+    // on its identity would needlessly redraw every chunk.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [picker]);
 
   // Live "you are here" marker — only when an active mission asks for it.
@@ -617,6 +640,19 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
         }
         .marker-cluster span {
           line-height: 30px;
+        }
+        .chunk-tip-dominated {
+          font-weight: 700;
+          font-size: 11px;
+          color: #15803d;
+          background: rgba(255, 255, 255, 0.92);
+          border: 1px solid rgba(21, 128, 61, 0.4);
+          border-radius: 6px;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+          white-space: nowrap;
+        }
+        .chunk-tip-dominated::before {
+          display: none;
         }
       `}</style>
 

@@ -10,11 +10,11 @@ export default async function FreeRoamPage() {
   const t = await getTranslations("missions");
 
   const points: { label: string; xp: string }[] = [
-    { label: t("freeRoamPtSighting"), xp: "+10" },
-    { label: t("freeRoamPtUnique"), xp: "+20" },
-    { label: t("freeRoamPtDiscover"), xp: "+30" },
-    { label: t("freeRoamPtDaily"), xp: "+15" },
-    { label: t("freeRoamPtTag"), xp: "+5" },
+    { label: t("freeRoamPtSighting"), xp: "+35" },
+    { label: t("freeRoamPtUnique"), xp: "+65" },
+    { label: t("freeRoamPtDiscover"), xp: "+100" },
+    { label: t("freeRoamPtDaily"), xp: "+50" },
+    { label: t("freeRoamPtTag"), xp: "+15" },
   ];
 
   return (

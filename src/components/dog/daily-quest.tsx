@@ -10,15 +10,15 @@ import { cn } from "@/lib/utils";
 interface DailyQuestProps {
   /** Whether the user has logged ≥1 sighting today (quest condition met). */
   complete: boolean;
-  /** Whether the +15 XP has already been awarded for today. */
+  /** Whether the +50 XP has already been awarded for today. */
   claimedToday: boolean;
 }
 
 /**
  * "Daily directive" with three states:
  *   1. Not yet met → empty checkbox + "spot 1 dog today" hint
- *   2. Met but unclaimed → claimable button "+15 XP"
- *   3. Already claimed → checked + "claimed · +15 XP"
+ *   2. Met but unclaimed → claimable button "+50 XP"
+ *   3. Already claimed → checked + "claimed · +50 XP"
  *
  * The claim hits the claim_daily_quest() RPC; the server enforces idempotency.
  */
@@ -126,7 +126,7 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
                 : "bg-green-soft text-green-deep"
             )}
           >
-            +15 XP
+            +50 XP
           </span>
         )}
       </div>
