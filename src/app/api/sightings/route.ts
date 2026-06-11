@@ -303,9 +303,12 @@ export async function POST(request: Request) {
         );
         isFirstCatch = !alreadySpotted;
 
-        // Update dog with new image and location
+        // Update dog with new image and location. The last_sighting_date
+        // bump is what keeps a re-sighted dog "fresh" on the map / dog
+        // profile, so surface any failure instead of silently swallowing it
+        // (a swallowed error left re-sighted dogs stuck at an old date).
         const updatedImages = [...(existingDog.images ?? []), dogImageUrl];
-        await supabase
+        const { error: dogUpdateErr } = await supabase
           .from("dogs")
           .update({
             images: updatedImages,
@@ -322,6 +325,12 @@ export async function POST(request: Request) {
             ear_tag_image: existingDog.ear_tag_image ?? earTagImageUrl,
           })
           .eq("id", dogId);
+        if (dogUpdateErr) {
+          console.error(
+            "[sightings] dog re-sighting bump failed:",
+            dogUpdateErr.message
+          );
+        }
       } else {
         // Create new dog. If no dog is visible in the photo, save it
         // privately as 'pending' for admin review instead of publishing it.
