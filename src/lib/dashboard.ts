@@ -30,7 +30,7 @@ export function deriveLevel(totalScore: number) {
  */
 export const LEVEL_NAMES = [
   "Stray Spotter", //                 1
-  "Paw Apprentice", //                2
+  "Pup Patroller", //                 2
   "Street Scout", //                  3
   "Trail Tracker", //                 4
   "Alley Ranger", //                  5
@@ -38,8 +38,8 @@ export const LEVEL_NAMES = [
   "Kennel Keeper", //                 7
   "Hound Hunter", //                  8
   "Dog Whisperer", //                 9
-  "Muzzle Master", //                 10
-  "Canine Cartographer", //           11
+  "Pack Leader", //                   10
+  "City Ranger", //                   11
   "Snout Scholar", //                 12
   "Bark Sage", //                     13
   "Doggo Guardian", //                14
