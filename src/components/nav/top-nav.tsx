@@ -52,6 +52,7 @@ const SECTION_NAMES: Record<string, string> = {
   "/change-nickname": "settings",
   "/change-password": "settings",
   "/privacy": "settings",
+  "/levels": "ranks",
   "/report": "report",
   "/support": "support",
   "/admin": "admin",

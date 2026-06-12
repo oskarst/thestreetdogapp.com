@@ -1,6 +1,9 @@
+"use client";
+
 import type { SightingWithUser } from "@/lib/db/sightings";
 import { SectionLabel } from "@/components/ui/section-label";
 import { sizeLabel } from "@/lib/size";
+import { cn } from "@/lib/utils";
 
 function relativeOffset(dateStr: string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -15,9 +18,16 @@ function relativeOffset(dateStr: string): string {
 
 interface SightingListProps {
   sightings: SightingWithUser[];
+  /** When provided, items become buttons that focus the map marker. */
+  onSelect?: (index: number) => void;
+  activeIndex?: number | null;
 }
 
-export function SightingList({ sightings }: SightingListProps) {
+export function SightingList({
+  sightings,
+  onSelect,
+  activeIndex,
+}: SightingListProps) {
   if (sightings.length === 0) {
     return (
       <div className="rounded-xl border border-rule bg-card p-4 text-center text-sm text-muted-foreground">
@@ -35,10 +45,20 @@ export function SightingList({ sightings }: SightingListProps) {
         {sightings.map((s, idx) => {
           const nickname = s.nickname ?? "anon";
           const id = s.id.slice(0, 4).toUpperCase();
+          const clickable = !!onSelect;
           return (
-            <div
+            <button
               key={s.id}
-              className="grid grid-cols-[88px_1fr_auto] gap-2.5 items-center bg-card rounded-xl px-3 py-2.5"
+              type="button"
+              onClick={clickable ? () => onSelect!(idx) : undefined}
+              disabled={!clickable}
+              className={cn(
+                "w-full text-left grid grid-cols-[88px_1fr_auto] gap-2.5 items-center rounded-xl px-3 py-2.5 transition-colors",
+                clickable && "hover:bg-muted cursor-pointer",
+                activeIndex === idx
+                  ? "bg-muted border border-ink/25"
+                  : "bg-card"
+              )}
             >
               <span className="font-mono text-[11.6px] tracking-[0.04em] text-muted-foreground">
                 {relativeOffset(s.timestamp)} · #{id}
@@ -66,7 +86,7 @@ export function SightingList({ sightings }: SightingListProps) {
               <span className="font-mono text-[13.2px] font-medium text-ink shrink-0">
                 #{idx + 1}
               </span>
-            </div>
+            </button>
           );
         })}
       </div>

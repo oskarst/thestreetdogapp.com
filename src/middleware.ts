@@ -79,6 +79,7 @@ export async function middleware(request: NextRequest) {
     "/change-nickname",
     "/change-password",
     "/privacy",
+    "/levels",
     "/admin",
   ];
   if (

@@ -14,13 +14,17 @@ interface Location {
 
 interface LocationHistoryMapInnerProps {
   locations: Location[];
+  /** When set, open that sighting's marker popup and pan to it. */
+  focusIndex?: number | null;
 }
 
 export default function LocationHistoryMapInner({
   locations,
+  focusIndex,
 }: LocationHistoryMapInnerProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
 
   useEffect(() => {
     if (!mapRef.current || locations.length === 0) return;
@@ -56,6 +60,7 @@ export default function LocationHistoryMapInner({
     });
 
     const coords: L.LatLngExpression[] = [];
+    const markers: L.Marker[] = [];
 
     locations.forEach((loc) => {
       const latlng: L.LatLngExpression = [loc.latitude, loc.longitude];
@@ -69,7 +74,9 @@ export default function LocationHistoryMapInner({
       `;
       marker.bindPopup(popupContent);
       marker.addTo(map);
+      markers.push(marker);
     });
+    markersRef.current = markers;
 
     if (coords.length > 0) {
       const bounds = L.latLngBounds(coords);
@@ -79,8 +86,19 @@ export default function LocationHistoryMapInner({
     return () => {
       map.remove();
       mapInstanceRef.current = null;
+      markersRef.current = [];
     };
   }, [locations]);
+
+  // Focus a marker when the linked sighting list item is tapped.
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || focusIndex == null) return;
+    const marker = markersRef.current[focusIndex];
+    if (!marker) return;
+    map.panTo(marker.getLatLng(), { animate: true });
+    marker.openPopup();
+  }, [focusIndex]);
 
   return (
     <div ref={mapRef} className="z-0" style={{ height: 400, width: "100%" }} />

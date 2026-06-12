@@ -9,12 +9,15 @@ import { Achievements } from "@/components/dog/achievements";
 import { DailyQuest } from "@/components/dog/daily-quest";
 import { MissionsBlock } from "@/components/dog/missions-block";
 import { LeaderboardBlock } from "@/components/dog/leaderboard-block";
+import { LevelUpSplash } from "@/components/dog/level-up-splash";
 import { DashboardContent } from "@/components/dog/dashboard-content";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import { TourPrompt } from "@/components/tour/tour-button";
 import {
   deriveAchievements,
   deriveStreak,
+  deriveLevel,
+  deriveTitle,
   shortHexId,
   isDailyQuestComplete,
   isDailyQuestClaimedToday,
@@ -59,8 +62,11 @@ export default async function DashboardPage() {
     streakDays,
   });
 
+  const { level } = deriveLevel(score.total_score);
+
   return (
     <div className="px-4 py-4 space-y-4">
+      <LevelUpSplash level={level} title={deriveTitle(level).title} />
       <OfflineSyncPanel />
       <TourPrompt userId={user.id} />
       {/* Researcher Level + Achievements share one card (no gap between

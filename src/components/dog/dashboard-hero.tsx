@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/ui/icon";
 import { deriveLevel, deriveTitle } from "@/lib/dashboard";
@@ -28,10 +29,13 @@ export async function DashboardHero({
           <span className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
             {t("level")}
           </span>
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-soft text-green-deep font-mono text-[11px] font-medium tracking-[0.06em] uppercase shrink-0 truncate">
+          <Link
+            href="/levels"
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-soft text-green-deep font-mono text-[11px] font-medium tracking-[0.06em] uppercase shrink-0 truncate no-underline hover:brightness-95 transition"
+          >
             <Icon name="medal" size={12} />
             {title}
-          </span>
+          </Link>
         </div>
         {streakDays > 0 && (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-soft text-amber-brand font-mono text-[12.1px] font-medium tracking-[0.04em] shrink-0">

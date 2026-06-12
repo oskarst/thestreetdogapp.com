@@ -8,11 +8,8 @@ import { isFavorite } from "@/lib/db/favorites";
 import { getProfile } from "@/lib/db/users";
 import { DogImageCarousel } from "@/components/dog/dog-image-carousel";
 import { DogDetails } from "@/components/dog/dog-details";
-import { SightingList } from "@/components/dog/sighting-list";
 import { DogActionIcons } from "@/components/dog/dog-action-icons";
-import { LocationHistoryMap } from "@/components/map/location-history-map";
-import { DailyActivityMap } from "@/components/map/daily-activity-map";
-import { SectionLabel } from "@/components/ui/section-label";
+import { DogHistorySection } from "@/components/dog/dog-history-section";
 import { sampleN } from "@/lib/sample";
 
 export default async function DogProfilePage({
@@ -65,6 +62,16 @@ export default async function DogProfilePage({
     notes: s.notes,
   }));
 
+  // Gallery pool: every sighting's photo plus any on the dog row, deduped.
+  const galleryImages = Array.from(
+    new Set([
+      ...(dog.images ?? []),
+      ...sightings
+        .map((s) => s.image_url)
+        .filter((u): u is string => Boolean(u)),
+    ])
+  );
+
   const dailySightings = recentSightings.map((s) => ({
     latitude: s.latitude,
     longitude: s.longitude,
@@ -77,11 +84,11 @@ export default async function DogProfilePage({
 
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
-      {/* Cap the gallery at 8 randomly-sampled photos so a heavily-sighted
-          dog (one image per sighting, unbounded) doesn't mount dozens of
-          slides + optimizer transforms. The ear-tag shot is always shown. */}
+      {/* Gallery pulls from every sighting's photo (plus any on the dog row),
+          deduped, then capped at 8 random so a heavily-sighted dog doesn't
+          mount dozens of slides. The ear-tag shot is always shown. */}
       <DogImageCarousel
-        images={sampleN(dog.images ?? [], 8)}
+        images={sampleN(galleryImages, 8)}
         name={dog.names?.[0] ?? "Dog"}
         earTagImage={dog.ear_tag_image}
       />
@@ -126,32 +133,12 @@ export default async function DogProfilePage({
         registrarIsYou={dog.first_registered_by_id === user.id}
       />
 
-      {locations.length > 0 && (
-        <div>
-          <SectionLabel meta={`${locations.length} sightings`}>
-            Location History
-          </SectionLabel>
-          <div className="rounded-xl border border-rule overflow-hidden">
-            <LocationHistoryMap locations={locations} />
-          </div>
-        </div>
-      )}
-
-      {showDailyMap && (
-        <div>
-          <SectionLabel meta={`${recentSightings.length} in last 24h`}>
-            Today&apos;s Activity
-          </SectionLabel>
-          <div className="rounded-xl border border-rule overflow-hidden">
-            <DailyActivityMap sightings={dailySightings} />
-            <div className="px-3 py-2 border-t border-rule bg-background font-mono text-[11px] tracking-[0.04em] text-muted-foreground">
-              markers numbered oldest (1) to newest ({recentSightings.length})
-            </div>
-          </div>
-        </div>
-      )}
-
-      <SightingList sightings={sightings} />
+      <DogHistorySection
+        sightings={sightings}
+        locations={locations}
+        dailySightings={dailySightings}
+        showDailyMap={showDailyMap}
+      />
     </div>
   );
 }
