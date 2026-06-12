@@ -13,6 +13,7 @@ interface PickerChunk {
   colorIndex: number;
   ring: [number, number][];
   status: "completed" | "active" | "available";
+  dominatedBy?: string | null;
 }
 
 interface MissionConfirmModalProps {
@@ -128,6 +129,14 @@ export function MissionConfirmModal({
             />
             <Row label="TARGET" value="5 SUBJECTS" />
             <Row label="REWARD" value="+350 XP" />
+            <Row
+              label="DOMINATED BY"
+              value={
+                chunk.dominatedBy
+                  ? chunk.dominatedBy.toUpperCase()
+                  : "[UNCLAIMED]"
+              }
+            />
           </div>
 
           {error && (

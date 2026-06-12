@@ -295,7 +295,7 @@ export async function getQuadrantDomination(): Promise<
         tally.set(c.slug, perChunk);
       }
       const prev = perChunk.get(cell.user_id) ?? {
-        nickname: cell.nickname ?? "—",
+        nickname: cell.nickname?.trim() || "Anonymous",
         score: 0,
       };
       prev.score += cell.n;

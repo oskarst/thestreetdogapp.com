@@ -30,7 +30,7 @@ export function deriveLevel(totalScore: number) {
  */
 export const LEVEL_NAMES = [
   "Stray Spotter", //                 1
-  "Sidewalk Sleuth", //               2
+  "Stray Tracker", //                 2
   "Street Scout", //                  3
   "Trail Tracker", //                 4
   "Alley Ranger", //                  5

@@ -1,6 +1,10 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { getMissionsView, PARENT_COLORS } from "@/lib/missions";
+import {
+  getMissionsView,
+  getQuadrantDomination,
+  PARENT_COLORS,
+} from "@/lib/missions";
 import { MissionsActiveActions } from "@/components/dog/missions-active-actions";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
@@ -28,13 +32,15 @@ function localizedParent(
  * "Available" excludes already-completed raions.
  */
 export async function MissionsBlock() {
-  const [t, locale, view] = await Promise.all([
+  const [t, locale, view, domination] = await Promise.all([
     getTranslations("missions"),
     getLocale(),
     getMissionsView(),
+    getQuadrantDomination(),
   ]);
 
   const { list, active } = view;
+  const activeDominator = active ? domination[active.slug]?.nickname : null;
   const completedCount = list.filter((m) => m.status === "completed").length;
   const allCompleted = completedCount === list.length;
 
@@ -93,6 +99,20 @@ export async function MissionsBlock() {
                       })}
                 </span>
                 <span>{t("completionReward", { xp: active.completionXp })}</span>
+              </div>
+              <div className="font-mono text-[11px] tracking-[0.06em] text-muted-foreground mt-1.5 flex items-center gap-1.5">
+                <Icon name="medal" size={12} className="text-green-deep" />
+                {activeDominator ? (
+                  <span>
+                    Dominated by{" "}
+                    <span className="text-ink font-medium">
+                      {activeDominator}
+                    </span>{" "}
+                    · take it over
+                  </span>
+                ) : (
+                  <span>Unclaimed — be the first to dominate</span>
+                )}
               </div>
             </div>
           </div>
