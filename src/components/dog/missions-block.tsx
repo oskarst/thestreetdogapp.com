@@ -129,24 +129,24 @@ export async function MissionsBlock() {
       ) : (
         <Link
           href="/missions/start"
-          className="card-soft block w-full px-5 py-4 no-underline text-inherit transition-colors hover:border-ink/30"
+          className="block w-full px-5 py-4 rounded-2xl no-underline bg-amber-brand text-amber-soft transition-all hover:brightness-105 active:scale-[0.99]"
         >
           <div className="flex items-center gap-4">
-            <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-ink text-background">
+            <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-amber-soft/20 text-amber-soft">
               <Icon name="target" size={26} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-mono text-[11px] tracking-[0.32em] uppercase text-muted-foreground">
+              <div className="font-mono text-[11px] tracking-[0.32em] uppercase text-amber-soft/80">
                 {t("title")}
               </div>
-              <div className="text-[19.8px] font-semibold leading-tight mt-0.5 text-ink">
+              <div className="text-[19.8px] font-semibold leading-tight mt-0.5 text-amber-soft">
                 {t("startMission")}
               </div>
-              <div className="font-mono text-[11.6px] tracking-[0.06em] text-muted-foreground mt-1">
+              <div className="font-mono text-[11.6px] tracking-[0.06em] text-amber-soft/80 mt-1">
                 {t("pickerSubtitleMap")}
               </div>
             </div>
-            <span className="font-mono text-lg text-muted-foreground shrink-0">
+            <span className="font-mono text-lg text-amber-soft/90 shrink-0">
               ›
             </span>
           </div>
