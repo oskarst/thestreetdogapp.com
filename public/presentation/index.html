@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<!-- Served at /presentation (no trailing slash), so relative URLs would
+     resolve to /img/... (404). Base fixes them to /presentation/img/...
+     If you host the deck at a different path, change this one line. -->
+<base href="/presentation/" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>The Street Dog App — A Field Study of Tbilisi</title>
 <meta name="description" content="How Tbilisi's street dogs became a crowd-sourced map of a city's animal life." />
@@ -199,10 +203,9 @@
         <h2 class="rv">I came to Tbilisi<br>in <span class="display-i">2012</span>.</h2>
         <p class="lead rv">The street dogs were unlike anywhere else I'd lived. Not strays in the margins — <em class="hl">characters in the life of the city</em>.</p>
       </div>
-      <!-- swap .ph-frame for: <img class="ph-img" src="me.jpg" alt="..."> -->
-      <figure class="ph rv">
-        <div class="ph-frame"><span class="ph-tag">Photo · You</span></div>
-        <figcaption class="ph-cap">[ portrait — Oskars, Tbilisi 2012 ]</figcaption>
+      <figure class="ph ph-wide rv">
+        <div class="ph-frame has-img"><img class="ph-img" src="img/me-2012.jpg" alt="Oskars hitchhiking into Georgia, 2012" /></div>
+        <figcaption class="ph-cap">Arriving — hitchhiking into Georgia, 2012</figcaption>
       </figure>
     </div>
   </section>
@@ -215,9 +218,9 @@
         <h2 class="rv">They had<br><span class="display-i">shepherd</span> in them.</h2>
         <p class="lead rv">Interactive, intelligent, social. They greet you, walk a block with you, hold down a corner like it's a job.</p>
       </div>
-      <figure class="ph rv">
-        <div class="ph-frame"><span class="ph-tag">Photo · Dogs</span></div>
-        <figcaption class="ph-cap">[ street dogs of Tbilisi ]</figcaption>
+      <figure class="ph ph-wide rv">
+        <div class="ph-frame has-img"><img class="ph-img" src="img/street-dog.jpg" alt="A street dog on the hills above Tbilisi" /></div>
+        <figcaption class="ph-cap">A street dog above Tbilisi</figcaption>
       </figure>
     </div>
   </section>
