@@ -454,21 +454,37 @@
   const dots=[...dotsNav.children];
 
   let active=0;
-  const io=new IntersectionObserver((entries)=>{
-    entries.forEach(en=>{
-      if(en.isIntersecting){
-        en.target.classList.add('in');
-        const i=slides.indexOf(en.target);
-        if(i>=0){
-          active=i;
-          dots.forEach((d,k)=>d.classList.toggle('on',k===i));
-          cur.textContent=String(i+1).padStart(2,'0');
-          topbar.style.width=((i)/(slides.length-1)*100)+'%';
-        }
-      }
+  function setActive(i){
+    active=i;
+    dots.forEach((d,k)=>d.classList.toggle('on',k===i));
+    cur.textContent=String(i+1).padStart(2,'0');
+    topbar.style.width=(i/(slides.length-1)*100)+'%';
+  }
+
+  // Reveal: fire as soon as a slide enters view. A low threshold + bottom
+  // root-margin means even a slide TALLER than the viewport reveals (a high
+  // threshold could never be met by an oversized slide -> blank slide bug).
+  const revealIO=new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('in'); });
+  },{threshold:0.01, rootMargin:'0px 0px -12% 0px'});
+  slides.forEach(s=>revealIO.observe(s));
+  slides[0].classList.add('in'); // first slide visible immediately
+
+  // Active slide / counter via scroll — robust for any slide height.
+  let ticking=false;
+  function updateActive(){
+    ticking=false;
+    const anchor=innerHeight*0.18;
+    let best=0,bestDist=Infinity;
+    slides.forEach((s,i)=>{
+      const d=Math.abs(s.getBoundingClientRect().top-anchor);
+      if(d<bestDist){bestDist=d;best=i;}
     });
-  },{threshold:.55});
-  slides.forEach(s=>io.observe(s));
+    setActive(best);
+  }
+  addEventListener('scroll',()=>{ if(!ticking){ticking=true;requestAnimationFrame(updateActive);} },{passive:true});
+  addEventListener('resize',updateActive,{passive:true});
+  updateActive();
 
   // keyboard nav
   function go(d){
