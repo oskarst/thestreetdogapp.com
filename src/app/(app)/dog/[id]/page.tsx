@@ -47,6 +47,17 @@ export default async function DogProfilePage({
     ]);
 
   const isOwner = dog.first_registered_by_id === user.id;
+  // Naming is allowed only for the registrar or someone who has sighted this
+  // dog — so only show the "Name this dog" action to those users.
+  const canName = isOwner || sightings.some((s) => s.is_mine);
+
+  // "First seen" = the earliest of the dog's creation date and any sighting on
+  // record. Imported dogs were created in-app (e.g. 2026) but carry sightings
+  // from years earlier (e.g. 2022), so created_at alone reads wrong.
+  const firstSeen = sightings.reduce(
+    (min, s) => (s.timestamp < min ? s.timestamp : min),
+    dog.created_at
+  );
 
   // Derive last-24h subset from the same fetched list.
   const dayAgoMs = Date.now() - 24 * 60 * 60 * 1000;
@@ -100,13 +111,15 @@ export default async function DogProfilePage({
           isFavorited={favorited}
           size="md"
         />
-        <Link
-          href={`/dog/${dog.id}/name`}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-sm font-medium text-ink hover:bg-muted transition-colors no-underline"
-        >
-          <PenLine className="h-4 w-4" />
-          Name this dog
-        </Link>
+        {canName && (
+          <Link
+            href={`/dog/${dog.id}/name`}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-rule-2 bg-card px-3 py-2 text-sm font-medium text-ink hover:bg-muted transition-colors no-underline"
+          >
+            <PenLine className="h-4 w-4" />
+            Name this dog
+          </Link>
+        )}
         {isOwner && (
           <Link
             href={`/dog/${dog.id}/edit`}
@@ -131,6 +144,7 @@ export default async function DogProfilePage({
         totalCatchers={totalCatchers}
         registeredByNickname={registeredByProfile?.nickname ?? null}
         registrarIsYou={dog.first_registered_by_id === user.id}
+        firstSeen={firstSeen}
       />
 
       <DogHistorySection

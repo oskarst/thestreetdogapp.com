@@ -27,6 +27,10 @@ interface DogDetailsProps {
   totalCatchers: number;
   registeredByNickname: string | null;
   registrarIsYou: boolean;
+  /** Earliest the dog was ever seen (oldest sighting, falling back to when the
+   *  dog record was created). Imported dogs were created in-app long after
+   *  their first real sighting, so created_at alone reads wrong. */
+  firstSeen?: string | null;
 }
 
 export async function DogDetails({
@@ -35,11 +39,12 @@ export async function DogDetails({
   totalCatchers,
   registeredByNickname,
   registrarIsYou,
+  firstSeen,
 }: DogDetailsProps) {
   const t = await getTranslations("dogProfile");
   const name = dog.names?.[0] ?? "Unnamed Dog";
   const altNames = dog.names?.slice(1) ?? [];
-  const created = new Date(dog.created_at);
+  const created = new Date(firstSeen ?? dog.created_at);
   const createdStr = `${created.getFullYear()}.${String(
     created.getMonth() + 1
   ).padStart(2, "0")}.${String(created.getDate()).padStart(2, "0")}`;

@@ -16,6 +16,13 @@ function relativeOffset(dateStr: string): string {
   return `T-${d}d`;
 }
 
+function dmy(dateStr: string): string {
+  const d = new Date(dateStr);
+  return `${String(d.getDate()).padStart(2, "0")}-${String(
+    d.getMonth() + 1
+  ).padStart(2, "0")}-${d.getFullYear()}`;
+}
+
 interface SightingListProps {
   sightings: SightingWithUser[];
   /** When provided, items become buttons that focus the map marker. */
@@ -60,8 +67,11 @@ export function SightingList({
                   : "bg-card"
               )}
             >
-              <span className="font-mono text-[11.6px] tracking-[0.04em] text-muted-foreground">
+              <span className="font-mono text-[11.6px] tracking-[0.04em] text-muted-foreground leading-tight">
                 {relativeOffset(s.timestamp)} · #{id}
+                <span className="block text-[10.5px] text-muted-foreground/70 mt-0.5">
+                  {dmy(s.timestamp)}
+                </span>
               </span>
               <div className="min-w-0">
                 <div className="text-[14.3px] font-semibold leading-tight flex items-center gap-1.5">
