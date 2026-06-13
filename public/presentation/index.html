@@ -108,6 +108,10 @@
   .ph-cap{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--ink-soft);margin-top:10px}
   .ph-img{width:100%;height:100%;object-fit:cover;display:block}
   .ph-wide .ph-frame{aspect-ratio:16/10}
+  /* real images: drop the crosshair/hatch placeholder styling */
+  .ph-frame.has-img{background:#0c0c0c;border-color:rgba(18,17,16,.3)}
+  .ph-frame.has-img::before,.ph-frame.has-img::after{display:none}
+  .ph-frame.contain .ph-img{object-fit:contain}
 
   /* ---------- lists / numbered points ---------- */
   .big-num{font-family:var(--mono);font-weight:700;font-size:clamp(2.4rem,6vw,4.4rem);line-height:1;color:var(--ink)}
@@ -227,9 +231,9 @@
         <h2 class="rv">Then the world<br>started <span class="display-i">collecting</span>.</h2>
         <p class="lead rv">Location games — Pokémon GO and its kin — turned whole cities into a board. Go outside. Find them. Catch them. Log them. Millions were hooked.</p>
       </div>
-      <figure class="ph ph-wide rv">
-        <div class="ph-frame"><span class="ph-tag">Screenshot</span></div>
-        <figcaption class="ph-cap">[ Pokémon-style location game ]</figcaption>
+      <figure class="ph rv">
+        <div class="ph-frame has-img contain"><img class="ph-img" src="img/pokemon.png" alt="Pokémon GO augmented-reality gameplay" /></div>
+        <figcaption class="ph-cap">Pokémon GO · AR capture · © Niantic (fair use)</figcaption>
       </figure>
     </div>
   </section>
@@ -243,8 +247,8 @@
         <p class="lead rv">Tagged through the city's vaccinate-and-neuter program, each ear carries a unique number. The "creatures" are <em class="hl">real</em> — and already <em class="hl">identifiable</em>.</p>
       </div>
       <figure class="ph rv">
-        <div class="ph-frame"><span class="ph-tag">Photo · Ear tag</span></div>
-        <figcaption class="ph-cap">[ tagged ear, close-up ]</figcaption>
+        <div class="ph-frame has-img"><img class="ph-img" src="img/eartag.jpg" alt="Street dog with an ear-tag notch after sterilisation" /></div>
+        <figcaption class="ph-cap">Ear-marked street dog · CC BY-SA 4.0 (Wikimedia)</figcaption>
       </figure>
     </div>
   </section>
@@ -332,7 +336,7 @@
       <h2 class="rv">Gamification.</h2>
       <p class="lead rv">The same loop that hooked millions — pointed at something that actually matters.</p>
       <div class="cols3 rv d2" style="grid-template-columns:1fr 1fr">
-        <figure class="ph ph-wide"><div class="ph-frame"><span class="ph-tag">Screenshot</span></div><figcaption class="ph-cap">[ Pokémon-style game ]</figcaption></figure>
+        <figure class="ph ph-wide"><div class="ph-frame has-img contain"><img class="ph-img" src="img/pokemon.png" alt="Pokémon GO gameplay" /></div><figcaption class="ph-cap">Pokémon GO · © Niantic (fair use)</figcaption></figure>
         <figure class="ph ph-wide"><div class="ph-frame"><span class="ph-tag">Screenshot · App</span></div><figcaption class="ph-cap">[ The Street Dog App ]</figcaption></figure>
       </div>
     </div>
@@ -373,8 +377,8 @@
       <h2 class="rv">Results: a city<br>that <span class="display-i">maps itself</span>.</h2>
       <p class="lead rv">Crowd-sourced sightings become a living territory map — like the range maps drawn for wolf packs, but charted by a whole city.</p>
       <figure class="ph ph-wide rv d2" style="margin-top:26px">
-        <div class="ph-frame"><span class="ph-tag">Visual · Dog-life map</span></div>
-        <figcaption class="ph-cap">[ territory / heat map of dog life across districts ]</figcaption>
+        <div class="ph-frame has-img"><img class="ph-img" src="img/lifemap.jpg" alt="Wolf-pack territory map — reference for the dog-life territory map" /></div>
+        <figcaption class="ph-cap">Reference: Voyageurs Wolf Project territory map — our dog-life map will look similar</figcaption>
       </figure>
       <div class="cols3 rv d3">
         <div class="card"><div class="lbl">Insight</div><p>Spot the districts that need attention — density, health flags, neglect.</p></div>
