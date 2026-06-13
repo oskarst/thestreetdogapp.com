@@ -125,6 +125,10 @@
   /* UI screenshots: show the whole screen on a light letterbox */
   .ph-frame.shot{background:var(--paper-2);border-color:var(--line)}
   .ph-frame.shot .ph-img{object-fit:contain}
+  /* full-bleed photo background for a hero slide */
+  .bgphoto{position:absolute;inset:0;z-index:0;overflow:hidden}
+  .bgphoto img{width:100%;height:100%;object-fit:cover;filter:grayscale(.1)}
+  .bgphoto::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,17,16,.5) 0%,rgba(18,17,16,.62) 55%,rgba(18,17,16,.82) 100%)}
 
   /* ---------- lists / numbered points ---------- */
   .big-num{font-family:var(--mono);font-weight:700;font-size:clamp(2.4rem,6vw,4.4rem);line-height:1;color:var(--ink)}
@@ -197,16 +201,14 @@
 
   <!-- 02 — 2012 -->
   <section class="slide">
-    <div class="wrap split">
-      <div class="col-text">
-        <div class="eyebrow rv">Field note 01 · 2012</div>
-        <h2 class="rv">I came to Tbilisi<br>in <span class="display-i">2012</span>.</h2>
-        <p class="lead rv">The street dogs were unlike anywhere else I'd lived. Not strays in the margins — <em class="hl">characters in the life of the city</em>.</p>
+    <div class="wrap">
+      <div class="eyebrow rv">Field note 01 · 2012</div>
+      <h2 class="rv">I came to Tbilisi in <span class="display-i">2012</span>.</h2>
+      <p class="lead rv">The street dogs were unlike anywhere else I'd lived. Not strays in the margins — <em class="hl">characters in the life of the city</em>.</p>
+      <div class="cols3 rv d2" style="grid-template-columns:1fr 1fr;margin-top:22px;align-items:start">
+        <figure class="ph"><div class="ph-frame has-img"><img class="ph-img" src="img/me-2012.jpg" alt="Oskars hitchhiking into Georgia, 2012" /></div><figcaption class="ph-cap">Arriving — hitchhiking in, 2012</figcaption></figure>
+        <figure class="ph"><div class="ph-frame has-img"><img class="ph-img" src="img/white-dog.jpg" alt="A street dog in Tbilisi with the TV tower behind" /></div><figcaption class="ph-cap">A Tbilisi street dog</figcaption></figure>
       </div>
-      <figure class="ph ph-wide rv">
-        <div class="ph-frame has-img"><img class="ph-img" src="img/me-2012.jpg" alt="Oskars hitchhiking into Georgia, 2012" /></div>
-        <figcaption class="ph-cap">Arriving — hitchhiking into Georgia, 2012</figcaption>
-      </figure>
     </div>
   </section>
 
@@ -227,10 +229,16 @@
 
   <!-- 04 — territory & story -->
   <section class="slide">
-    <div class="wrap">
-      <div class="eyebrow rv">Field note 03</div>
-      <h2 class="rv">Each one had a <span class="display-i">territory</span>.<br>And a <span class="display-i">story</span>.</h2>
-      <p class="lead rv">The dog by the bakery. The one who escorts kids across the road. They are known, named, and local — a cast of regulars the whole neighbourhood recognises.</p>
+    <div class="wrap split">
+      <div class="col-text">
+        <div class="eyebrow rv">Field note 03</div>
+        <h2 class="rv">Each one had a <span class="display-i">territory</span>.<br>And a <span class="display-i">story</span>.</h2>
+        <p class="lead rv">The dog by the bakery. The one who escorts kids across the road. Known, named, local — and each one keeping to its own patch of the city.</p>
+      </div>
+      <figure class="ph ph-wide rv">
+        <div class="ph-frame has-img"><img class="ph-img" src="img/territory.webp" alt="GPS tracks mapping distinct animal territories" /></div>
+        <figcaption class="ph-cap">Tracked movement reveals distinct territories</figcaption>
+      </figure>
     </div>
     <div class="skyline" aria-hidden="true"></div>
   </section>
@@ -301,12 +309,13 @@
 
   <!-- 09 — the vision realized -->
   <section class="slide dark">
-    <div class="wrap" style="text-align:center">
+    <div class="bgphoto" aria-hidden="true"><img src="img/street-dog.jpg" alt="" /></div>
+    <div class="wrap" style="text-align:center;position:relative;z-index:1">
       <div class="eyebrow rv" style="justify-content:center">v-now</div>
       <h2 class="rv">Finally — the app<br>as we always <span class="display-i">saw it</span>.</h2>
       <p class="lead rv" style="margin-left:auto;margin-right:auto;text-align:center">Fast. Gameful. Real. Built around the dogs, the tags, and the people who notice them.</p>
     </div>
-    <div class="skyline" aria-hidden="true"></div>
+    <div class="skyline" aria-hidden="true" style="z-index:1"></div>
   </section>
 
   <!-- 10 — so what is this app (divider) -->
@@ -319,15 +328,16 @@
 
   <!-- 11 — data tells the story -->
   <section class="slide">
-    <div class="wrap">
-      <div class="eyebrow rv">01 — Premise</div>
-      <div class="point rv">
-        <div class="big-num">01</div>
-        <div>
-          <h3>Data tells the story.</h3>
-          <p>Every sighting is a data point — which dog, where, when, what condition. One on its own is a note. Thousands together become a <em class="hl">living portrait</em> of the city's animal life.</p>
-        </div>
+    <div class="wrap split">
+      <div class="col-text">
+        <div class="eyebrow rv">01 — Premise</div>
+        <h2 class="rv">Data tells<br>the <span class="display-i">story</span>.</h2>
+        <p class="lead rv">Every sighting is a data point — which dog, where, when, what condition. One on its own is a note. Thousands together become a <em class="hl">living portrait</em> of the city's animal life.</p>
       </div>
+      <figure class="ph rv">
+        <div class="ph-frame has-img shot"><img class="ph-img" src="img/dog-route.jpg" alt="One dog's tracked daily route across Tbilisi with timed stops" /></div>
+        <figcaption class="ph-cap">One dog's day, as data — 8.4 km, café and park stops</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -398,7 +408,7 @@
       <div class="eyebrow rv">The payoff</div>
       <h2 class="rv">Results: a city<br>that <span class="display-i">maps itself</span>.</h2>
       <p class="lead rv">Crowd-sourced sightings become a living territory map — like the range maps drawn for wolf packs, but charted by a whole city.</p>
-      <figure class="ph ph-wide rv d2" style="margin-top:26px">
+      <figure class="ph ph-wide rv d2" style="margin:16px auto 0;max-width:540px;width:100%">
         <div class="ph-frame has-img"><img class="ph-img" src="img/dogmap.jpg" alt="The Street Dog App's observed dog-territory map of Tbilisi" /></div>
         <figcaption class="ph-cap">Observed dog territories across Tbilisi — drawn from real sightings</figcaption>
       </figure>
@@ -425,7 +435,7 @@
   <section class="slide title-slide">
     <div class="wrap">
       <img class="logo rv" src="logo.png" alt="The Street Dog App" style="width:clamp(140px,18vw,210px)" />
-      <h2 class="rv">Let's map the lives of<br>Tbilisi's dogs — <span class="display-i">together</span>.</h2>
+      <h2 class="rv">Let's map the lives<br>of <span class="display-i">Tbilisi's dogs</span>.</h2>
       <div class="title-sub rv">thestreetdogapp.com &nbsp;·&nbsp; hello@developers-alliance.com</div>
     </div>
     <div class="skyline" aria-hidden="true"></div>
