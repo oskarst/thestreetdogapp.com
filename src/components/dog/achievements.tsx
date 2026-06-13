@@ -71,12 +71,17 @@ export function Achievements({ achievements, score }: AchievementsProps) {
           <span className="text-green-deep">
             {t("ptTotal", { n: score.total_score })}
           </span>
-          <ChevronDown
+          <span
             className={cn(
-              "size-3.5 transition-transform",
-              open && "rotate-180"
+              "grid place-items-center size-7 rounded-full shrink-0 transition-all",
+              "bg-ink text-background group-hover:brightness-125 group-active:scale-95",
+              !open && "animate-pulse-soft"
             )}
-          />
+          >
+            <ChevronDown
+              className={cn("size-4 transition-transform", open && "rotate-180")}
+            />
+          </span>
         </span>
       </button>
 
