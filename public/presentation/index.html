@@ -26,7 +26,9 @@
     color:var(--ink);
     font-family:var(--serif);
     -webkit-font-smoothing:antialiased;
-    scroll-snap-type:y mandatory;
+    /* proximity (not mandatory) + no scroll-snap-stop so a content-heavy
+       slide taller than the viewport can never trap the scroll. */
+    scroll-snap-type:y proximity;
     overflow-x:hidden;
   }
   /* film grain + vignette atmosphere */
@@ -42,9 +44,10 @@
   /* ---------- slides ---------- */
   .deck{position:relative;z-index:1}
   section.slide{
-    min-height:100svh;scroll-snap-align:start;scroll-snap-stop:always;
+    min-height:100svh;scroll-snap-align:start;
     display:flex;flex-direction:column;justify-content:center;
-    padding:clamp(28px,6vw,110px);position:relative;overflow:hidden;
+    padding:clamp(28px,6vw,110px) clamp(28px,6vw,110px) clamp(40px,7vw,120px);
+    position:relative;overflow-x:clip;
   }
   .wrap{width:100%;max-width:1180px;margin:0 auto}
 
@@ -73,6 +76,9 @@
   .accent{color:var(--accent)}
   em.hl{font-style:italic;color:var(--ink)}
   .rule{width:64px;height:2px;background:var(--ink);margin:30px 0}
+  .stat{font-family:var(--serif);font-weight:500;font-size:clamp(3.2rem,15vw,11rem);line-height:.88;letter-spacing:-.045em}
+  .stat .dash{font-weight:300;opacity:.55;padding:0 .06em}
+  .stat .unit{display:block;font-family:var(--mono);font-weight:500;font-size:clamp(11px,1.3vw,15px);letter-spacing:.34em;text-transform:uppercase;opacity:.7;margin-top:24px}
 
   /* ---------- title ---------- */
   .title-slide{align-items:center;text-align:center}
@@ -219,6 +225,16 @@
       <div class="eyebrow rv">Field note 03</div>
       <h2 class="rv">Each one had a <span class="display-i">territory</span>.<br>And a <span class="display-i">story</span>.</h2>
       <p class="lead rv">The dog by the bakery. The one who escorts kids across the road. They are known, named, and local — a cast of regulars the whole neighbourhood recognises.</p>
+    </div>
+    <div class="skyline" aria-hidden="true"></div>
+  </section>
+
+  <!-- 04b — the scale -->
+  <section class="slide dark">
+    <div class="wrap" style="text-align:center">
+      <div class="eyebrow rv" style="justify-content:center">The scale</div>
+      <div class="stat rv">20,000<span class="dash">–</span>50,000<span class="unit">stray dogs in Tbilisi</span></div>
+      <p class="lead rv" style="margin:26px auto 0;text-align:center">By different accounts — a whole population living in plain sight, and mostly unmeasured.</p>
     </div>
     <div class="skyline" aria-hidden="true"></div>
   </section>
