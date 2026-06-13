@@ -118,6 +118,9 @@
   .ph-frame.has-img{background:#0c0c0c;border-color:rgba(18,17,16,.3)}
   .ph-frame.has-img::before,.ph-frame.has-img::after{display:none}
   .ph-frame.contain .ph-img{object-fit:contain}
+  /* UI screenshots: show the whole screen on a light letterbox */
+  .ph-frame.shot{background:var(--paper-2);border-color:var(--line)}
+  .ph-frame.shot .ph-img{object-fit:contain}
 
   /* ---------- lists / numbered points ---------- */
   .big-num{font-family:var(--mono);font-weight:700;font-size:clamp(2.4rem,6vw,4.4rem);line-height:1;color:var(--ink)}
@@ -247,9 +250,9 @@
         <h2 class="rv">Then the world<br>started <span class="display-i">collecting</span>.</h2>
         <p class="lead rv">Location games — Pokémon GO and its kin — turned whole cities into a board. Go outside. Find them. Catch them. Log them. Millions were hooked.</p>
       </div>
-      <figure class="ph rv">
-        <div class="ph-frame has-img contain"><img class="ph-img" src="img/pokemon.png" alt="Pokémon GO augmented-reality gameplay" /></div>
-        <figcaption class="ph-cap">Pokémon GO · AR capture · © Niantic (fair use)</figcaption>
+      <figure class="ph ph-wide rv">
+        <div class="ph-frame has-img"><img class="ph-img" src="img/pokemon-go.webp" alt="Pokémon GO — a creature in augmented reality on a city street" /></div>
+        <figcaption class="ph-cap">Pokémon GO · © Niantic (fair use)</figcaption>
       </figure>
     </div>
   </section>
@@ -263,8 +266,8 @@
         <p class="lead rv">Tagged through the city's vaccinate-and-neuter program, each ear carries a unique number. The "creatures" are <em class="hl">real</em> — and already <em class="hl">identifiable</em>.</p>
       </div>
       <figure class="ph rv">
-        <div class="ph-frame has-img"><img class="ph-img" src="img/eartag.jpg" alt="Street dog with an ear-tag notch after sterilisation" /></div>
-        <figcaption class="ph-cap">Ear-marked street dog · CC BY-SA 4.0 (Wikimedia)</figcaption>
+        <div class="ph-frame has-img"><img class="ph-img" src="img/eartag.jpg" alt="Street dog wearing a numbered ear tag" /></div>
+        <figcaption class="ph-cap">A numbered ear tag — every dog already has a unique ID</figcaption>
       </figure>
     </div>
   </section>
@@ -277,9 +280,9 @@
         <h2 class="rv">So we built the<br><span class="display-i">first version</span>.</h2>
         <p class="lead rv">It worked. People could log a dog. But the interface was limited — the idea kept outrunning the tool.</p>
       </div>
-      <figure class="ph ph-wide rv">
-        <div class="ph-frame"><span class="ph-tag">Screenshot · v0.1</span></div>
-        <figcaption class="ph-cap">[ early app, limited UI ]</figcaption>
+      <figure class="ph rv">
+        <div class="ph-frame has-img shot"><img class="ph-img" src="img/old-app.png" alt="The first version of the app — a plain list of dogs" /></div>
+        <figcaption class="ph-cap">v0.1 — functional, but a plain list</figcaption>
       </figure>
     </div>
   </section>
@@ -352,8 +355,8 @@
       <h2 class="rv">Gamification.</h2>
       <p class="lead rv">The same loop that hooked millions — pointed at something that actually matters.</p>
       <div class="cols3 rv d2" style="grid-template-columns:1fr 1fr">
-        <figure class="ph ph-wide"><div class="ph-frame has-img contain"><img class="ph-img" src="img/pokemon.png" alt="Pokémon GO gameplay" /></div><figcaption class="ph-cap">Pokémon GO · © Niantic (fair use)</figcaption></figure>
-        <figure class="ph ph-wide"><div class="ph-frame"><span class="ph-tag">Screenshot · App</span></div><figcaption class="ph-cap">[ The Street Dog App ]</figcaption></figure>
+        <figure class="ph ph-wide"><div class="ph-frame has-img"><img class="ph-img" src="img/pokemon-go.webp" alt="Pokémon GO" /></div><figcaption class="ph-cap">Pokémon GO — collect imaginary creatures</figcaption></figure>
+        <figure class="ph ph-wide"><div class="ph-frame has-img"><img class="ph-img" src="img/our-app.jpg" alt="The Street Dog App beside a real street dog" /></div><figcaption class="ph-cap">The Street Dog App — find real dogs that need help</figcaption></figure>
       </div>
     </div>
   </section>
@@ -379,9 +382,9 @@
         <h2 class="rv">XP — that<br>could become <span class="display-i">good</span>.</h2>
         <p class="lead rv">Every contribution earns experience and rank. The plan: let XP convert into <em class="hl accent">donations</em> — turning play into food, vaccines, and care for the dogs being mapped.</p>
       </div>
-      <figure class="ph ph-wide rv">
-        <div class="ph-frame"><span class="ph-tag">Screenshot · XP</span></div>
-        <figcaption class="ph-cap">[ levels &amp; ranks ]</figcaption>
+      <figure class="ph rv">
+        <div class="ph-frame has-img shot"><img class="ph-img" src="img/new-app.png" alt="The app's researcher level, rank and leaderboard" /></div>
+        <figcaption class="ph-cap">Researcher level, rank &amp; leaderboard</figcaption>
       </figure>
     </div>
   </section>
