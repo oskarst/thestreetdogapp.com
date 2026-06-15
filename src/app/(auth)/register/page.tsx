@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { z } from "zod/v4";
@@ -27,6 +27,10 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
+  // Synchronous guard against a double-submit (a second click/Enter or a fast
+  // re-render) firing a second signUp — the first creates the account, the
+  // second would error "already registered" for a brand-new email.
+  const submitting = useRef(false);
 
   function update(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -53,9 +57,19 @@ export default function RegisterPage() {
       return;
     }
 
+    if (submitting.current) return;
+    submitting.current = true;
     setLoading(true);
+
     const supabase = createClient();
-    const { data, error } = await supabase.auth.signUp({
+
+    function fail(message: string) {
+      setErrors({ form: message });
+      submitting.current = false;
+      setLoading(false);
+    }
+
+    const { error } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
       options: {
@@ -66,31 +80,35 @@ export default function RegisterPage() {
     if (error) {
       const lower = error.message.toLowerCase();
       if (lower.includes("rate limit")) {
-        setErrors({
-          form: "Too many attempts. Please try again in a few minutes.",
-        });
-      } else if (
+        return fail("Too many attempts. Please try again in a few minutes.");
+      }
+      const taken =
         lower.includes("already registered") ||
         lower.includes("already been registered") ||
-        lower.includes("user already")
-      ) {
-        // Surface the one error worth surfacing: the email is taken, so
-        // there's nothing for the user to do here but sign in instead.
-        setErrors({
-          form: "That email is already registered. Try signing in instead.",
-        });
-      } else {
-        setErrors({ form: "Something went wrong. Please try again." });
+        lower.includes("user already");
+      if (!taken) {
+        return fail("Something went wrong. Please try again.");
       }
-      setLoading(false);
-      return;
+      // "Already registered" on a brand-new email is almost always a
+      // double-submit or a network retry of THIS user's own signup — the
+      // first request already created the account. Try to sign in with the
+      // password they just entered: if it works the account is theirs and we
+      // continue; if not, it's a genuinely different existing account.
+      const { error: signinErr } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+      if (signinErr) {
+        return fail(
+          "That email is already registered. Try signing in instead."
+        );
+      }
     }
 
-    // Easiest possible signup: no email-confirmation gate. When Supabase
-    // email confirmation is OFF, signUp returns a live session and the user
-    // is already logged in. If it's ON (no session returned), fall back to
-    // an explicit password sign-in so the user still lands logged in.
-    if (!data.session) {
+    // Make sure we're signed in (confirmation-OFF: signUp already returns a
+    // session; this also covers the recovery path above).
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData.session) {
       await supabase.auth.signInWithPassword({
         email: form.email,
         password: form.password,
