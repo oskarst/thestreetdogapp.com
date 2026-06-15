@@ -8,11 +8,17 @@ import "leaflet/dist/leaflet.css";
 interface LocationPickerProps {
   onChange: (pos: { lat: number; lng: number }) => void;
   initialPosition?: { lat: number; lng: number };
+  /** Where to centre the map before GPS / a pick arrives. Defaults to Tbilisi. */
+  fallbackCenter?: { lat: number; lng: number };
 }
 
 const TBILISI = { lat: 41.7151, lng: 44.8271 };
 
-function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps) {
+function LocationPickerInner({
+  onChange,
+  initialPosition,
+  fallbackCenter,
+}: LocationPickerProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
@@ -42,7 +48,7 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
         shadowUrl: "/leaflet/marker-shadow.png",
       });
 
-      const center = initialPosition ?? TBILISI;
+      const center = initialPosition ?? fallbackCenter ?? TBILISI;
       const map = L.map(mapRef.current!, {
         center: [center.lat, center.lng],
         zoom: 16,
@@ -91,7 +97,7 @@ function LocationPickerInner({ onChange, initialPosition }: LocationPickerProps)
         markerRef.current = null;
       }
     };
-  }, [initialPosition]);
+  }, [initialPosition, fallbackCenter]);
 
   // Auto-detect GPS location after map is ready
   useEffect(() => {

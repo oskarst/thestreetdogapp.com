@@ -1,6 +1,8 @@
 import dynamic from "next/dynamic";
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
+import { DEFAULT_CITY } from "@/lib/cities";
+import { getViewerMissionAccess } from "@/lib/viewer-city";
 import { type DogMarker } from "@/types/database";
 import {
   getChunks,
@@ -163,12 +165,20 @@ export default async function MapPage({
       ? []
       : dogs;
 
+  // Centre the plain map on the viewer's city (Tbilisi fallback).
+  const { city } = await getViewerMissionAccess();
+  const mapCenter = city?.center ?? DEFAULT_CITY.center;
+
   return (
     <div
       className="w-full relative z-0"
       style={{ height: "calc(100vh - 56px - 64px)" }}
     >
-      <DogMap dogs={visibleDogs} mission={missionContext} />
+      <DogMap
+        dogs={visibleDogs}
+        mission={missionContext}
+        center={missionContext ? undefined : mapCenter}
+      />
     </div>
   );
 }

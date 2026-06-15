@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Loader2, WifiOff } from "lucide-react";
+
+import { useViewerLocation } from "@/components/location/location-gate";
 
 import { Input } from "@/components/ui/input";
 import { SectionLabel } from "@/components/ui/section-label";
@@ -36,6 +38,13 @@ export function AddDogForm() {
   const router = useRouter();
   const t = useTranslations("addDog");
   const searchParams = useSearchParams();
+  // Centre the location picker on the viewer's city (Tbilisi fallback) so
+  // users outside Tbilisi don't have to pan across the map before GPS kicks in.
+  const { center } = useViewerLocation();
+  const fallbackCenter = useMemo(
+    () => ({ lat: center[0], lng: center[1] }),
+    [center]
+  );
   // Deep-link prefill: /add-dog?earTag=XXX lands here from the Find a
   // Doggo target screen so the user doesn't have to retype the tag.
   const prefilledEarTag = searchParams.get("earTag") ?? "";
@@ -499,6 +508,7 @@ export function AddDogForm() {
       <section ref={sectionRefs.location} className="scroll-mt-24">
         <SectionLabel meta={t("metaGpsLocked")}>{t("location")}</SectionLabel>
         <LocationPicker
+          fallbackCenter={fallbackCenter}
           onChange={(pos) => {
             setLocation(pos);
             clearFieldError("location");

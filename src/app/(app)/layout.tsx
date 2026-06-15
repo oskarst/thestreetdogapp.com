@@ -6,7 +6,9 @@ import { NavProgress } from "@/components/nav/nav-progress";
 import { AuthListener } from "@/components/auth/auth-listener";
 import { PrecachePages } from "@/components/pwa/sw-register";
 import { OfflineBanner } from "@/components/pwa/offline-banner";
+import { LocationGate } from "@/components/location/location-gate";
 import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
+import { getViewerMissionAccess } from "@/lib/viewer-city";
 
 export default async function AppLayout({
   children,
@@ -23,7 +25,10 @@ export default async function AppLayout({
 
   if (!user) redirect("/login");
 
+  const access = await getViewerMissionAccess();
+
   return (
+    <LocationGate initialCitySlug={access.city?.slug ?? null}>
     <div className="flex flex-col min-h-screen">
       {/* NavProgress reads useSearchParams which Next requires to live
           inside a Suspense boundary at the layout level. */}
@@ -39,6 +44,7 @@ export default async function AppLayout({
       <main className="flex-1 overflow-y-auto pb-36">{children}</main>
       <AppFooter />
     </div>
+    </LocationGate>
   );
 }
 

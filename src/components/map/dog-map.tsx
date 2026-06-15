@@ -21,6 +21,7 @@ import { MapSidePanel } from "./map-side-panel";
 import { MissionConfirmModal } from "./mission-confirm-modal";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { DEFAULT_CITY, isInAnyMissionCity } from "@/lib/cities";
 
 interface MissionContext {
   slug: string;
@@ -73,6 +74,8 @@ interface DogMapProps {
   dogs: DogMarker[];
   mission?: MissionContext | null;
   picker?: PickerContext | null;
+  /** Initial map centre [lat, lng] — the viewer's city (Tbilisi fallback). */
+  center?: [number, number];
 }
 
 function localizedMissionName(m: MissionContext): string {
@@ -95,28 +98,11 @@ function localizedChunkName(c: PickerChunk, locale: string): string {
   return `${stem} ${c.index}`;
 }
 
-const TBILISI_CENTER: [number, number] = [41.7151, 44.8271];
 const DEFAULT_ZOOM = 13;
 
-// Generous bbox around Tbilisi's 10 raions (slightly padded on each side
-// so a dog logged on the city border still counts). Anything outside is
-// hidden until the user zooms out past the city scale (zoom < 11).
-const TBILISI_BBOX = {
-  minLat: 41.6,
-  maxLat: 41.88,
-  minLon: 44.55,
-  maxLon: 45.05,
-} as const;
-const TBILISI_FILTER_MIN_ZOOM = 11;
-
-function isInTbilisi(lat: number, lon: number): boolean {
-  return (
-    lat >= TBILISI_BBOX.minLat &&
-    lat <= TBILISI_BBOX.maxLat &&
-    lon >= TBILISI_BBOX.minLon &&
-    lon <= TBILISI_BBOX.maxLon
-  );
-}
+// At city zoom, only show dogs inside a known mission city; zooming out past
+// this reveals dogs everywhere (a global view).
+const CITY_FILTER_MIN_ZOOM = 11;
 
 function createDogIcon(dog: DogMarker): L.DivIcon {
   const initial = dog.names?.[0]?.[0]?.toUpperCase() ?? "🐾";
@@ -141,7 +127,12 @@ function createDogIcon(dog: DogMarker): L.DivIcon {
   });
 }
 
-export default function DogMap({ dogs, mission, picker }: DogMapProps) {
+export default function DogMap({
+  dogs,
+  mission,
+  picker,
+  center = DEFAULT_CITY.center,
+}: DogMapProps) {
   const router = useRouter();
   const tMissions = useTranslations("missions");
   const mapRef = useRef<HTMLDivElement>(null);
@@ -167,7 +158,9 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
     () =>
       showOutsideTbilisi
         ? dogs
-        : dogs.filter((d) => isInTbilisi(d.last_latitude, d.last_longitude)),
+        : dogs.filter((d) =>
+            isInAnyMissionCity(d.last_latitude, d.last_longitude)
+          ),
     [dogs, showOutsideTbilisi]
   );
 
@@ -203,7 +196,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
     if (!mapRef.current || mapInstanceRef.current) return;
 
     const map = L.map(mapRef.current, {
-      center: TBILISI_CENTER,
+      center,
       zoom: DEFAULT_ZOOM,
       zoomControl: true,
       attributionControl: false,
@@ -252,7 +245,7 @@ export default function DogMap({ dogs, mission, picker }: DogMapProps) {
     // city scale. Wired here so the listener is registered once per map
     // instance lifetime.
     const handleZoomEnd = () => {
-      setShowOutsideTbilisi(map.getZoom() < TBILISI_FILTER_MIN_ZOOM);
+      setShowOutsideTbilisi(map.getZoom() < CITY_FILTER_MIN_ZOOM);
     };
     map.on("zoomend", handleZoomEnd);
 

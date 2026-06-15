@@ -2,11 +2,16 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth-cache";
+import { getViewerMissionAccess } from "@/lib/viewer-city";
 import { Icon } from "@/components/ui/icon";
 
 export default async function MissionsStartPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  // Missions only exist in supported cities; outside them, send to dashboard.
+  const { inMissionCity, showChunkMissions } = await getViewerMissionAccess();
+  if (!inMissionCity) redirect("/dashboard");
 
   // The chooser is the missions hub: it lists the startable mission types.
   // We deliberately do NOT auto-redirect into an active Find Doggo here —
@@ -51,30 +56,32 @@ export default async function MissionsStartPage() {
         </div>
       </Link>
 
-      <Link
-        href="/map?picker=1"
-        className="card-soft block w-full px-4 py-4 no-underline text-inherit transition-colors hover:border-ink/30"
-      >
-        <div className="flex items-start gap-3">
-          <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-ink text-background">
-            <Icon name="pin" size={28} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
-              {t("chooserMapTitle")}
+      {showChunkMissions && (
+        <Link
+          href="/map?picker=1"
+          className="card-soft block w-full px-4 py-4 no-underline text-inherit transition-colors hover:border-ink/30"
+        >
+          <div className="flex items-start gap-3">
+            <div className="grid place-items-center size-12 rounded-2xl shrink-0 bg-ink text-background">
+              <Icon name="pin" size={28} />
             </div>
-            <div className="text-[17.6px] font-semibold leading-tight mt-1">
-              {t("openMapPicker")}
+            <div className="flex-1 min-w-0">
+              <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
+                {t("chooserMapTitle")}
+              </div>
+              <div className="text-[17.6px] font-semibold leading-tight mt-1">
+                {t("openMapPicker")}
+              </div>
+              <p className="text-[14.3px] text-muted-foreground leading-snug mt-1.5">
+                {t("chooserMapBody")}
+              </p>
             </div>
-            <p className="text-[14.3px] text-muted-foreground leading-snug mt-1.5">
-              {t("chooserMapBody")}
-            </p>
+            <span className="font-mono text-lg text-muted-foreground shrink-0">
+              ›
+            </span>
           </div>
-          <span className="font-mono text-lg text-muted-foreground shrink-0">
-            ›
-          </span>
-        </div>
-      </Link>
+        </Link>
+      )}
 
       <Link
         href="/missions/find-doggo"

@@ -23,12 +23,14 @@ import {
   isDailyQuestClaimedToday,
 } from "@/lib/dashboard";
 import { time } from "@/lib/perf";
+import { getViewerMissionAccess } from "@/lib/viewer-city";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
   const t = await getTranslations("dashboard");
+  const { showChunkMissions } = await getViewerMissionAccess();
 
   // Two real network calls: the composite dashboard RPC (dogs + favorites
   // + caught_ids + score) and the user's sightings (for streak + quest).
@@ -86,16 +88,18 @@ export default async function DashboardPage() {
       {questComplete && (
         <DailyQuest complete={questComplete} claimedToday={questClaimedToday} />
       )}
-      {/* MissionsBlock does its own profile + completions round-trips, so
-          let it stream in independently while the rest of the dashboard
-          paints. Falls back to a slim placeholder card. */}
-      <Suspense
-        fallback={
-          <div className="rounded-2xl border border-rule bg-muted/50 h-24 animate-pulse" />
-        }
-      >
-        <MissionsBlock />
-      </Suspense>
+      {/* MissionsBlock is the chunk-based map-domination mission — only shown
+          for cities that have mission chunks (Tbilisi). Streams in
+          independently; falls back to a slim placeholder card. */}
+      {showChunkMissions && (
+        <Suspense
+          fallback={
+            <div className="rounded-2xl border border-rule bg-muted/50 h-24 animate-pulse" />
+          }
+        >
+          <MissionsBlock />
+        </Suspense>
+      )}
       {/* Leaderboard sits directly under missions — own round-trip, streams in
           independently. */}
       <Suspense

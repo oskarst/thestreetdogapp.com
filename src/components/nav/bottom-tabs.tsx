@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Icon, type IconName } from "@/components/ui/icon";
+import { useViewerLocation } from "@/components/location/location-gate";
 import { cn } from "@/lib/utils";
 
 interface Tab {
@@ -18,6 +19,7 @@ export function BottomTabs() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("nav");
+  const { inMissionCity } = useViewerLocation();
 
   const tabs: Tab[] = [
     { href: "/dashboard", label: t("dogs"), icon: "home" },
@@ -28,15 +30,20 @@ export function BottomTabs() {
       isMatch: (p, q) =>
         (p === "/map" || p.startsWith("/map/")) && q.get("picker") !== "1",
     },
-    {
-      // Missions tab opens the mission-type chooser (Find a Doggo / map
-      // mission), not the map picker or the district list directly.
-      href: "/missions/start",
-      label: t("missions"),
-      icon: "flag",
-      isMatch: (p, q) =>
-        p.startsWith("/missions") || (p === "/map" && q.get("picker") === "1"),
-    },
+    // Missions tab only appears for users in a mission city (it opens the
+    // chooser: Free Roam / Find a Doggo / map mission).
+    ...(inMissionCity
+      ? [
+          {
+            href: "/missions/start",
+            label: t("missions"),
+            icon: "flag" as IconName,
+            isMatch: (p: string, q: URLSearchParams) =>
+              p.startsWith("/missions") ||
+              (p === "/map" && q.get("picker") === "1"),
+          },
+        ]
+      : []),
     { href: "/gallery", label: t("gallery"), icon: "image" },
   ];
 
