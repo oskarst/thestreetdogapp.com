@@ -29,7 +29,7 @@ const TERMS: Record<string, TermsContent> = {
   en: {
     title: "Terms & Conditions",
     intro: "Please read this before you sign up and start logging street dogs.",
-    lastUpdated: "Last updated: 11 June 2026",
+    lastUpdated: "Last updated: 15 June 2026",
     back: "← Back",
     footer:
       "By creating an account you confirm that you have read and agree to these Terms.",
@@ -173,13 +173,17 @@ const TERMS: Record<string, TermsContent> = {
           {
             type: "ul",
             items: [
-              "Your **username (nickname)** — for example next to dogs you registered and on the leaderboard.",
+              "Your **username (nickname)** — for example next to dogs you registered and on the leaderboard. It also appears in **map data**, next to dogs and sightings you logged. By using Street Dog you agree that your nickname may appear in this map data.",
               "The **dog data points** you create — the dogs you log, their photos, locations, and sighting details — are shared so the whole community can find and help those dogs.",
             ],
           },
           {
             type: "p",
-            text: "Your email and password are never shown to other users. You can export or delete your dog data at any time from your account settings.",
+            text: "**Open data.** At least once every quarter, we publish **anonymised** dog data — such as the dogs logged, their locations, and sighting details — as **open data**, so researchers, animal-welfare groups, and the public can use it for good. This open data is stripped of anything that identifies you personally: it never includes your email or password.",
+          },
+          {
+            type: "p",
+            text: "**Your control.** You stay in control of your own dog data. You can export it or delete it at any time from your account settings. Your email and password are never shown to other users.",
           },
         ],
       },
@@ -199,7 +203,7 @@ const TERMS: Record<string, TermsContent> = {
     title: "წესები და პირობები",
     intro:
       "გთხოვთ, წაიკითხოთ ეს რეგისტრაციამდე და ქუჩის ძაღლების აღრიცხვის დაწყებამდე.",
-    lastUpdated: "ბოლო განახლება: 2026 წლის 11 ივნისი",
+    lastUpdated: "ბოლო განახლება: 2026 წლის 15 ივნისი",
     back: "← უკან",
     footer:
       "ანგარიშის შექმნით თქვენ ადასტურებთ, რომ წაიკითხეთ და ეთანხმებით ამ პირობებს.",
@@ -343,13 +347,17 @@ const TERMS: Record<string, TermsContent> = {
           {
             type: "ul",
             items: [
-              "თქვენი **მომხმარებლის სახელი (მეტსახელი)** — მაგალითად, თქვენ მიერ რეგისტრირებული ძაღლების გვერდით და ლიდერბორდზე.",
+              "თქვენი **მომხმარებლის სახელი (მეტსახელი)** — მაგალითად, თქვენ მიერ რეგისტრირებული ძაღლების გვერდით და ლიდერბორდზე. ის ასევე ჩანს **რუკის მონაცემებში**, თქვენ მიერ აღრიცხული ძაღლებისა და დაკვირვებების გვერდით. Street Dog-ის გამოყენებით თქვენ ეთანხმებით, რომ თქვენი მეტსახელი შესაძლოა გამოჩნდეს ამ რუკის მონაცემებში.",
               "**ძაღლების მონაცემები**, რომლებსაც ქმნით — აღრიცხული ძაღლები, მათი ფოტოები, მდებარეობები და დაკვირვების დეტალები — ზიარდება, რათა მთელმა საზოგადოებამ შეძლოს ამ ძაღლების მოძებნა და დახმარება.",
             ],
           },
           {
             type: "p",
-            text: "თქვენი ელფოსტა და პაროლი არასოდეს ეჩვენება სხვა მომხმარებლებს. თქვენ ნებისმიერ დროს შეგიძლიათ ექსპორტი გაუკეთოთ ან წაშალოთ თქვენი ძაღლების მონაცემები ანგარიშის პარამეტრებიდან.",
+            text: "**ღია მონაცემები.** კვარტალში ერთხელ მაინც ჩვენ ვაქვეყნებთ **ანონიმიზებულ** ძაღლების მონაცემებს — როგორიცაა აღრიცხული ძაღლები, მათი მდებარეობები და დაკვირვების დეტალები — როგორც **ღია მონაცემებს**, რათა მკვლევრებმა, ცხოველთა კეთილდღეობის ჯგუფებმა და საზოგადოებამ შეძლონ მათი საზოგადო სასიკეთო გამოყენება. ეს ღია მონაცემები გასუფთავებულია ყველაფრისგან, რაც თქვენ პირადად გაიდენტიფიცირებთ: ის არასოდეს მოიცავს თქვენს ელფოსტას ან პაროლს.",
+          },
+          {
+            type: "p",
+            text: "**თქვენი კონტროლი.** თქვენ ინარჩუნებთ კონტროლს თქვენს ძაღლების მონაცემებზე. ნებისმიერ დროს შეგიძლიათ მათი ექსპორტი ან წაშლა ანგარიშის პარამეტრებიდან. თქვენი ელფოსტა და პაროლი არასოდეს ეჩვენება სხვა მომხმარებლებს.",
           },
         ],
       },
@@ -369,7 +377,7 @@ const TERMS: Record<string, TermsContent> = {
     title: "Условия использования",
     intro:
       "Пожалуйста, прочитайте это перед регистрацией и началом учёта уличных собак.",
-    lastUpdated: "Последнее обновление: 11 июня 2026 г.",
+    lastUpdated: "Последнее обновление: 15 июня 2026 г.",
     back: "← Назад",
     footer:
       "Создавая аккаунт, вы подтверждаете, что прочитали и согласны с этими Условиями.",
@@ -513,13 +521,17 @@ const TERMS: Record<string, TermsContent> = {
           {
             type: "ul",
             items: [
-              "Ваше **имя пользователя (никнейм)** — например, рядом с собаками, которых вы зарегистрировали, и в таблице лидеров.",
+              "Ваше **имя пользователя (никнейм)** — например, рядом с собаками, которых вы зарегистрировали, и в таблице лидеров. Оно также появляется в **данных карты**, рядом с собаками и наблюдениями, которые вы добавили. Используя Street Dog, вы соглашаетесь, что ваш никнейм может появляться в этих данных карты.",
               "**Данные о собаках**, которые вы создаёте, — собаки, которых вы регистрируете, их фотографии, местоположения и детали наблюдений — публикуются, чтобы всё сообщество могло находить этих собак и помогать им.",
             ],
           },
           {
             type: "p",
-            text: "Ваша электронная почта и пароль никогда не показываются другим пользователям. Вы можете в любой момент экспортировать или удалить данные о ваших собаках в настройках аккаунта.",
+            text: "**Открытые данные.** Не реже одного раза в квартал мы публикуем **обезличенные** данные о собаках — такие как зарегистрированные собаки, их местоположения и детали наблюдений — в виде **открытых данных**, чтобы исследователи, зоозащитные организации и общество могли использовать их во благо. Эти открытые данные очищены от всего, что позволяет идентифицировать вас лично: они никогда не включают вашу электронную почту или пароль.",
+          },
+          {
+            type: "p",
+            text: "**Ваш контроль.** Вы сохраняете контроль над своими данными о собаках. Вы можете в любой момент экспортировать или удалить их в настройках аккаунта. Ваша электронная почта и пароль никогда не показываются другим пользователям.",
           },
         ],
       },
