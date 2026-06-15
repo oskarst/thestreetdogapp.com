@@ -216,7 +216,27 @@ export default function RegisterPage() {
         )}
 
         {errors.form && (
-          <p className="text-sm text-destructive mb-2">{errors.form}</p>
+          <div className="mb-2">
+            <p className="text-sm text-destructive">{errors.form}</p>
+            {errors.form.includes("already registered") && (
+              <p className="text-sm text-muted-foreground mt-1">
+                <Link
+                  href="/login"
+                  className="text-ink underline underline-offset-[3px] font-medium"
+                >
+                  Sign in
+                </Link>{" "}
+                or{" "}
+                <Link
+                  href="/reset-password"
+                  className="text-ink underline underline-offset-[3px] font-medium"
+                >
+                  reset your password
+                </Link>
+                .
+              </p>
+            )}
+          </div>
         )}
 
         <PrimaryAuthButton type="submit" loading={loading}>
