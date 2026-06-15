@@ -54,10 +54,11 @@ export function AddDogForm() {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
-  // Friendliness/character is hidden from the UI for now to keep the form
-  // simple, but the column is still required, so we always submit a sensible
-  // default.
-  const [character] = useState<DogCharacter>("friendly");
+  // Character is captured only as a safety flag: an "aggressive" checkbox.
+  // Unchecked submits the neutral default; checked marks the dog aggressive so
+  // others are warned to keep their distance.
+  const [aggressive, setAggressive] = useState(false);
+  const character: DogCharacter = aggressive ? "aggressive" : "friendly";
   const [size, setSize] = useState(DEFAULT_SIZE);
   const [gender, setGender] = useState<DogGender | "">("");
   const [age, setAge] = useState<DogAge | "">("");
@@ -554,6 +555,26 @@ export function AddDogForm() {
             {fieldErrors.age}
           </p>
         )}
+      </section>
+
+      <section>
+        <SectionLabel meta={t("metaSafety")}>{t("behaviour")}</SectionLabel>
+        <label className="flex items-center gap-3 rounded-xl border border-rule-2 bg-card px-3.5 py-3 cursor-pointer select-none has-[:checked]:border-amber-brand has-[:checked]:bg-amber-soft transition-colors">
+          <input
+            type="checkbox"
+            checked={aggressive}
+            onChange={(e) => setAggressive(e.target.checked)}
+            className="size-4 shrink-0 accent-[var(--amber-brand)]"
+          />
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-ink">
+              {t("aggressiveDog")}
+            </div>
+            <div className="text-[12.5px] leading-snug text-muted-foreground">
+              {t("aggressiveDogHint")}
+            </div>
+          </div>
+        </label>
       </section>
 
       <section>
