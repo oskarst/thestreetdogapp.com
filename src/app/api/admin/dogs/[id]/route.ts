@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyAdmin } from "@/lib/admin-auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isUUID } from "@/lib/validate";
-import { CITY_SLUGS } from "@/lib/cities";
 import type {
   DogAge,
   DogCharacter,
@@ -256,13 +255,14 @@ export async function PATCH(
   }
 
   // city_slug — admin override of the auto-derived city. null clears it;
-  // otherwise must be a known city slug (or "other").
+  // otherwise any slug-formatted value (cities are dynamic now: geocoded
+  // slugs like "rustavi" are valid, not just the hardcoded ones).
   if ("city_slug" in body) {
     const v = body.city_slug;
     if (v === null || v === "") {
       update.city_slug = null;
-    } else if (typeof v === "string" && CITY_SLUGS.includes(v)) {
-      update.city_slug = v;
+    } else if (typeof v === "string" && /^[a-z0-9-]{1,64}$/.test(v.trim())) {
+      update.city_slug = v.trim();
     } else {
       return NextResponse.json({ error: "Invalid city" }, { status: 400 });
     }
