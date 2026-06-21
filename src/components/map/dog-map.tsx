@@ -145,6 +145,11 @@ export default function DogMap({
   const overlayLayerRef = useRef<L.LayerGroup | null>(null);
   const userMarkerRef = useRef<L.Marker | null>(null);
   const hasFitBoundsRef = useRef(false);
+  // Persistent marker registry so we add/remove only the delta instead of
+  // clearing + rebuilding the whole cluster on every visibility change (which
+  // made markers flash out and back in when crossing the zoom threshold).
+  const markersRef = useRef<Map<string, L.Marker>>(new Map());
+  const inClusterRef = useRef<Set<string>>(new Set());
   const [selectedDog, setSelectedDog] = useState<DogMarker | null>(null);
 
   const handleClose = useCallback(() => setSelectedDog(null), []);
@@ -265,6 +270,10 @@ export default function DogMap({
       overlayLayerRef.current = null;
       pickerLayerRef.current = null;
       hasFitBoundsRef.current = false;
+      // Registry markers belong to the destroyed map; drop them so a remount
+      // rebuilds against the fresh cluster.
+      markersRef.current.clear();
+      inClusterRef.current.clear();
     };
   }, []);
 
@@ -483,18 +492,36 @@ export default function DogMap({
     const clusterGroup = clusterGroupRef.current;
     if (!map || !clusterGroup) return;
 
-    clusterGroup.clearLayers();
+    // Sync the cluster to visibleDogs by delta — keep markers that should
+    // stay (no flash), remove only those now hidden, add only the new ones.
+    const desired = new Map(visibleDogs.map((d) => [d.id, d]));
 
-    const markers = visibleDogs.map((dog) => {
-      const marker = L.marker([dog.last_latitude, dog.last_longitude], {
-        icon: createDogIcon(dog),
-        title: dog.names?.[0] ?? "Unnamed Dog",
-      });
-      marker.on("click", () => setSelectedDog(dog));
-      return marker;
-    });
+    const toRemove: L.Marker[] = [];
+    for (const id of inClusterRef.current) {
+      if (!desired.has(id)) {
+        const m = markersRef.current.get(id);
+        if (m) toRemove.push(m);
+        inClusterRef.current.delete(id);
+      }
+    }
+    if (toRemove.length > 0) clusterGroup.removeLayers(toRemove);
 
-    if (markers.length > 0) clusterGroup.addLayers(markers);
+    const toAdd: L.Marker[] = [];
+    for (const [id, dog] of desired) {
+      if (inClusterRef.current.has(id)) continue;
+      let marker = markersRef.current.get(id);
+      if (!marker) {
+        marker = L.marker([dog.last_latitude, dog.last_longitude], {
+          icon: createDogIcon(dog),
+          title: dog.names?.[0] ?? "Unnamed Dog",
+        });
+        marker.on("click", () => setSelectedDog(dog));
+        markersRef.current.set(id, marker);
+      }
+      toAdd.push(marker);
+      inClusterRef.current.add(id);
+    }
+    if (toAdd.length > 0) clusterGroup.addLayers(toAdd);
 
     if (!hasFitBoundsRef.current && visibleDogs.length > 0) {
       const bounds = L.latLngBounds(
