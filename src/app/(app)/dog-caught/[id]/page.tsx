@@ -20,11 +20,15 @@ interface DogCaughtPageProps {
   }>;
 }
 
+// Rebalanced scale (migrations 027/031): Pioneer 100, Tracker 65,
+// sighting 35, welfare bonus 15. The `points` query param carries the
+// authoritative value; `bonus` here is the welfare/find extra beyond the
+// base sighting, kept in sync for reference.
 const CATCH_LABELS: Record<string, { eyebrow: string; bonus: number }> = {
-  new: { eyebrow: "+ pioneer find", bonus: 9 }, // 10 base − 1 sighting
-  first_catch: { eyebrow: "+ tracker find", bonus: 4 }, // 5 base − 1 sighting
+  new: { eyebrow: "+ pioneer find", bonus: 65 }, // 100 base − 35 sighting
+  first_catch: { eyebrow: "+ tracker find", bonus: 30 }, // 65 base − 35 sighting
   repeat: { eyebrow: "+ field find", bonus: 0 },
-  untagged: { eyebrow: "+ untagged find", bonus: 2 }, // 1 sighting + 2 welfare
+  untagged: { eyebrow: "+ untagged find", bonus: 15 }, // 35 sighting + 15 welfare
 };
 
 export default async function DogCaughtPage({

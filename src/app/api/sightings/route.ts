@@ -432,23 +432,26 @@ export async function POST(request: Request) {
       throw sightingErr;
     }
 
-    // Calculate points. Untagged finds don't mint Pioneer / Tracker
-    // bonuses — without an ear tag we can't deduplicate, so each is just
-    // a +1 sighting plus the +2 welfare bonus from migration 007/012.
+    // Calculate the per-catch celebration number shown on /dog-caught.
+    // These mirror the rebalanced scale in get_user_score (migrations
+    // 027/031): Pioneer 100, Tracker 65, sighting 35, welfare bonus 15.
+    // Untagged finds don't mint Pioneer / Tracker — without an ear tag we
+    // can't deduplicate, so each is just the +35 sighting plus the +15
+    // welfare bonus (migration 007/012, rescaled) = 50.
     let points: number;
     let catchType: "new" | "first_catch" | "repeat" | "untagged";
 
     if (isNewDog && !earTagId) {
-      points = 3;
+      points = 50;
       catchType = "untagged";
     } else if (isNewDog) {
-      points = 10;
+      points = 100;
       catchType = "new";
     } else if (isFirstCatch) {
-      points = 5;
+      points = 65;
       catchType = "first_catch";
     } else {
-      points = 1;
+      points = 35;
       catchType = "repeat";
     }
 

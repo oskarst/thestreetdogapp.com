@@ -1,6 +1,7 @@
 {
   "nav": {
     "appName": "The Street Dog App",
+    "back": "Back",
     "dashboard": "Dashboard",
     "map": "Map",
     "gallery": "Gallery",

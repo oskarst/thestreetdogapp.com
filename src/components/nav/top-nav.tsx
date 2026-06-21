@@ -12,6 +12,7 @@ import {
   UserPen,
   KeyRound,
   DatabaseBackup,
+  ChevronLeft,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -75,6 +76,7 @@ export function TopNav({ user }: TopNavProps) {
 
   const initial = user.nickname.charAt(0).toUpperCase();
   const section = sectionFor(pathname);
+  const isDashboard = pathname === "/dashboard";
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -84,9 +86,23 @@ export function TopNav({ user }: TopNavProps) {
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-rule">
       <div className="flex items-center justify-between px-4 h-14">
+        <div className="flex items-center gap-2 min-w-0">
+        {!isDashboard && (
+          <button
+            type="button"
+            onClick={() => router.back()}
+            aria-label={t("back")}
+            className="inline-flex items-center gap-1 rounded-full pl-1.5 pr-2.5 py-1 text-ink bg-muted hover:bg-rule transition-colors shrink-0"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="font-mono text-[12.1px] font-medium tracking-[0.06em] uppercase">
+              {t("back")}
+            </span>
+          </button>
+        )}
         <Link
           href="/dashboard"
-          className="flex items-center gap-2.5 no-underline"
+          className="flex items-center gap-2.5 no-underline min-w-0"
         >
           <Image
             src="/logo.png"
@@ -103,6 +119,7 @@ export function TopNav({ user }: TopNavProps) {
             </span>
           </span>
         </Link>
+        </div>
 
         <div className="flex items-center gap-1 shrink-0">
           {pathname === "/dashboard" && <TourButton userId={user.id} />}

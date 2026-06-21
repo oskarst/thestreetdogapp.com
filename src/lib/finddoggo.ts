@@ -2,7 +2,8 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth-cache";
 
-export const FINDDOGGO_REWARD_XP = 100;
+// Rebalanced to 350 in migration 027 (complete_finddoggo awards +350).
+export const FINDDOGGO_REWARD_XP = 350;
 // 15 is enough sightings to draw a meaningful movement track on the
 // embedded map without overloading the target screen. The "Recent
 // sightings" list below the map still trims to 5 visible rows.
