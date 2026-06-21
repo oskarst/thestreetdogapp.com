@@ -1,8 +1,9 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { PenLine, SlidersHorizontal, Flag } from "lucide-react";
+import { PenLine, SlidersHorizontal, Flag, MapPin } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth-cache";
-import { getDogById } from "@/lib/db/dogs";
+import { getDogById, getSameEarTagDogs } from "@/lib/db/dogs";
+import { cityLabel } from "@/lib/cities";
 import { getSightingsForDog, countDogCatchers } from "@/lib/db/sightings";
 import { isFavorite } from "@/lib/db/favorites";
 import { getProfile } from "@/lib/db/users";
@@ -93,6 +94,15 @@ export default async function DogProfilePage({
 
   const showDailyMap = recentSightings.length > 3;
 
+  // Same ear-tag in another city (per-city uniqueness, migration 037).
+  const sameTagDogs = dog.ear_tag_id
+    ? await safe(
+        getSameEarTagDogs(dog.ear_tag_id, dog.id),
+        "getSameEarTagDogs",
+        []
+      )
+    : [];
+
   return (
     <div className="px-4 py-4 max-w-2xl mx-auto space-y-4">
       {/* Gallery pulls from every sighting's photo (plus any on the dog row),
@@ -136,6 +146,30 @@ export default async function DogProfilePage({
           <Flag className="h-4 w-4" />
           Report bad data
         </Link>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-rule-2 bg-card px-3 py-1.5 font-mono text-[11.6px] font-medium tracking-[0.08em] uppercase text-ink">
+          <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+          {cityLabel(dog.city_slug)}
+        </span>
+        {dog.ear_tag_id && sameTagDogs.length > 0 && (
+          <span className="font-mono text-[11.6px] tracking-[0.04em] text-amber-600">
+            Tag {dog.ear_tag_id} also in{" "}
+            {sameTagDogs.map((d, i) => (
+              <span key={d.id}>
+                {i > 0 && ", "}
+                <Link
+                  href={`/dog/${d.id}`}
+                  className="underline underline-offset-2 hover:text-ink"
+                >
+                  {cityLabel(d.city_slug)}
+                </Link>
+              </span>
+            ))}{" "}
+            (different dog)
+          </span>
+        )}
       </div>
 
       <DogDetails

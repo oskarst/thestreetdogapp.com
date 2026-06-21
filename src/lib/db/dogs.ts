@@ -51,6 +51,30 @@ export async function getDogById(id: string): Promise<DogRow | null> {
   return data;
 }
 
+/**
+ * Other (non-deleted) dogs that share an ear-tag number with this one.
+ * Since ear tags are unique per city (migration 037), every match is in a
+ * different city — used to flag "same tag, different city" on the dog page.
+ */
+export async function getSameEarTagDogs(
+  earTagId: string,
+  excludeId: string
+): Promise<Array<{ id: string; city_slug: string | null; names: string[] }>> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("dogs")
+    .select("id, city_slug, names")
+    .eq("ear_tag_id", earTagId)
+    .neq("id", excludeId)
+    .is("deleted_at", null);
+  if (error) return [];
+  return (data ?? []) as Array<{
+    id: string;
+    city_slug: string | null;
+    names: string[];
+  }>;
+}
+
 export async function createDog(data: DogInsert): Promise<DogRow> {
   const supabase = await createClient();
   const { data: dog, error } = await supabase

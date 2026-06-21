@@ -35,7 +35,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MoreHorizontal, Search, Star, ArrowLeft, ArrowRight, X } from "lucide-react";
+import {
+  MoreHorizontal,
+  Search,
+  Star,
+  ArrowLeft,
+  ArrowRight,
+  X,
+  TriangleAlert,
+} from "lucide-react";
 import type {
   DogAge,
   DogCharacter,
@@ -44,6 +52,7 @@ import type {
   DogStatus,
 } from "@/types/database";
 import { toast } from "sonner";
+import { cityLabel, CITY_SLUGS } from "@/lib/cities";
 import { AdminHeader } from "@/components/admin/admin-header";
 
 interface DogWithMeta extends DogRow {
@@ -61,9 +70,12 @@ interface EditDraft {
   age: DogAge | "unset";
   size: number | null;
   status: DogStatus;
+  city_slug: string | null;
   images: string[];
   ear_tag_image: string | null;
 }
+
+const CITY_OPTIONS = CITY_SLUGS;
 
 const CHARACTER_OPTIONS: DogCharacter[] = [
   "friendly",
@@ -85,6 +97,25 @@ export default function AdminDogsPage() {
   const [mergeTargetId, setMergeTargetId] = useState("");
   const [editDraft, setEditDraft] = useState<EditDraft | null>(null);
   const [savingEdit, setSavingEdit] = useState(false);
+  const [cityFilter, setCityFilter] = useState<string>("all");
+
+  // Tags that appear in more than one city among the loaded dogs — these get
+  // a "same number in another city" warning so an admin can spot a possible
+  // mis-tag or a genuinely distinct dog that shares a number.
+  const earTagCities = new Map<string, Set<string>>();
+  for (const d of dogs) {
+    if (!d.ear_tag_id) continue;
+    const set = earTagCities.get(d.ear_tag_id) ?? new Set<string>();
+    set.add(d.city_slug ?? "unknown");
+    earTagCities.set(d.ear_tag_id, set);
+  }
+  const tagInMultipleCities = (dog: DogWithMeta) =>
+    !!dog.ear_tag_id && (earTagCities.get(dog.ear_tag_id)?.size ?? 0) > 1;
+
+  const visibleDogs =
+    cityFilter === "all"
+      ? dogs
+      : dogs.filter((d) => (d.city_slug ?? "unknown") === cityFilter);
 
   useEffect(() => {
     fetchDogs();
@@ -126,6 +157,7 @@ export default function AdminDogsPage() {
       age: (dog.age ?? "unset") as EditDraft["age"],
       size: dog.size ?? null,
       status: dog.status ?? "approved",
+      city_slug: dog.city_slug ?? null,
       images: dog.images ?? [],
       ear_tag_image: dog.ear_tag_image ?? null,
     });
@@ -171,6 +203,7 @@ export default function AdminDogsPage() {
       age: editDraft.age === "unset" ? null : editDraft.age,
       size: editDraft.size,
       status: editDraft.status,
+      city_slug: editDraft.city_slug,
       images: editDraft.images,
       ear_tag_image: editDraft.ear_tag_image,
     };
@@ -236,6 +269,20 @@ export default function AdminDogsPage() {
         <Button onClick={handleSearch} variant="outline" disabled={isPending}>
           Search
         </Button>
+        <Select value={cityFilter} onValueChange={(v) => setCityFilter(v ?? "all")}>
+          <SelectTrigger className="w-40">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All cities</SelectItem>
+            {CITY_OPTIONS.map((slug) => (
+              <SelectItem key={slug} value={slug}>
+                {cityLabel(slug)}
+              </SelectItem>
+            ))}
+            <SelectItem value="unknown">Unknown</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <Table>
@@ -246,12 +293,13 @@ export default function AdminDogsPage() {
             <TableHead>Names</TableHead>
             <TableHead>Sightings</TableHead>
             <TableHead>Last Seen</TableHead>
+            <TableHead>City</TableHead>
             <TableHead>Registered By</TableHead>
             <TableHead className="w-10" />
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dogs.map((dog) => (
+          {visibleDogs.map((dog) => (
             <TableRow key={dog.id}>
               <TableCell>
                 {(dog.thumbnail ?? dog.images?.[0]) ? (
@@ -284,6 +332,19 @@ export default function AdminDogsPage() {
                 {dog.last_sighting_date
                   ? new Date(dog.last_sighting_date).toLocaleDateString()
                   : "-"}
+              </TableCell>
+              <TableCell className="text-xs">
+                <span className="inline-flex items-center gap-1">
+                  {cityLabel(dog.city_slug)}
+                  {tagInMultipleCities(dog) && (
+                    <span
+                      className="text-amber-600"
+                      title={`Tag ${dog.ear_tag_id} also exists in another city`}
+                    >
+                      <TriangleAlert className="size-3.5" />
+                    </span>
+                  )}
+                </span>
               </TableCell>
               <TableCell className="text-xs text-muted-foreground">
                 {dog.registered_by_email ?? "-"}
@@ -321,9 +382,9 @@ export default function AdminDogsPage() {
               </TableCell>
             </TableRow>
           ))}
-          {dogs.length === 0 && (
+          {visibleDogs.length === 0 && (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+              <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
                 No dogs found.
               </TableCell>
             </TableRow>
@@ -623,6 +684,30 @@ export default function AdminDogsPage() {
                             : s === "pending"
                               ? "Pending review (hidden)"
                               : "Rejected (hidden)"}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">City</label>
+                  <Select
+                    value={editDraft.city_slug ?? "unset"}
+                    onValueChange={(v) =>
+                      setEditDraft({
+                        ...editDraft,
+                        city_slug: v === "unset" ? null : v,
+                      })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unset">— unset —</SelectItem>
+                      {CITY_OPTIONS.map((slug) => (
+                        <SelectItem key={slug} value={slug}>
+                          {cityLabel(slug)}
                         </SelectItem>
                       ))}
                     </SelectContent>

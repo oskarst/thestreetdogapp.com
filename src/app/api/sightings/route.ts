@@ -3,6 +3,7 @@ import sharp from "sharp";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getDistricts, pointInDistrict } from "@/lib/missions";
+import { citySlugForPoint } from "@/lib/cities";
 import { checkHasDog } from "@/lib/dog-photo-classifier";
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
@@ -279,17 +280,25 @@ export async function POST(request: Request) {
     ]);
     mark("uploads");
 
+    // City this sighting falls in — used to scope ear-tag matching so the
+    // same tag number in a different city is a distinct dog (migration 037).
+    // Sightings always carry coordinates, so this is non-null in practice.
+    const citySlug = citySlugForPoint(latitude, longitude);
+
     // Check if dog exists by ear tag
     let dogId: string;
     let isNewDog = false;
     let isFirstCatch = false;
 
     if (earTagId) {
+      // Match within the SAME city: tag 123 in Batumi must not match tag 123
+      // in Tbilisi. maybeSingle so "no match" is data=null, not an error.
       const { data: existingDog } = await supabase
         .from("dogs")
         .select("*")
         .eq("ear_tag_id", earTagId)
-        .single();
+        .eq("city_slug", citySlug)
+        .maybeSingle();
 
       if (existingDog) {
         dogId = existingDog.id;
@@ -353,6 +362,7 @@ export async function POST(request: Request) {
             last_latitude: latitude,
             last_longitude: longitude,
             last_sighting_date: new Date().toISOString(),
+            city_slug: citySlug,
             character,
             size,
             gender,
@@ -383,6 +393,7 @@ export async function POST(request: Request) {
           last_latitude: latitude,
           last_longitude: longitude,
           last_sighting_date: new Date().toISOString(),
+          city_slug: citySlug,
           character,
           size,
           gender,

@@ -85,6 +85,8 @@ export interface DogRow {
   age: DogAge | null;
   first_registered_by_id: string | null;
   status: DogStatus;
+  /** City the dog belongs to (derived from coordinates, admin-overridable). */
+  city_slug: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -111,12 +113,13 @@ export interface DogListRow {
   last_sighting_date: string | null;
   created_at: string;
   first_registered_by_id: string | null;
+  city_slug?: string | null;
 }
 
 // Excludes `thumbnail` so direct SELECTs work whether or not migration 016
 // is applied. The composite dashboard RPC projects thumbnail explicitly.
 export const DOG_LIST_COLUMNS =
-  "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id";
+  "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id,city_slug";
 
 /**
  * Slim projection for the map view — just enough to place markers and
@@ -130,10 +133,11 @@ export interface DogMarker {
   last_latitude: number;
   last_longitude: number;
   last_sighting_date: string | null;
+  city_slug?: string | null;
 }
 
 export const DOG_MARKER_COLUMNS =
-  "id,ear_tag_id,names,images,last_latitude,last_longitude,last_sighting_date";
+  "id,ear_tag_id,names,images,last_latitude,last_longitude,last_sighting_date,city_slug";
 
 export interface DogInsert {
   id?: string;
@@ -150,6 +154,7 @@ export interface DogInsert {
   age?: DogAge | null;
   first_registered_by_id?: string | null;
   status?: DogStatus;
+  city_slug?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -169,6 +174,7 @@ export interface DogUpdate {
   age?: DogAge | null;
   first_registered_by_id?: string | null;
   status?: DogStatus;
+  city_slug?: string | null;
   updated_at?: string;
 }
 

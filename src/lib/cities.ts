@@ -86,3 +86,33 @@ export function cityBySlug(slug?: string | null): MissionCity | null {
 export function isInAnyMissionCity(lat: number, lng: number): boolean {
   return cityForPoint(lat, lng) !== null;
 }
+
+/** Slug for dogs whose coordinates fall outside every known city. */
+export const OTHER_CITY_SLUG = "other";
+
+/** All assignable city slugs: the known mission cities plus the catch-all. */
+export const CITY_SLUGS: string[] = [
+  ...MISSION_CITIES.map((c) => c.slug),
+  OTHER_CITY_SLUG,
+];
+
+/**
+ * City slug for a coordinate pair, used to group dogs. Returns a known
+ * city slug, "other" when the point is outside every known city, or null
+ * when coordinates are missing. Mirrors derive_city_slug() in migration
+ * 037 — keep the two in sync if a city's bbox changes.
+ */
+export function citySlugForPoint(
+  lat?: number | null,
+  lng?: number | null
+): string | null {
+  if (lat == null || lng == null) return null;
+  return cityForPoint(lat, lng)?.slug ?? OTHER_CITY_SLUG;
+}
+
+/** Human-readable label for a city slug. */
+export function cityLabel(slug?: string | null): string {
+  if (!slug) return "Unknown";
+  if (slug === OTHER_CITY_SLUG) return "Other";
+  return cityBySlug(slug)?.name ?? slug;
+}

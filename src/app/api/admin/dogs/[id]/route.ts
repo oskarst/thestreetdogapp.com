@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyAdmin } from "@/lib/admin-auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isUUID } from "@/lib/validate";
+import { CITY_SLUGS } from "@/lib/cities";
 import type {
   DogAge,
   DogCharacter,
@@ -216,6 +217,19 @@ export async function PATCH(
         { error: "Size must be 1-10" },
         { status: 400 }
       );
+    }
+  }
+
+  // city_slug — admin override of the auto-derived city. null clears it;
+  // otherwise must be a known city slug (or "other").
+  if ("city_slug" in body) {
+    const v = body.city_slug;
+    if (v === null || v === "") {
+      update.city_slug = null;
+    } else if (typeof v === "string" && CITY_SLUGS.includes(v)) {
+      update.city_slug = v;
+    } else {
+      return NextResponse.json({ error: "Invalid city" }, { status: 400 });
     }
   }
 

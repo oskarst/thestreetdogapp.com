@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DogGalleryCard } from "@/components/dog/dog-gallery-card";
 import { cn } from "@/lib/utils";
+import { cityLabel, CITY_SLUGS } from "@/lib/cities";
 import type { DogListRow } from "@/types/database";
 
 type Filter = "all" | "found" | "toFind" | "favorites";
 
 const PAGE_SIZE = 12;
+const UNKNOWN_CITY = "__unknown__";
 
 interface GalleryFiltersProps {
   dogs: DogListRow[];
@@ -23,11 +25,30 @@ export function GalleryFilters({
 }: GalleryFiltersProps) {
   const t = useTranslations("gallery");
   const [filter, setFilter] = useState<Filter>("all");
+  const [city, setCity] = useState<string>("all");
   const [query, setQuery] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const caughtSet = useMemo(() => new Set(caughtIds), [caughtIds]);
   const favSet = useMemo(() => new Set(favIds), [favIds]);
+
+  // City chips: only the cities actually present in the data, in the
+  // canonical city order (known cities first, then "other", then unknown).
+  const cityChips = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const d of dogs) {
+      const key = d.city_slug ?? UNKNOWN_CITY;
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+    const order = [...CITY_SLUGS, UNKNOWN_CITY];
+    return order
+      .filter((slug) => counts.has(slug))
+      .map((slug) => ({
+        slug,
+        label: slug === UNKNOWN_CITY ? "Unknown" : cityLabel(slug),
+        count: counts.get(slug) ?? 0,
+      }));
+  }, [dogs]);
 
   const counts: Record<Filter, number> = {
     all: dogs.length,
@@ -38,6 +59,8 @@ export function GalleryFilters({
 
   const filtered = useMemo(() => {
     let list = dogs;
+    if (city !== "all")
+      list = list.filter((d) => (d.city_slug ?? UNKNOWN_CITY) === city);
     if (filter === "found") list = list.filter((d) => caughtSet.has(d.id));
     if (filter === "toFind")
       list = list.filter((d) => !caughtSet.has(d.id));
@@ -51,14 +74,14 @@ export function GalleryFilters({
       );
     }
     return list;
-  }, [dogs, filter, query, caughtSet, favSet]);
+  }, [dogs, filter, city, query, caughtSet, favSet]);
 
   // Reset the visible window when the filter / search changes — otherwise a
   // user who'd expanded to 200 dogs would briefly render 200 thumbnails when
   // they pivot to a 5-dog filter.
   useEffect(() => {
     setVisible(PAGE_SIZE);
-  }, [filter, query]);
+  }, [filter, city, query]);
 
   const shown = filtered.slice(0, visible);
   const remaining = filtered.length - shown.length;
@@ -110,6 +133,26 @@ export function GalleryFilters({
         })}
       </div>
 
+      {cityChips.length > 1 && (
+        <div className="flex gap-1.5 overflow-x-auto pb-1">
+          <CityChip
+            label={t("filterAll")}
+            count={dogs.length}
+            active={city === "all"}
+            onClick={() => setCity("all")}
+          />
+          {cityChips.map((c) => (
+            <CityChip
+              key={c.slug}
+              label={c.label}
+              count={c.count}
+              active={city === c.slug}
+              onClick={() => setCity(c.slug)}
+            />
+          ))}
+        </div>
+      )}
+
       {filtered.length === 0 ? (
         <div className="rounded-xl bg-card p-8 text-center text-sm text-muted-foreground border border-rule">
           {t("noMatches")}
@@ -151,6 +194,36 @@ export function GalleryFilters({
         </>
       )}
     </div>
+  );
+}
+
+function CityChip({
+  label,
+  count,
+  active,
+  onClick,
+}: {
+  label: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full border",
+        "font-mono text-[11.6px] font-medium tracking-[0.08em] uppercase",
+        active
+          ? "border-green-deep bg-green-soft text-green-deep"
+          : "border-rule-2 bg-card text-muted-foreground hover:border-rule"
+      )}
+    >
+      {label}
+      <span className={cn("ml-1", active ? "text-green-deep/60" : "text-muted-foreground/60")}>
+        {count}
+      </span>
+    </button>
   );
 }
 

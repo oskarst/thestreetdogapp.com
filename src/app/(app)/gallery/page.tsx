@@ -42,7 +42,7 @@ const getGalleryDogs = unstable_cache(
     const { data, error } = await admin
       .from("dogs")
       .select(
-        "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id"
+        "id,ear_tag_id,names,images,last_sighting_date,created_at,first_registered_by_id,city_slug"
       )
       .eq("status", "approved")
       .is("deleted_at", null)

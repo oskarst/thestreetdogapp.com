@@ -21,7 +21,11 @@ import { MapSidePanel } from "./map-side-panel";
 import { MissionConfirmModal } from "./mission-confirm-modal";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { DEFAULT_CITY, isInAnyMissionCity } from "@/lib/cities";
+import {
+  DEFAULT_CITY,
+  isInAnyMissionCity,
+  MISSION_CITIES,
+} from "@/lib/cities";
 
 interface MissionContext {
   slug: string;
@@ -475,6 +479,25 @@ export default function DogMap({
   return (
     <>
       <div ref={mapRef} className="w-full h-full z-0" />
+
+      {/* City quick-jump — only in normal browse mode (not picker/mission). */}
+      {!picker && !mission && (
+        <div className="absolute bottom-3 left-3 right-3 z-[500] flex gap-1.5 overflow-x-auto">
+          {MISSION_CITIES.map((c) => (
+            <button
+              key={c.slug}
+              type="button"
+              onClick={() => {
+                setShowOutsideTbilisi(true);
+                mapInstanceRef.current?.setView(c.center, 13);
+              }}
+              className="shrink-0 rounded-full border border-rule-2 bg-background/95 px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.08em] uppercase text-ink shadow-lg backdrop-blur-sm hover:bg-muted"
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       {picker && (
         <div
