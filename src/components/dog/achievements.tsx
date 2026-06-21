@@ -29,19 +29,19 @@ export function Achievements({ achievements, score }: AchievementsProps) {
   const stats = [
     {
       label: t("pioneers"),
-      mult: "×30",
+      mult: "×100",
       count: score.new_dogs,
       points: score.new_dogs_points,
     },
     {
       label: t("trackers"),
-      mult: "×20",
+      mult: "×65",
       count: score.unique_dogs,
       points: score.unique_dogs_points,
     },
     {
       label: t("spottings"),
-      mult: "×10",
+      mult: "×35",
       count: score.total_catches,
       points: score.total_catches_points,
     },
@@ -54,22 +54,12 @@ export function Achievements({ achievements, score }: AchievementsProps) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-baseline justify-between gap-3 px-1 py-1 group"
+        className="w-full flex items-center justify-between gap-3 px-1 py-1 group"
         aria-expanded={open}
       >
-        <span className="font-mono text-[12.1px] font-medium tracking-[0.22em] uppercase text-ink group-hover:text-ink transition-colors">
-          {t("achievements")}
-        </span>
-        <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-muted-foreground group-hover:text-ink transition-colors">
-          <span className="text-ink">
-            {pad(score.new_dogs)}
-            <span className="text-muted-foreground/50 px-1">·</span>
-            {pad(score.unique_dogs)}
-            <span className="text-muted-foreground/50 px-1">·</span>
-            {pad(score.total_catches)}
-          </span>
-          <span className="text-green-deep">
-            {t("ptTotal", { n: score.total_score })}
+        <span className="inline-flex items-center gap-2">
+          <span className="font-mono text-[12.1px] font-medium tracking-[0.22em] uppercase text-ink group-hover:text-ink transition-colors">
+            {t("achievements")}
           </span>
           <span
             className={cn(
@@ -81,6 +71,18 @@ export function Achievements({ achievements, score }: AchievementsProps) {
             <ChevronDown
               className={cn("size-4 transition-transform", open && "rotate-180")}
             />
+          </span>
+        </span>
+        <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-muted-foreground group-hover:text-ink transition-colors">
+          <span className="text-ink">
+            {pad(score.new_dogs)}
+            <span className="text-muted-foreground/50 px-1">·</span>
+            {pad(score.unique_dogs)}
+            <span className="text-muted-foreground/50 px-1">·</span>
+            {pad(score.total_catches)}
+          </span>
+          <span className="text-green-deep">
+            {t("ptTotal", { n: score.total_score })}
           </span>
         </span>
       </button>

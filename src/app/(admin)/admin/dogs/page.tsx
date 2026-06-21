@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -59,6 +60,8 @@ interface EditDraft {
   age: DogAge | "unset";
   size: number | null;
   status: DogStatus;
+  images: string[];
+  ear_tag_image: string | null;
 }
 
 const CHARACTER_OPTIONS: DogCharacter[] = [
@@ -122,6 +125,8 @@ export default function AdminDogsPage() {
       age: (dog.age ?? "unset") as EditDraft["age"],
       size: dog.size ?? null,
       status: dog.status ?? "approved",
+      images: dog.images ?? [],
+      ear_tag_image: dog.ear_tag_image ?? null,
     });
   }
 
@@ -322,12 +327,64 @@ export default function AdminDogsPage() {
           <DialogHeader>
             <DialogTitle>Edit dog attributes</DialogTitle>
             <DialogDescription>
-              Whitelisted fields only. Image arrays, registration metadata,
-              and last-sighting timestamps stay read-only here.
+              Whitelisted fields only. Images are shown for reference;
+              image arrays, registration metadata, and last-sighting
+              timestamps stay read-only here.
             </DialogDescription>
           </DialogHeader>
           {editDraft && (
             <div className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-sm font-medium">
+                  Images{editDraft.images.length > 0 && ` (${editDraft.images.length})`}
+                </label>
+                {editDraft.images.length === 0 && !editDraft.ear_tag_image ? (
+                  <div className="text-xs text-muted-foreground">
+                    No images on file.
+                  </div>
+                ) : (
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {editDraft.images.map((url, i) => (
+                      <a
+                        key={url + i}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative size-24 shrink-0 overflow-hidden rounded-lg border border-rule bg-muted"
+                        title="Open full size"
+                      >
+                        <Image
+                          src={url}
+                          alt={`Dog image ${i + 1}`}
+                          fill
+                          className="object-cover"
+                          sizes="96px"
+                        />
+                      </a>
+                    ))}
+                    {editDraft.ear_tag_image && (
+                      <a
+                        href={editDraft.ear_tag_image}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative size-24 shrink-0 overflow-hidden rounded-lg border border-dashed border-rule-2 bg-muted"
+                        title="Ear-tag photo"
+                      >
+                        <Image
+                          src={editDraft.ear_tag_image}
+                          alt="Ear-tag photo"
+                          fill
+                          className="object-cover"
+                          sizes="96px"
+                        />
+                        <span className="absolute bottom-0 inset-x-0 bg-black/60 text-[9px] font-mono uppercase tracking-[0.1em] text-white text-center py-0.5">
+                          ear tag
+                        </span>
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
               <div className="space-y-1">
                 <label className="text-sm font-medium">Ear tag ID</label>
                 <Input

@@ -8,11 +8,14 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { GalleryFilters } from "@/components/dog/gallery-filters";
 import type { DogListRow } from "@/types/database";
 
-// Capped at 200 for the initial payload: the page renders 12 cards and the
-// rest feed the client-side filter/search/pagination over the capped set.
-// Server-side search across the full table is the future step once the
-// catalog outgrows 200 dogs.
-const GALLERY_LIMIT = 200;
+// The gallery is the full-catalogue view, so the cap matches the map's
+// marker budget (2000). Only 12 cards render at a time (GalleryFilters
+// paginates with "Load more"); the rest of the capped set lives in memory
+// to back client-side filter/search across the whole catalogue. The row
+// payload is trimmed (minimal columns + first image only), so 2000 rows on
+// the wire is comparable to the map's marker query. Server-side search
+// across the full table is the next step once the catalog outgrows 2000.
+const GALLERY_LIMIT = 2000;
 const GALLERY_CACHE_SECONDS = 60;
 
 /**
