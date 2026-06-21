@@ -127,7 +127,14 @@ export function TopNav({ user }: TopNavProps) {
 
           <DropdownMenu>
             <DropdownMenuTrigger className="inline-flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 bg-muted text-ink hover:bg-rule transition-colors outline-none cursor-pointer">
-              <span className="grid size-[22px] place-items-center rounded-full bg-ink text-background font-mono text-[12.1px] font-medium">
+              <span
+                className={`grid size-[22px] place-items-center rounded-full font-mono text-[12.1px] font-medium ${
+                  user.role === "admin"
+                    ? "bg-amber-500 text-white"
+                    : "bg-ink text-background"
+                }`}
+                title={user.role === "admin" ? "Admin" : undefined}
+              >
                 {initial}
               </span>
               <span className="font-mono text-[12.1px] font-medium tracking-[0.04em] max-w-[100px] truncate">
