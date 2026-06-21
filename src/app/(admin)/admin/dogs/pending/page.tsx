@@ -10,6 +10,8 @@ interface PendingDog {
   id: string;
   name: string | null;
   image: string | null;
+  images: string[];
+  ear_tag_image: string | null;
   ear_tag_id: string | null;
   latitude: number | null;
   longitude: number | null;
@@ -87,6 +89,48 @@ export default function AdminPendingDogsPage() {
                   </div>
                 )}
               </div>
+              {(d.images.length > 1 || d.ear_tag_image) && (
+                <div className="flex gap-1.5 overflow-x-auto border-t bg-muted/40 p-2">
+                  {d.images.map((url, i) => (
+                    <a
+                      key={url + i}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative size-14 shrink-0 overflow-hidden rounded-md border bg-muted"
+                      title="Open full size"
+                    >
+                      <Image
+                        src={url}
+                        alt={`Photo ${i + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="56px"
+                      />
+                    </a>
+                  ))}
+                  {d.ear_tag_image && (
+                    <a
+                      href={d.ear_tag_image}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative size-14 shrink-0 overflow-hidden rounded-md border border-dashed bg-muted"
+                      title="Ear-tag photo"
+                    >
+                      <Image
+                        src={d.ear_tag_image}
+                        alt="Ear-tag photo"
+                        fill
+                        className="object-cover"
+                        sizes="56px"
+                      />
+                      <span className="absolute inset-x-0 bottom-0 bg-black/60 py-px text-center font-mono text-[8px] uppercase tracking-[0.1em] text-white">
+                        tag
+                      </span>
+                    </a>
+                  )}
+                </div>
+              )}
               <div className="flex-1 space-y-1 p-3 text-sm">
                 <div className="font-medium">{d.name ?? "Unnamed"}</div>
                 <div className="text-xs text-muted-foreground">

@@ -35,7 +35,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MoreHorizontal, Search } from "lucide-react";
+import { MoreHorizontal, Search, Star, ArrowLeft, ArrowRight, X } from "lucide-react";
 import type {
   DogAge,
   DogCharacter,
@@ -47,6 +47,7 @@ import { toast } from "sonner";
 import { AdminHeader } from "@/components/admin/admin-header";
 
 interface DogWithMeta extends DogRow {
+  thumbnail?: string | null;
   sightings_count: number;
   registered_by_email: string | null;
 }
@@ -130,6 +131,33 @@ export default function AdminDogsPage() {
     });
   }
 
+  // Image strip controls — operate on editDraft.images; saveEdit sends the
+  // resulting array, so one PATCH field covers set-primary/reorder/delete.
+  function setPrimaryImage(i: number) {
+    setEditDraft((d) => {
+      if (!d || i <= 0) return d;
+      const next = [...d.images];
+      const [picked] = next.splice(i, 1);
+      next.unshift(picked);
+      return { ...d, images: next };
+    });
+  }
+  function moveImage(i: number, dir: -1 | 1) {
+    setEditDraft((d) => {
+      if (!d) return d;
+      const j = i + dir;
+      if (j < 0 || j >= d.images.length) return d;
+      const next = [...d.images];
+      [next[i], next[j]] = [next[j], next[i]];
+      return { ...d, images: next };
+    });
+  }
+  function removeImage(i: number) {
+    setEditDraft((d) =>
+      d ? { ...d, images: d.images.filter((_, idx) => idx !== i) } : d
+    );
+  }
+
   async function saveEdit() {
     if (!editDraft) return;
     const payload: Record<string, unknown> = {
@@ -143,6 +171,8 @@ export default function AdminDogsPage() {
       age: editDraft.age === "unset" ? null : editDraft.age,
       size: editDraft.size,
       status: editDraft.status,
+      images: editDraft.images,
+      ear_tag_image: editDraft.ear_tag_image,
     };
     setSavingEdit(true);
     const res = await fetch(`/api/admin/dogs/${editDraft.id}`, {
@@ -211,6 +241,7 @@ export default function AdminDogsPage() {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead className="w-14" />
             <TableHead>Ear Tag</TableHead>
             <TableHead>Names</TableHead>
             <TableHead>Sightings</TableHead>
@@ -222,6 +253,28 @@ export default function AdminDogsPage() {
         <TableBody>
           {dogs.map((dog) => (
             <TableRow key={dog.id}>
+              <TableCell>
+                {(dog.thumbnail ?? dog.images?.[0]) ? (
+                  <button
+                    type="button"
+                    onClick={() => openEdit(dog)}
+                    className="relative block size-10 overflow-hidden rounded-md border border-rule bg-muted"
+                    title="Edit dog"
+                  >
+                    <Image
+                      src={(dog.thumbnail ?? dog.images[0]) as string}
+                      alt={dog.names?.[0] ?? "Dog"}
+                      fill
+                      className="object-cover"
+                      sizes="40px"
+                    />
+                  </button>
+                ) : (
+                  <div className="grid size-10 place-items-center rounded-md border border-rule bg-muted text-[9px] text-muted-foreground">
+                    —
+                  </div>
+                )}
+              </TableCell>
               <TableCell className="font-mono text-xs">
                 {dog.ear_tag_id ?? "-"}
               </TableCell>
@@ -270,7 +323,7 @@ export default function AdminDogsPage() {
           ))}
           {dogs.length === 0 && (
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+              <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                 No dogs found.
               </TableCell>
             </TableRow>
@@ -343,46 +396,97 @@ export default function AdminDogsPage() {
                     No images on file.
                   </div>
                 ) : (
-                  <div className="flex gap-2 overflow-x-auto pb-1">
-                    {editDraft.images.map((url, i) => (
-                      <a
-                        key={url + i}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative size-24 shrink-0 overflow-hidden rounded-lg border border-rule bg-muted"
-                        title="Open full size"
-                      >
-                        <Image
-                          src={url}
-                          alt={`Dog image ${i + 1}`}
-                          fill
-                          className="object-cover"
-                          sizes="96px"
-                        />
-                      </a>
-                    ))}
-                    {editDraft.ear_tag_image && (
-                      <a
-                        href={editDraft.ear_tag_image}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative size-24 shrink-0 overflow-hidden rounded-lg border border-dashed border-rule-2 bg-muted"
-                        title="Ear-tag photo"
-                      >
-                        <Image
-                          src={editDraft.ear_tag_image}
-                          alt="Ear-tag photo"
-                          fill
-                          className="object-cover"
-                          sizes="96px"
-                        />
-                        <span className="absolute bottom-0 inset-x-0 bg-black/60 text-[9px] font-mono uppercase tracking-[0.1em] text-white text-center py-0.5">
-                          ear tag
-                        </span>
-                      </a>
-                    )}
-                  </div>
+                  <>
+                    <div className="flex gap-2 overflow-x-auto pb-1">
+                      {editDraft.images.map((url, i) => (
+                        <div
+                          key={url + i}
+                          className="relative size-28 shrink-0 overflow-hidden rounded-lg border border-rule bg-muted"
+                        >
+                          <Image
+                            src={url}
+                            alt={`Dog image ${i + 1}`}
+                            fill
+                            className="object-cover"
+                            sizes="112px"
+                          />
+                          {i === 0 && (
+                            <span className="absolute left-1 top-1 rounded bg-ink/80 px-1 py-px font-mono text-[8px] uppercase tracking-[0.1em] text-background">
+                              primary
+                            </span>
+                          )}
+                          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-0.5 bg-black/55 p-0.5">
+                            <button
+                              type="button"
+                              title="Move left"
+                              disabled={i === 0}
+                              onClick={() => moveImage(i, -1)}
+                              className="grid size-5 place-items-center rounded text-white hover:bg-white/20 disabled:opacity-30"
+                            >
+                              <ArrowLeft className="size-3" />
+                            </button>
+                            <button
+                              type="button"
+                              title="Set as primary"
+                              disabled={i === 0}
+                              onClick={() => setPrimaryImage(i)}
+                              className="grid size-5 place-items-center rounded text-white hover:bg-white/20 disabled:opacity-30"
+                            >
+                              <Star className="size-3" />
+                            </button>
+                            <button
+                              type="button"
+                              title="Move right"
+                              disabled={i === editDraft.images.length - 1}
+                              onClick={() => moveImage(i, 1)}
+                              className="grid size-5 place-items-center rounded text-white hover:bg-white/20 disabled:opacity-30"
+                            >
+                              <ArrowRight className="size-3" />
+                            </button>
+                            <button
+                              type="button"
+                              title="Remove image"
+                              onClick={() => removeImage(i)}
+                              className="grid size-5 place-items-center rounded text-white hover:bg-destructive"
+                            >
+                              <X className="size-3" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      {editDraft.ear_tag_image && (
+                        <div className="relative size-28 shrink-0 overflow-hidden rounded-lg border border-dashed border-rule-2 bg-muted">
+                          <Image
+                            src={editDraft.ear_tag_image}
+                            alt="Ear-tag photo"
+                            fill
+                            className="object-cover"
+                            sizes="112px"
+                          />
+                          <span className="absolute inset-x-0 top-0 bg-black/60 py-px text-center font-mono text-[8px] uppercase tracking-[0.1em] text-white">
+                            ear tag
+                          </span>
+                          <button
+                            type="button"
+                            title="Clear ear-tag photo"
+                            onClick={() =>
+                              setEditDraft((d) =>
+                                d ? { ...d, ear_tag_image: null } : d
+                              )
+                            }
+                            className="absolute bottom-1 right-1 grid size-5 place-items-center rounded bg-black/60 text-white hover:bg-destructive"
+                          >
+                            <X className="size-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      First image is the primary (shown on cards). Removing a
+                      photo detaches it from this dog; the file stays in
+                      storage. Changes apply on Save.
+                    </p>
+                  </>
                 )}
               </div>
               <div className="space-y-1">

@@ -17,7 +17,7 @@ export async function GET() {
   const { data, error } = await admin
     .from("dogs")
     .select(
-      "id, names, images, thumbnail, ear_tag_id, last_latitude, last_longitude, created_at, first_registered_by_id, profiles:first_registered_by_id(nickname, email)"
+      "id, names, images, thumbnail, ear_tag_image, ear_tag_id, last_latitude, last_longitude, created_at, first_registered_by_id, profiles:first_registered_by_id(nickname, email)"
     )
     .eq("status", "pending")
     .order("created_at", { ascending: false })
@@ -32,6 +32,7 @@ export async function GET() {
     names: string[] | null;
     images: string[] | null;
     thumbnail: string | null;
+    ear_tag_image: string | null;
     ear_tag_id: string | null;
     last_latitude: number | null;
     last_longitude: number | null;
@@ -44,6 +45,8 @@ export async function GET() {
     id: d.id,
     name: d.names?.[0] ?? null,
     image: d.thumbnail ?? d.images?.[0] ?? null,
+    images: d.images ?? [],
+    ear_tag_image: d.ear_tag_image,
     ear_tag_id: d.ear_tag_id,
     latitude: d.last_latitude,
     longitude: d.last_longitude,

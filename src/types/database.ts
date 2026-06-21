@@ -158,6 +158,7 @@ export interface DogUpdate {
   ear_tag_id?: string | null;
   names?: string[];
   images?: string[];
+  thumbnail?: string | null;
   ear_tag_image?: string | null;
   last_latitude?: number | null;
   last_longitude?: number | null;

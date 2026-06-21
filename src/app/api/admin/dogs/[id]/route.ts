@@ -121,6 +121,48 @@ export async function PATCH(
     update.names = cleaned;
   }
 
+  // images — ordered array of URL strings. The first element is the
+  // primary photo. The admin UI sends the full reordered/filtered array,
+  // so this one field covers reorder, set-primary, and delete. Editing it
+  // invalidates the cached 320px thumbnail (built from the old primary at
+  // upload), so we clear thumbnail to fall back to images[0].
+  if ("images" in body) {
+    if (!Array.isArray(body.images)) {
+      return NextResponse.json(
+        { error: "images must be an array" },
+        { status: 400 }
+      );
+    }
+    const cleaned = (body.images as unknown[])
+      .filter((x): x is string => typeof x === "string")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && s.length <= 2048);
+    if (cleaned.length > 20) {
+      return NextResponse.json(
+        { error: "Too many images (max 20)" },
+        { status: 400 }
+      );
+    }
+    update.images = cleaned;
+    update.thumbnail = null;
+  }
+
+  // ear_tag_image — clear (null) or set to a URL (e.g. promote one of the
+  // dog's photos to be the ear-tag reference).
+  if ("ear_tag_image" in body) {
+    const v = body.ear_tag_image;
+    if (v === null || v === "") {
+      update.ear_tag_image = null;
+    } else if (typeof v === "string" && v.trim().length <= 2048) {
+      update.ear_tag_image = v.trim();
+    } else {
+      return NextResponse.json(
+        { error: "Invalid ear_tag_image" },
+        { status: 400 }
+      );
+    }
+  }
+
   if ("character" in body) {
     const v = body.character;
     if (v === null || v === "") {

@@ -37,12 +37,17 @@ export async function DashboardHero({
             {title}
           </Link>
         </div>
-        {streakDays > 0 && (
-          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-soft text-amber-brand font-mono text-[12.1px] font-medium tracking-[0.04em] shrink-0">
-            <Icon name="fire" size={13} />
-            {streakDays}d
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="font-mono text-[12.1px] font-medium tracking-[0.04em] text-green-deep whitespace-nowrap">
+            {t("ptTotal", { n: score.total_score })}
           </span>
-        )}
+          {streakDays > 0 && (
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-soft text-amber-brand font-mono text-[12.1px] font-medium tracking-[0.04em] shrink-0">
+              <Icon name="fire" size={13} />
+              {streakDays}d
+            </span>
+          )}
+        </div>
       </div>
       <div className="flex items-end gap-4 flex-wrap">
         <div className="font-mono font-medium text-[70.4px] leading-[0.85] tracking-[-0.04em] text-ink">
