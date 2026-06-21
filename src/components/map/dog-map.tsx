@@ -536,9 +536,10 @@ export default function DogMap({
     <>
       <div ref={mapRef} className="w-full h-full z-0" />
 
-      {/* City quick-jump — only in normal browse mode (not picker/mission). */}
+      {/* City quick-jump — top of the map (clears the zoom control on the
+          left), only in normal browse mode (not picker/mission). */}
       {!picker && !mission && (
-        <div className="absolute bottom-3 left-3 right-3 z-[500] flex gap-1.5 overflow-x-auto">
+        <div className="absolute top-3 left-14 right-3 z-[1000] flex gap-1.5 overflow-x-auto">
           {MISSION_CITIES.map((c) => (
             <button
               key={c.slug}
