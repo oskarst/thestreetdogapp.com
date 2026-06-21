@@ -268,6 +268,35 @@ export default function DogMap({
     };
   }, []);
 
+  // Normal browse mode: center on the user's location if available, else on
+  // the default city (Tbilisi). Runs once and claims the "fit done" flag so
+  // the dog-cluster effect doesn't override it by fitting to every dog.
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || mission || picker) return;
+    if (hasFitBoundsRef.current) return;
+    hasFitBoundsRef.current = true;
+    const toDefault = () => map.setView(DEFAULT_CITY.center, DEFAULT_ZOOM);
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          map.setView([latitude, longitude], DEFAULT_ZOOM);
+          // If they're outside the mission cities, reveal local dogs that the
+          // city-scale filter would otherwise hide at this zoom.
+          if (!isInAnyMissionCity(latitude, longitude)) {
+            setShowOutsideTbilisi(true);
+          }
+        },
+        toDefault,
+        { enableHighAccuracy: false, maximumAge: 60000, timeout: 8000 }
+      );
+    } else {
+      toDefault();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Mission overlay: draw all districts dimmed, the active one highlighted.
   // When a mission is active, fitBounds to its polygon (overrides the dog
   // bounds fit on first render).

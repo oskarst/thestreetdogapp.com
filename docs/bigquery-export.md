@@ -51,6 +51,19 @@ curl -H "Authorization: Bearer $CRON_SECRET" \
 # -> { "ok": true, "loaded": { "dogs": N, "sightings": M } }
 ```
 
+## Direct downloads (no BigQuery needed)
+
+The same anonymized views are downloadable straight from the app — no GCP — for
+people who just want the data. Public, CDN-cached (~1h):
+
+- `GET /api/public/dataset/dogs` — GeoJSON (default)
+- `GET /api/public/dataset/dogs?format=csv`
+- `GET /api/public/dataset/dogs?format=json`
+- `GET /api/public/dataset/sightings` (same `format` options)
+
+GeoJSON emits `Point` features from the coordinates; all other fields go in
+`properties`. Requires migration `039_analytics_views.sql` to be applied.
+
 ## Notes
 
 - Full refresh each run (snapshot), so deletions/edits propagate. Switch to
