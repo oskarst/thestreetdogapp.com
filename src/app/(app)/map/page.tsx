@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import DogMap from "@/components/map/dog-map-client";
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_CITY } from "@/lib/cities";
@@ -13,10 +13,6 @@ import {
   MISSION_TARGET,
   MISSION_COMPLETION_XP,
 } from "@/lib/missions";
-
-// Leaflet ships ~150kB and only renders client-side. Keep it out of the
-// server bundle — and out of every other route's chunks.
-const DogMap = dynamic(() => import("@/components/map/dog-map"));
 
 // Minimal column set the markers + side panel actually read: cluster icon
 // uses names; the popup uses ear_tag_id, last_sighting_date, and a single
