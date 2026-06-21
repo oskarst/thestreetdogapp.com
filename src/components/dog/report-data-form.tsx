@@ -44,9 +44,24 @@ export function ReportDataForm({ dogId, dogName }: ReportDataFormProps) {
         p_dog_id: dogId,
         p_body: body.trim(),
       });
-      const r = data as { ok?: boolean } | null;
+      const r = data as { ok?: boolean; error?: string } | null;
       if (rpcErr || !r?.ok) {
-        setError("Couldn't send the report. Please try again.");
+        // Surface the real reason so a deploy/migration gap is obvious instead
+        // of hiding behind a generic message.
+        console.error("[report-data] submit failed:", rpcErr ?? r);
+        const code = r?.error;
+        const friendly: Record<string, string> = {
+          body_too_short: "Please add a few words about what's wrong.",
+          body_too_long: "That's a bit too long — please shorten it.",
+          dog_not_found: "This dog could not be found.",
+          unauthorized: "Please sign in again to send a report.",
+        };
+        const detail = (code && friendly[code]) || rpcErr?.message || code;
+        setError(
+          detail
+            ? `Couldn't send the report: ${detail}`
+            : "Couldn't send the report. Please try again."
+        );
         return;
       }
       setSubmitted(true);
