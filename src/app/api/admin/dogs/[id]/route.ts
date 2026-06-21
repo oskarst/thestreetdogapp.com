@@ -21,6 +21,41 @@ const ALLOWED_CHARACTERS: DogCharacter[] = [
 const ALLOWED_GENDERS: DogGender[] = ["male", "female", "unknown"];
 const ALLOWED_AGES: DogAge[] = ["puppy", "young", "adult", "old"];
 
+/**
+ * Admin-only: fetch a single dog by id (used by the dogs page to open the
+ * edit dialog for a dog linked from elsewhere — e.g. a report — even when
+ * it isn't in the current 200-row list).
+ */
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await verifyAdmin();
+  if ("error" in auth) return auth.error;
+
+  const { id } = await params;
+  if (!isUUID(id)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  }
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("dogs")
+    .select("*, profiles:first_registered_by_id(email)")
+    .eq("id", id)
+    .single();
+  if (error || !data) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  const d = data as Record<string, unknown> & {
+    profiles?: { email?: string | null } | null;
+  };
+  return NextResponse.json({
+    ...d,
+    registered_by_email: d.profiles?.email ?? null,
+    sightings_count: 0,
+  });
+}
+
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -131,6 +131,24 @@ export default function AdminDogsPage() {
     fetchDogs();
   }, []);
 
+  // Deep-link: /admin/dogs?edit=<id> opens that dog's edit dialog directly
+  // (e.g. from a report). Fetched on its own so it works even when the dog
+  // isn't in the current 200-row list. Read from the URL on mount (client
+  // only) to avoid a useSearchParams suspense boundary.
+  useEffect(() => {
+    const editId = new URLSearchParams(window.location.search).get("edit");
+    if (!editId) return;
+    (async () => {
+      const res = await fetch(`/api/admin/dogs/${editId}`);
+      if (res.ok) {
+        openEdit((await res.json()) as DogWithMeta);
+      } else {
+        toast.error("Could not load that dog");
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function fetchDogs() {
     const params = new URLSearchParams();
     if (search) params.set("search", search);

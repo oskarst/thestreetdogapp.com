@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -30,6 +32,10 @@ interface AdminReport {
   status: ReportStatus;
   created_at: string;
   dog_id: string | null;
+  dog_ear_tag: string | null;
+  dog_name: string | null;
+  dog_thumbnail: string | null;
+  dog_city: string | null;
   user_nickname: string | null;
   user_email: string;
 }
@@ -114,8 +120,33 @@ export default function AdminReportsPage() {
                   <TableCell className="max-w-[200px] truncate">
                     {r.message}
                   </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    {r.dog_id ? r.dog_id.slice(0, 8) + "..." : "-"}
+                  <TableCell className="text-xs">
+                    {r.dog_id ? (
+                      <Link
+                        href={`/admin/dogs?edit=${r.dog_id}`}
+                        className="inline-flex items-center gap-2 text-ink hover:underline"
+                        title="Open edit dog"
+                      >
+                        {r.dog_thumbnail && (
+                          <span className="relative size-7 shrink-0 overflow-hidden rounded border border-rule bg-muted">
+                            <Image
+                              src={r.dog_thumbnail}
+                              alt=""
+                              fill
+                              className="object-cover"
+                              sizes="28px"
+                            />
+                          </span>
+                        )}
+                        <span className="font-mono">
+                          {r.dog_ear_tag
+                            ? `#${r.dog_ear_tag}`
+                            : r.dog_name ?? r.dog_id.slice(0, 8) + "…"}
+                        </span>
+                      </Link>
+                    ) : (
+                      <span className="text-muted-foreground">-</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     <Select
