@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Loader2, WifiOff } from "lucide-react";
@@ -17,6 +17,7 @@ import { AgePicker } from "@/components/forms/age-picker";
 import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import { checkDogPhoto, checkEarTagImage } from "@/lib/image-checks";
 import { saveOfflineDog } from "@/lib/offline-db";
+import { loadDraft, saveDraft, clearDraft } from "@/lib/add-dog-draft";
 import { DEFAULT_SIZE } from "@/lib/size";
 
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
@@ -79,6 +80,10 @@ export function AddDogForm() {
   const [error, setError] = useState("");
   const [savedOffline, setSavedOffline] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
+  // Draft persistence: don't save until the initial restore runs, and stop
+  // saving once we've submitted (so the post-submit clear isn't re-written).
+  const restoredRef = useRef(false);
+  const submittedRef = useRef(false);
 
   type FieldKey =
     | "dogImage"
@@ -120,6 +125,81 @@ export function AddDogForm() {
       return next;
     });
   }
+
+  // Restore a saved draft (fields + images) so a refresh or navigating away
+  // doesn't lose work. Runs once; images are re-wrapped as Files so the
+  // CameraUpload previews render and submission still works.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const d = await loadDraft();
+        if (d && !cancelled) {
+          if (d.earTagId && !prefilledEarTag) setEarTagId(d.earTagId);
+          if (d.noEarTag) setNoEarTag(true);
+          if (d.location) setLocation(d.location);
+          if (d.aggressive) setAggressive(true);
+          if (typeof d.size === "number") setSize(d.size);
+          if (d.gender) setGender(d.gender as DogGender);
+          if (d.age) setAge(d.age as DogAge);
+          if (d.notes) setNotes(d.notes);
+          if (d.dogImage) {
+            setDogImage(
+              new File([d.dogImage], "dog.jpg", {
+                type: d.dogImage.type || "image/jpeg",
+              })
+            );
+          }
+          if (d.earTagImage) {
+            setEarTagImage(
+              new File([d.earTagImage], "ear_tag.jpg", {
+                type: d.earTagImage.type || "image/jpeg",
+              })
+            );
+          }
+        }
+      } finally {
+        restoredRef.current = true;
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist the draft as the user edits (debounced). Skipped until the
+  // initial restore completes and after a successful submit.
+  useEffect(() => {
+    if (!restoredRef.current || submittedRef.current) return;
+    const handle = setTimeout(() => {
+      void saveDraft({
+        earTagId,
+        noEarTag,
+        location,
+        aggressive,
+        size,
+        gender,
+        age,
+        notes,
+        dogImage,
+        earTagImage,
+        updatedAt: Date.now(),
+      });
+    }, 600);
+    return () => clearTimeout(handle);
+  }, [
+    earTagId,
+    noEarTag,
+    location,
+    aggressive,
+    size,
+    gender,
+    age,
+    notes,
+    dogImage,
+    earTagImage,
+  ]);
 
   // Top-banner showError stays for server-side failures only.
   function showError(msg: string) {
@@ -257,6 +337,8 @@ export function AddDogForm() {
           await (reg as ServiceWorkerRegistration & { sync: { register(tag: string): Promise<void> } }).sync.register("sync-dogs");
         }
 
+        submittedRef.current = true;
+        void clearDraft();
         setSavedOffline(true);
         setSubmitting(false);
         clearSubmittingFlag();
@@ -315,6 +397,9 @@ export function AddDogForm() {
       }
 
       const data = await res.json();
+      // Success — drop the saved draft so the next visit starts clean.
+      submittedRef.current = true;
+      void clearDraft();
       const params = new URLSearchParams({
         points: String(data.points),
         catchType: String(data.catchType),
