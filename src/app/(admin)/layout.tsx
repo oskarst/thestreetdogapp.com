@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -46,6 +47,30 @@ export default async function AdminLayout({
 
   if (profile?.role !== "admin") redirect("/dashboard");
 
+  // Unresolved-work badges in the sidebar. Service-role client (the viewer is
+  // already confirmed admin); head+exact gives counts without pulling rows.
+  const admin = createAdminClient();
+  const [reportsRes, healthRes, pendingRes] = await Promise.all([
+    admin
+      .from("reports")
+      .select("id", { count: "exact", head: true })
+      .neq("status", "resolved"),
+    admin
+      .from("health_reports")
+      .select("id", { count: "exact", head: true })
+      .neq("status", "resolved"),
+    admin
+      .from("dogs")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "pending")
+      .is("deleted_at", null),
+  ]);
+  const badgeCounts: Record<string, number> = {
+    "/admin/reports": reportsRes.count ?? 0,
+    "/admin/health-reports": healthRes.count ?? 0,
+    "/admin/dogs/pending": pendingRes.count ?? 0,
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-rule bg-card">
@@ -73,6 +98,11 @@ export default async function AdminLayout({
             >
               <link.icon className="size-4" />
               {link.label}
+              {(badgeCounts[link.href] ?? 0) > 0 && (
+                <span className="ml-auto inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white">
+                  {badgeCounts[link.href]}
+                </span>
+              )}
             </Link>
           ))}
         </nav>
@@ -104,10 +134,17 @@ export default async function AdminLayout({
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-ink"
-                title={link.label}
+                className="relative rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-ink"
+                title={
+                  (badgeCounts[link.href] ?? 0) > 0
+                    ? `${link.label} (${badgeCounts[link.href]})`
+                    : link.label
+                }
               >
                 <link.icon className="size-4" />
+                {(badgeCounts[link.href] ?? 0) > 0 && (
+                  <span className="absolute right-0.5 top-0.5 size-2 rounded-full bg-amber-500 ring-2 ring-card" />
+                )}
               </Link>
             ))}
           </nav>
