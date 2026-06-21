@@ -3,7 +3,7 @@ import sharp from "sharp";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getDistricts, pointInDistrict } from "@/lib/missions";
-import { citySlugForPoint } from "@/lib/cities";
+import { resolveCitySlug } from "@/lib/geocode";
 import { checkHasDog } from "@/lib/dog-photo-classifier";
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
 
@@ -282,8 +282,9 @@ export async function POST(request: Request) {
 
     // City this sighting falls in — used to scope ear-tag matching so the
     // same tag number in a different city is a distinct dog (migration 037).
-    // Sightings always carry coordinates, so this is non-null in practice.
-    const citySlug = citySlugForPoint(latitude, longitude);
+    // Reverse-geocoded (Nominatim) + cached, with a bbox fallback; see
+    // resolveCitySlug. Sightings always carry coordinates.
+    const citySlug = await resolveCitySlug(admin, latitude, longitude);
 
     // Check if dog exists by ear tag
     let dogId: string;

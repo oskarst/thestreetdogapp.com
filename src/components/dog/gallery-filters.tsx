@@ -40,14 +40,22 @@ export function GalleryFilters({
       const key = d.city_slug ?? UNKNOWN_CITY;
       counts.set(key, (counts.get(key) ?? 0) + 1);
     }
-    const order = [...CITY_SLUGS, UNKNOWN_CITY];
-    return order
-      .filter((slug) => counts.has(slug))
-      .map((slug) => ({
-        slug,
-        label: slug === UNKNOWN_CITY ? "Unknown" : cityLabel(slug),
-        count: counts.get(slug) ?? 0,
-      }));
+    // Known cities first (canonical order), then any geocoded cities not in
+    // the known list, alphabetically, then the "unknown" bucket last.
+    const known = CITY_SLUGS.filter((s) => counts.has(s));
+    const dynamic = [...counts.keys()]
+      .filter((s) => s !== UNKNOWN_CITY && !CITY_SLUGS.includes(s))
+      .sort((a, b) => cityLabel(a).localeCompare(cityLabel(b)));
+    const ordered = [
+      ...known,
+      ...dynamic,
+      ...(counts.has(UNKNOWN_CITY) ? [UNKNOWN_CITY] : []),
+    ];
+    return ordered.map((slug) => ({
+      slug,
+      label: slug === UNKNOWN_CITY ? "Unknown" : cityLabel(slug),
+      count: counts.get(slug) ?? 0,
+    }));
   }, [dogs]);
 
   const counts: Record<Filter, number> = {

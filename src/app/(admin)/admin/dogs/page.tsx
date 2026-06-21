@@ -75,8 +75,6 @@ interface EditDraft {
   ear_tag_image: string | null;
 }
 
-const CITY_OPTIONS = CITY_SLUGS;
-
 const CHARACTER_OPTIONS: DogCharacter[] = [
   "friendly",
   "very_friendly",
@@ -111,6 +109,18 @@ export default function AdminDogsPage() {
   }
   const tagInMultipleCities = (dog: DogWithMeta) =>
     !!dog.ear_tag_id && (earTagCities.get(dog.ear_tag_id)?.size ?? 0) > 1;
+
+  // City dropdown options: the known/canonical slugs plus any geocoded
+  // cities that already exist in the loaded data, so the override and filter
+  // cover dynamically-detected cities too.
+  const cityOptions = Array.from(
+    new Set<string>([
+      ...CITY_SLUGS,
+      ...dogs
+        .map((d) => d.city_slug)
+        .filter((s): s is string => !!s),
+    ])
+  ).sort((a, b) => cityLabel(a).localeCompare(cityLabel(b)));
 
   const visibleDogs =
     cityFilter === "all"
@@ -275,7 +285,7 @@ export default function AdminDogsPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All cities</SelectItem>
-            {CITY_OPTIONS.map((slug) => (
+            {cityOptions.map((slug) => (
               <SelectItem key={slug} value={slug}>
                 {cityLabel(slug)}
               </SelectItem>
@@ -705,7 +715,7 @@ export default function AdminDogsPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="unset">— unset —</SelectItem>
-                      {CITY_OPTIONS.map((slug) => (
+                      {cityOptions.map((slug) => (
                         <SelectItem key={slug} value={slug}>
                           {cityLabel(slug)}
                         </SelectItem>

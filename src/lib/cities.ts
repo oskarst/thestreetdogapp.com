@@ -114,5 +114,11 @@ export function citySlugForPoint(
 export function cityLabel(slug?: string | null): string {
   if (!slug) return "Unknown";
   if (slug === OTHER_CITY_SLUG) return "Other";
-  return cityBySlug(slug)?.name ?? slug;
+  const known = cityBySlug(slug);
+  if (known) return known.name;
+  // Dynamic city from reverse geocoding — title-case the slug parts.
+  return slug
+    .split("-")
+    .map((s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s))
+    .join(" ");
 }
