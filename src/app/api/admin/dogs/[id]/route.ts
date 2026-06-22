@@ -268,6 +268,11 @@ export async function PATCH(
     }
   }
 
+  // in_shelter — welfare flag toggle.
+  if ("in_shelter" in body) {
+    update.in_shelter = body.in_shelter === true;
+  }
+
   // status — moderation approve/decline (approved / pending / rejected).
   if ("status" in body) {
     const v = body.status;

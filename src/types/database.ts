@@ -87,6 +87,8 @@ export interface DogRow {
   status: DogStatus;
   /** City the dog belongs to (derived from coordinates, admin-overridable). */
   city_slug: string | null;
+  /** Welfare flag: the dog lives in / is cared for by a shelter. */
+  in_shelter: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -155,6 +157,7 @@ export interface DogInsert {
   first_registered_by_id?: string | null;
   status?: DogStatus;
   city_slug?: string | null;
+  in_shelter?: boolean;
   created_at?: string;
   updated_at?: string;
 }
@@ -175,6 +178,7 @@ export interface DogUpdate {
   first_registered_by_id?: string | null;
   status?: DogStatus;
   city_slug?: string | null;
+  in_shelter?: boolean;
   updated_at?: string;
 }
 

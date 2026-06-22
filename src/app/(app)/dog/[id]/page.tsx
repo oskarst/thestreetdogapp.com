@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { PenLine, SlidersHorizontal, Flag, MapPin } from "lucide-react";
+import { PenLine, SlidersHorizontal, Flag, MapPin, Home } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth-cache";
 import { getDogById, getSameEarTagDogs } from "@/lib/db/dogs";
 import { cityLabel } from "@/lib/cities";
@@ -153,6 +153,12 @@ export default async function DogProfilePage({
           <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
           {cityLabel(dog.city_slug)}
         </span>
+        {dog.in_shelter && (
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--green-brand)]/40 bg-green-soft px-3 py-1.5 font-mono text-[11.6px] font-medium tracking-[0.08em] uppercase text-green-deep">
+            <Home className="h-3.5 w-3.5" />
+            In shelter
+          </span>
+        )}
         {dog.ear_tag_id && sameTagDogs.length > 0 && (
           <span className="font-mono text-[11.6px] tracking-[0.04em] text-amber-600">
             Tag {dog.ear_tag_id} also in{" "}

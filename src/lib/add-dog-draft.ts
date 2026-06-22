@@ -8,6 +8,7 @@ export interface AddDogDraft {
   noEarTag?: boolean;
   location?: { lat: number; lng: number } | null;
   aggressive?: boolean;
+  inShelter?: boolean;
   size?: number;
   gender?: string;
   age?: string;

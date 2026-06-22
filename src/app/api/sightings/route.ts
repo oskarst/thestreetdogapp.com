@@ -125,6 +125,7 @@ export async function POST(request: Request) {
     const age = formData.get("age") as DogAge;
     const notes = (formData.get("notes") as string) || null;
     const clientUuid = (formData.get("clientUuid") as string) || null;
+    const inShelter = formData.get("inShelter") === "true";
 
     // Idempotent replay: if this clientUuid was already accepted for this
     // user, return the existing dogId without re-inserting. Routes through
@@ -337,6 +338,9 @@ export async function POST(request: Request) {
             gender,
             age,
             ear_tag_image: existingDog.ear_tag_image ?? earTagImageUrl,
+            // Sticky: only promote to true on re-sighting so a passer-by who
+            // leaves the box unticked can't clear a known shelter dog.
+            ...(inShelter ? { in_shelter: true } : {}),
           })
           .eq("id", dogId);
         if (dogUpdateErr) {
@@ -364,6 +368,7 @@ export async function POST(request: Request) {
             last_longitude: longitude,
             last_sighting_date: new Date().toISOString(),
             city_slug: citySlug,
+            in_shelter: inShelter,
             character,
             size,
             gender,
@@ -395,6 +400,7 @@ export async function POST(request: Request) {
           last_longitude: longitude,
           last_sighting_date: new Date().toISOString(),
           city_slug: citySlug,
+          in_shelter: inShelter,
           character,
           size,
           gender,

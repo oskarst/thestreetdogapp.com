@@ -69,6 +69,7 @@ export function AddDogForm() {
   // others are warned to keep their distance.
   const [aggressive, setAggressive] = useState(false);
   const character: DogCharacter = aggressive ? "aggressive" : "friendly";
+  const [inShelter, setInShelter] = useState(false);
   const [size, setSize] = useState(DEFAULT_SIZE);
   const [gender, setGender] = useState<DogGender | "">("");
   const [age, setAge] = useState<DogAge | "">("");
@@ -139,6 +140,7 @@ export function AddDogForm() {
           if (d.noEarTag) setNoEarTag(true);
           if (d.location) setLocation(d.location);
           if (d.aggressive) setAggressive(true);
+          if (d.inShelter) setInShelter(true);
           if (typeof d.size === "number") setSize(d.size);
           if (d.gender) setGender(d.gender as DogGender);
           if (d.age) setAge(d.age as DogAge);
@@ -178,6 +180,7 @@ export function AddDogForm() {
         noEarTag,
         location,
         aggressive,
+        inShelter,
         size,
         gender,
         age,
@@ -193,6 +196,7 @@ export function AddDogForm() {
     noEarTag,
     location,
     aggressive,
+    inShelter,
     size,
     gender,
     age,
@@ -327,6 +331,7 @@ export function AddDogForm() {
           gender,
           age,
           notes: notes.trim() || undefined,
+          inShelter,
           clientUuid: makeUuid(),
           createdAt: new Date().toISOString(),
         });
@@ -366,6 +371,7 @@ export function AddDogForm() {
       formData.append("gender", gender);
       formData.append("age", age);
       if (notes.trim()) formData.append("notes", notes.trim());
+      if (inShelter) formData.append("inShelter", "true");
 
       const res = await fetch("/api/sightings", {
         method: "POST",
@@ -667,6 +673,22 @@ export function AddDogForm() {
             </div>
             <div className="text-[12.5px] leading-snug text-muted-foreground">
               {t("aggressiveDogHint")}
+            </div>
+          </div>
+        </label>
+        <label className="mt-2 flex items-center gap-3 rounded-xl border border-rule bg-card px-3.5 py-2.5 cursor-pointer select-none has-[:checked]:border-[var(--green-brand)] has-[:checked]:bg-green-soft transition-colors">
+          <input
+            type="checkbox"
+            checked={inShelter}
+            onChange={(e) => setInShelter(e.target.checked)}
+            className="size-4 shrink-0 accent-[var(--green-brand)]"
+          />
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-ink">
+              {t("shelterDog")}
+            </div>
+            <div className="text-[12.5px] leading-snug text-muted-foreground">
+              {t("shelterDogHint")}
             </div>
           </div>
         </label>

@@ -71,6 +71,7 @@ interface EditDraft {
   size: number | null;
   status: DogStatus;
   city_slug: string | null;
+  in_shelter: boolean;
   images: string[];
   ear_tag_image: string | null;
 }
@@ -186,6 +187,7 @@ export default function AdminDogsPage() {
       size: dog.size ?? null,
       status: dog.status ?? "approved",
       city_slug: dog.city_slug ?? null,
+      in_shelter: dog.in_shelter ?? false,
       images: dog.images ?? [],
       ear_tag_image: dog.ear_tag_image ?? null,
     });
@@ -232,6 +234,7 @@ export default function AdminDogsPage() {
       size: editDraft.size,
       status: editDraft.status,
       city_slug: editDraft.city_slug,
+      in_shelter: editDraft.in_shelter,
       images: editDraft.images,
       ear_tag_image: editDraft.ear_tag_image,
     };
@@ -742,6 +745,17 @@ export default function AdminDogsPage() {
                   </Select>
                 </div>
               </div>
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={editDraft.in_shelter}
+                  onChange={(e) =>
+                    setEditDraft({ ...editDraft, in_shelter: e.target.checked })
+                  }
+                  className="size-4"
+                />
+                <span className="text-sm font-medium">Lives in a shelter</span>
+              </label>
             </div>
           )}
           <DialogFooter>
