@@ -29,6 +29,7 @@ export interface OfflineDogEntry {
   age: DogAge;
   notes?: string;
   inShelter?: boolean;
+  shelterInfo?: string;
   clientUuid?: string;
   createdAt: string;
   // v2 retry metadata — optional on read, defaults applied at write.
@@ -265,6 +266,7 @@ export async function syncOfflineDogs(): Promise<{
       formData.append("age", entry.age);
       if (entry.notes) formData.append("notes", entry.notes);
       if (entry.inShelter) formData.append("inShelter", "true");
+      if (entry.shelterInfo) formData.append("shelterInfo", entry.shelterInfo);
       if (entry.clientUuid) formData.append("clientUuid", entry.clientUuid);
 
       try {

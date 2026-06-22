@@ -178,6 +178,17 @@ export default async function DogProfilePage({
         )}
       </div>
 
+      {dog.in_shelter && dog.shelter_info && (
+        <div className="rounded-xl border border-[var(--green-brand)]/30 bg-green-soft px-4 py-3">
+          <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-green-deep mb-1">
+            Shelter
+          </div>
+          <p className="text-sm text-ink leading-relaxed whitespace-pre-line">
+            {dog.shelter_info}
+          </p>
+        </div>
+      )}
+
       <DogDetails
         dog={dog}
         totalSightings={sightings.length}

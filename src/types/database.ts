@@ -46,6 +46,8 @@ export interface ProfileRow {
   /** Find Doggo active state — null when no active target. */
   active_finddoggo_dog_id?: string | null;
   active_finddoggo_started_at?: string | null;
+  /** Remembered shelter info, prefilled into the Add-Dog shelter field. */
+  shelter_info?: string | null;
 }
 
 export interface ProfileInsert {
@@ -67,6 +69,7 @@ export interface ProfileUpdate {
   is_banned?: boolean;
   ocr_usage_count?: number;
   last_activity?: string;
+  shelter_info?: string | null;
   updated_at?: string;
 }
 
@@ -89,6 +92,8 @@ export interface DogRow {
   city_slug: string | null;
   /** Welfare flag: the dog lives in / is cared for by a shelter. */
   in_shelter: boolean;
+  /** Free-text shelter info (name/address/contact) when in_shelter. */
+  shelter_info: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -158,6 +163,7 @@ export interface DogInsert {
   status?: DogStatus;
   city_slug?: string | null;
   in_shelter?: boolean;
+  shelter_info?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -179,6 +185,7 @@ export interface DogUpdate {
   status?: DogStatus;
   city_slug?: string | null;
   in_shelter?: boolean;
+  shelter_info?: string | null;
   updated_at?: string;
 }
 

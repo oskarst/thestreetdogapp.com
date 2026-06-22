@@ -18,6 +18,7 @@ import { OfflineSyncPanel } from "@/components/pwa/offline-sync-panel";
 import { checkDogPhoto, checkEarTagImage } from "@/lib/image-checks";
 import { saveOfflineDog } from "@/lib/offline-db";
 import { loadDraft, saveDraft, clearDraft } from "@/lib/add-dog-draft";
+import { createClient } from "@/lib/supabase/client";
 import { DEFAULT_SIZE } from "@/lib/size";
 
 import type { DogCharacter, DogGender, DogAge } from "@/types/database";
@@ -70,6 +71,9 @@ export function AddDogForm() {
   const [aggressive, setAggressive] = useState(false);
   const character: DogCharacter = aggressive ? "aggressive" : "friendly";
   const [inShelter, setInShelter] = useState(false);
+  const [shelterInfo, setShelterInfo] = useState("");
+  // Shelter info remembered on the profile; prefilled when the box is ticked.
+  const savedShelterInfoRef = useRef("");
   const [size, setSize] = useState(DEFAULT_SIZE);
   const [gender, setGender] = useState<DogGender | "">("");
   const [age, setAge] = useState<DogAge | "">("");
@@ -141,6 +145,7 @@ export function AddDogForm() {
           if (d.location) setLocation(d.location);
           if (d.aggressive) setAggressive(true);
           if (d.inShelter) setInShelter(true);
+          if (d.shelterInfo) setShelterInfo(d.shelterInfo);
           if (typeof d.size === "number") setSize(d.size);
           if (d.gender) setGender(d.gender as DogGender);
           if (d.age) setAge(d.age as DogAge);
@@ -170,6 +175,29 @@ export function AddDogForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Load the shelter info remembered on the user's profile, so ticking the
+  // shelter box can prefill it.
+  useEffect(() => {
+    (async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data } = await supabase
+          .from("profiles")
+          .select("shelter_info")
+          .eq("id", user.id)
+          .single();
+        const info = ((data?.shelter_info as string | null) ?? "").trim();
+        if (info) savedShelterInfoRef.current = info;
+      } catch {
+        /* ignore */
+      }
+    })();
+  }, []);
+
   // Persist the draft as the user edits (debounced). Skipped until the
   // initial restore completes and after a successful submit.
   useEffect(() => {
@@ -181,6 +209,7 @@ export function AddDogForm() {
         location,
         aggressive,
         inShelter,
+        shelterInfo,
         size,
         gender,
         age,
@@ -197,6 +226,7 @@ export function AddDogForm() {
     location,
     aggressive,
     inShelter,
+    shelterInfo,
     size,
     gender,
     age,
@@ -332,6 +362,7 @@ export function AddDogForm() {
           age,
           notes: notes.trim() || undefined,
           inShelter,
+          shelterInfo: inShelter ? shelterInfo.trim() || undefined : undefined,
           clientUuid: makeUuid(),
           createdAt: new Date().toISOString(),
         });
@@ -372,6 +403,8 @@ export function AddDogForm() {
       formData.append("age", age);
       if (notes.trim()) formData.append("notes", notes.trim());
       if (inShelter) formData.append("inShelter", "true");
+      if (inShelter && shelterInfo.trim())
+        formData.append("shelterInfo", shelterInfo.trim());
 
       const res = await fetch("/api/sightings", {
         method: "POST",
@@ -680,7 +713,14 @@ export function AddDogForm() {
           <input
             type="checkbox"
             checked={inShelter}
-            onChange={(e) => setInShelter(e.target.checked)}
+            onChange={(e) => {
+              const checked = e.target.checked;
+              setInShelter(checked);
+              // Prefill from the remembered profile value when first ticked.
+              if (checked && !shelterInfo.trim() && savedShelterInfoRef.current) {
+                setShelterInfo(savedShelterInfoRef.current);
+              }
+            }}
             className="size-4 shrink-0 accent-[var(--green-brand)]"
           />
           <div className="min-w-0">
@@ -692,6 +732,16 @@ export function AddDogForm() {
             </div>
           </div>
         </label>
+        {inShelter && (
+          <textarea
+            value={shelterInfo}
+            onChange={(e) => setShelterInfo(e.target.value)}
+            rows={3}
+            maxLength={1000}
+            placeholder={t("shelterInfoPlaceholder")}
+            className="mt-2 w-full rounded-xl border border-rule bg-card px-3.5 py-2.5 text-sm leading-snug text-ink placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-[var(--green-brand)]/30 focus:border-[var(--green-brand)]"
+          />
+        )}
       </section>
 
       <section>

@@ -126,6 +126,9 @@ export async function POST(request: Request) {
     const notes = (formData.get("notes") as string) || null;
     const clientUuid = (formData.get("clientUuid") as string) || null;
     const inShelter = formData.get("inShelter") === "true";
+    const shelterInfo = ((formData.get("shelterInfo") as string) || "")
+      .trim()
+      .slice(0, 1000);
 
     // Idempotent replay: if this clientUuid was already accepted for this
     // user, return the existing dogId without re-inserting. Routes through
@@ -339,8 +342,14 @@ export async function POST(request: Request) {
             age,
             ear_tag_image: existingDog.ear_tag_image ?? earTagImageUrl,
             // Sticky: only promote to true on re-sighting so a passer-by who
-            // leaves the box unticked can't clear a known shelter dog.
-            ...(inShelter ? { in_shelter: true } : {}),
+            // leaves the box unticked can't clear a known shelter dog. Update
+            // shelter_info only when fresh text is supplied.
+            ...(inShelter
+              ? {
+                  in_shelter: true,
+                  ...(shelterInfo ? { shelter_info: shelterInfo } : {}),
+                }
+              : {}),
           })
           .eq("id", dogId);
         if (dogUpdateErr) {
@@ -369,6 +378,7 @@ export async function POST(request: Request) {
             last_sighting_date: new Date().toISOString(),
             city_slug: citySlug,
             in_shelter: inShelter,
+            shelter_info: inShelter ? shelterInfo || null : null,
             character,
             size,
             gender,
@@ -401,6 +411,7 @@ export async function POST(request: Request) {
           last_sighting_date: new Date().toISOString(),
           city_slug: citySlug,
           in_shelter: inShelter,
+          shelter_info: inShelter ? shelterInfo || null : null,
           character,
           size,
           gender,
@@ -415,6 +426,19 @@ export async function POST(request: Request) {
       dogId = newDog.id;
     }
     mark("dog-upsert");
+
+    // Remember the shelter info on the reporter's profile so the Add-Dog
+    // form can prefill it next time. Best-effort; never blocks the sighting.
+    if (inShelter && shelterInfo) {
+      try {
+        await supabase
+          .from("profiles")
+          .update({ shelter_info: shelterInfo })
+          .eq("id", user.id);
+      } catch (profErr) {
+        console.error("[sightings] shelter_info profile save failed:", profErr);
+      }
+    }
 
     // Create sighting
     const { error: sightingErr } = await supabase.from("sightings").insert({

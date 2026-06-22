@@ -9,6 +9,7 @@ export interface AddDogDraft {
   location?: { lat: number; lng: number } | null;
   aggressive?: boolean;
   inShelter?: boolean;
+  shelterInfo?: string;
   size?: number;
   gender?: string;
   age?: string;
