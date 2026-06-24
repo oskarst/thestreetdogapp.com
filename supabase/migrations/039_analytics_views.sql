@@ -32,6 +32,11 @@ WHERE d.status = 'approved'
   AND d.deleted_at IS NULL;
 
 -- Sightings -----------------------------------------------------------------
+-- health_flag normally arrives via migration 022. Guard it here so this view
+-- doesn't depend on 022 having been applied first (no-op if it already has).
+ALTER TABLE public.sightings
+    ADD COLUMN IF NOT EXISTS health_flag BOOLEAN NOT NULL DEFAULT false;
+
 CREATE OR REPLACE VIEW public.analytics_sightings AS
 SELECT
     s.id,
