@@ -136,9 +136,8 @@ export default function PrivacyPage() {
             </h2>
             <p className="text-[13.5px] text-muted-foreground mt-1 leading-snug">
               Removes your sightings and the dogs you registered from the app
-              and from your score. This is a soft delete — your data is hidden
-              and recoverable by an admin, and shared dogs other people have
-              also seen are kept.
+              and from your score. This is a soft delete, so your data is hidden
+              from the app, and shared dogs other people have also seen are kept.
             </p>
 
             {!confirmDelete ? (

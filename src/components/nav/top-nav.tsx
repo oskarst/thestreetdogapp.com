@@ -112,9 +112,9 @@ export function TopNav({ user }: TopNavProps) {
             className="h-8 w-8 object-contain"
             priority
           />
-          <span className="font-mono text-[12.1px] font-semibold tracking-[0.16em] uppercase text-ink">
+          <span className="font-mono text-[12.1px] font-semibold tracking-[0.16em] uppercase text-ink truncate min-w-0">
             Street-Dog
-            <span className="font-medium text-muted-foreground ml-1">
+            <span className="hidden sm:inline font-medium text-muted-foreground ml-1">
               // {section}
             </span>
           </span>
@@ -137,7 +137,7 @@ export function TopNav({ user }: TopNavProps) {
               >
                 {initial}
               </span>
-              <span className="font-mono text-[12.1px] font-medium tracking-[0.04em] max-w-[100px] truncate">
+              <span className="hidden sm:block font-mono text-[12.1px] font-medium tracking-[0.04em] max-w-[100px] truncate">
                 {user.nickname}
               </span>
             </DropdownMenuTrigger>

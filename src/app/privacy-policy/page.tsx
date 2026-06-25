@@ -135,9 +135,8 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-lg font-semibold mb-2">7. Retention</h2>
           <p>
             We keep your data while your account is active. When you delete your
-            dog data, it is soft-deleted — hidden from the app and from scores,
-            and recoverable by an admin for a limited period before permanent
-            removal. Backups are rotated on a regular schedule.
+            dog data, it is soft-deleted, so it is hidden from the app and from
+            scores. Backups are rotated on a regular schedule.
           </p>
         </div>
 

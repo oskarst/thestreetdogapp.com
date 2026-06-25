@@ -11,6 +11,7 @@ import { DogImageCarousel } from "@/components/dog/dog-image-carousel";
 import { DogDetails } from "@/components/dog/dog-details";
 import { DogActionIcons } from "@/components/dog/dog-action-icons";
 import { DogHistorySection } from "@/components/dog/dog-history-section";
+import { DeleteMySightingsButton } from "@/components/dog/delete-my-sightings-button";
 import { sampleN } from "@/lib/sample";
 
 export default async function DogProfilePage({
@@ -51,6 +52,7 @@ export default async function DogProfilePage({
   // Naming is allowed only for the registrar or someone who has sighted this
   // dog — so only show the "Name this dog" action to those users.
   const canName = isOwner || sightings.some((s) => s.is_mine);
+  const myCount = sightings.filter((s) => s.is_mine).length;
 
   // "First seen" = the earliest of the dog's creation date and any sighting on
   // record. Imported dogs were created in-app (e.g. 2026) but carry sightings
@@ -146,6 +148,9 @@ export default async function DogProfilePage({
           <Flag className="h-4 w-4" />
           Report bad data
         </Link>
+        {myCount > 0 && (
+          <DeleteMySightingsButton dogId={dog.id} count={myCount} />
+        )}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
