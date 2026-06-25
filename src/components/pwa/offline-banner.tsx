@@ -3,21 +3,41 @@
 import { useEffect, useState } from "react";
 import { WifiOff } from "lucide-react";
 
+async function reachable(): Promise<boolean> {
+  try {
+    const res = await fetch("/api/ping", { method: "GET", cache: "no-store" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 export function OfflineBanner() {
   const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
-    setIsOffline(!navigator.onLine);
+    let cancelled = false;
 
-    const goOffline = () => setIsOffline(true);
-    const goOnline = () => setIsOffline(false);
+    // navigator.onLine false-positives "offline" in some webviews / standalone
+    // PWAs, which made this banner show for online users. Trust onLine=true,
+    // but when it claims offline, confirm with a real network probe first.
+    const recheck = async () => {
+      if (navigator.onLine) {
+        if (!cancelled) setIsOffline(false);
+        return;
+      }
+      const ok = await reachable();
+      if (!cancelled) setIsOffline(!ok);
+    };
 
-    window.addEventListener("offline", goOffline);
-    window.addEventListener("online", goOnline);
+    recheck();
+    window.addEventListener("offline", recheck);
+    window.addEventListener("online", recheck);
 
     return () => {
-      window.removeEventListener("offline", goOffline);
-      window.removeEventListener("online", goOnline);
+      cancelled = true;
+      window.removeEventListener("offline", recheck);
+      window.removeEventListener("online", recheck);
     };
   }, []);
 
