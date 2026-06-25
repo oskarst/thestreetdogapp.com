@@ -1,6 +1,6 @@
 // Service Worker for Street Dog App PWA
 
-const CACHE_NAME = "streetdog-v13";
+const CACHE_NAME = "streetdog-v14";
 // Dedicated cache for Supabase Storage public objects (dog photos +
 // thumbnails). Stays out of CACHE_NAME so deploys don't have to evict
 // the user's photo cache.
