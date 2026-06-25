@@ -312,6 +312,40 @@ export function AddDogForm() {
     }
   }
 
+  // Queue the dog in IndexedDB for background sync. Used as the fallback when
+  // the network POST can't reach the server (genuine offline), not gated on
+  // the unreliable navigator.onLine.
+  async function saveDogOffline() {
+    if (!dogImage || !location || !gender || !age) return;
+    await saveOfflineDog({
+      dogImage,
+      earTagImage: earTagImage ?? undefined,
+      earTagId: earTagId.trim() || undefined,
+      latitude: location.lat,
+      longitude: location.lng,
+      character,
+      size,
+      gender,
+      age,
+      notes: notes.trim() || undefined,
+      inShelter,
+      shelterInfo: inShelter ? shelterInfo.trim() || undefined : undefined,
+      clientUuid: makeUuid(),
+      createdAt: new Date().toISOString(),
+    });
+    if ("serviceWorker" in navigator && "SyncManager" in window) {
+      const reg = await navigator.serviceWorker.ready;
+      await (
+        reg as ServiceWorkerRegistration & {
+          sync: { register(tag: string): Promise<void> };
+        }
+      ).sync.register("sync-dogs");
+    }
+    submittedRef.current = true;
+    void clearDraft();
+    setSavedOffline(true);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -347,49 +381,9 @@ export function AddDogForm() {
       /* private mode — best-effort. */
     }
 
-    // Offline: save to IndexedDB instead of posting
-    if (typeof navigator !== "undefined" && !navigator.onLine) {
-      try {
-        await saveOfflineDog({
-          dogImage,
-          earTagImage: earTagImage ?? undefined,
-          earTagId: earTagId.trim() || undefined,
-          latitude: location.lat,
-          longitude: location.lng,
-          character,
-          size,
-          gender,
-          age,
-          notes: notes.trim() || undefined,
-          inShelter,
-          shelterInfo: inShelter ? shelterInfo.trim() || undefined : undefined,
-          clientUuid: makeUuid(),
-          createdAt: new Date().toISOString(),
-        });
-
-        // Register background sync
-        if ("serviceWorker" in navigator && "SyncManager" in window) {
-          const reg = await navigator.serviceWorker.ready;
-          await (reg as ServiceWorkerRegistration & { sync: { register(tag: string): Promise<void> } }).sync.register("sync-dogs");
-        }
-
-        submittedRef.current = true;
-        void clearDraft();
-        setSavedOffline(true);
-        setSubmitting(false);
-        clearSubmittingFlag();
-        return;
-      } catch (err) {
-        showError(
-          err instanceof Error ? err.message : t("errorSaveOffline")
-        );
-        setSubmitting(false);
-        clearSubmittingFlag();
-        return;
-      }
-    }
-
-    // Online: POST to API
+    // Try the network first. Only fall back to offline-save if the request
+    // genuinely can't reach the server (see catch) — navigator.onLine lies
+    // (false positives for "offline") in some webviews / standalone PWAs.
     try {
       const formData = new FormData();
       formData.append("dogImage", dogImage);
@@ -462,7 +456,18 @@ export function AddDogForm() {
       // route guard turns this into a same-document navigation.
       clearSubmittingFlag();
     } catch (err) {
-      showError(err instanceof Error ? err.message : t("errorSubmit"));
+      // fetch() throws TypeError only when the request can't reach the server
+      // (offline, DNS, dropped connection). A non-ok HTTP response does NOT
+      // throw — we threw a plain Error for that above. So TypeError ⇒ offline.
+      if (err instanceof TypeError) {
+        try {
+          await saveDogOffline();
+        } catch {
+          showError(t("errorSaveOffline"));
+        }
+      } else {
+        showError(err instanceof Error ? err.message : t("errorSubmit"));
+      }
       setSubmitting(false);
       clearSubmittingFlag();
     }
