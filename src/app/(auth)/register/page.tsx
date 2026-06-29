@@ -69,67 +69,76 @@ export default function RegisterPage() {
       setLoading(false);
     }
 
-    const { error } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
-      options: {
-        data: { nickname: form.nickname },
-      },
-    });
-
-    if (error) {
-      const lower = error.message.toLowerCase();
-      if (lower.includes("rate limit")) {
-        return fail("Too many attempts. Please try again in a few minutes.");
-      }
-      const taken =
-        lower.includes("already registered") ||
-        lower.includes("already been registered") ||
-        lower.includes("user already");
-      if (!taken) {
-        return fail("Something went wrong. Please try again.");
-      }
-      // "Already registered" on a brand-new email is almost always a
-      // double-submit or a network retry of THIS user's own signup — the
-      // first request already created the account. Try to sign in with the
-      // password they just entered: if it works the account is theirs and we
-      // continue; if not, it's a genuinely different existing account.
-      const { error: signinErr } = await supabase.auth.signInWithPassword({
+    // Everything below is network I/O. Wrap it so a flaky connection (a thrown
+    // fetch error on any call) surfaces a retryable error instead of leaving
+    // the button stuck spinning with the submit guard latched — the root of
+    // the "registration is flaky" reports.
+    try {
+      const { data: signUpData, error } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
+        options: {
+          data: { nickname: form.nickname },
+        },
       });
-      if (signinErr) {
-        return fail(
-          "That email is already registered. Try signing in instead."
-        );
+
+      let session = signUpData?.session ?? null;
+
+      if (error) {
+        const lower = error.message.toLowerCase();
+        if (lower.includes("rate limit")) {
+          return fail("Too many attempts. Please try again in a few minutes.");
+        }
+        const taken =
+          lower.includes("already registered") ||
+          lower.includes("already been registered") ||
+          lower.includes("user already");
+        if (!taken) {
+          return fail("Something went wrong. Please try again.");
+        }
+        // "Already registered" on a brand-new email is almost always a
+        // double-submit or a network retry of THIS user's own signup — the
+        // first request already created the account. Try to sign in with the
+        // password they just entered: if it works the account is theirs and we
+        // continue; if not, it's a genuinely different existing account.
+        const { data: signinData, error: signinErr } =
+          await supabase.auth.signInWithPassword({
+            email: form.email,
+            password: form.password,
+          });
+        if (signinErr) {
+          return fail(
+            "That email is already registered. Try signing in instead."
+          );
+        }
+        session = signinData.session;
       }
-    }
 
-    // Make sure we're signed in (confirmation-OFF: signUp already returns a
-    // session; this also covers the recovery path above).
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData.session) {
-      await supabase.auth.signInWithPassword({
-        email: form.email,
-        password: form.password,
-      });
-    }
+      // Confirmation-OFF returns a session straight from signUp. If there
+      // isn't one (e.g. email confirmation is enabled), the account exists but
+      // can't be used yet — tell them to confirm rather than bouncing to a
+      // dashboard that would just redirect back to login.
+      if (!session) {
+        submitting.current = false;
+        setLoading(false);
+        setErrors({
+          form: "Account created. Check your email to confirm it, then sign in.",
+        });
+        return;
+      }
 
-    // The auth trigger creates the profile row with id + email only, so the
-    // chosen nickname has to be written back here (RLS allows the user to
-    // update their own nickname). Best-effort: a failure here shouldn't block
-    // an otherwise-successful signup.
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
+      // The auth trigger creates the profile row with id + email only, so the
+      // chosen nickname is written back here (RLS allows updating your own).
+      // Best-effort: a failure here shouldn't block an otherwise-good signup.
       await supabase
         .from("profiles")
         .update({ nickname: form.nickname })
-        .eq("id", user.id);
-    }
+        .eq("id", session.user.id);
 
-    router.push("/dashboard");
+      router.push("/dashboard");
+    } catch {
+      fail("Network problem. Please check your connection and try again.");
+    }
   }
 
   return (
