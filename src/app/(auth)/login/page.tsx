@@ -36,15 +36,22 @@ export default function LoginPage() {
 
     setLoading(true);
     const supabase = createClient();
-    const { error: otpError } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-        // Magic-link sign-in is for existing accounts; new users register
-        // (which logs them in immediately).
-        shouldCreateUser: false,
-      },
-    });
+    let otpError: { status?: number; message: string } | null = null;
+    try {
+      ({ error: otpError } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          // Magic-link sign-in is for existing accounts; new users register
+          // (which logs them in immediately).
+          shouldCreateUser: false,
+        },
+      }));
+    } catch {
+      setError("Network problem. Please check your connection and try again.");
+      setLoading(false);
+      return;
+    }
     setLoading(false);
 
     if (otpError) {
@@ -89,20 +96,26 @@ export default function LoginPage() {
 
     setLoading(true);
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (signInError) {
-      // Generic message — never differentiate between "wrong password",
-      // "no such user", etc., to prevent account enumeration.
-      setError("Invalid email or password.");
+      if (signInError) {
+        // Generic message — never differentiate between "wrong password",
+        // "no such user", etc., to prevent account enumeration.
+        setError("Invalid email or password.");
+        setLoading(false);
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch {
+      // Network blip / thrown fetch — don't leave the button stuck spinning.
+      setError("Network problem. Please check your connection and try again.");
       setLoading(false);
-      return;
     }
-
-    router.push("/dashboard");
   }
 
   const footer = (
