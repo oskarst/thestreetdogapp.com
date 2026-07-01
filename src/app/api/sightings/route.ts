@@ -440,21 +440,27 @@ export async function POST(request: Request) {
       }
     }
 
-    // Create sighting
-    const { error: sightingErr } = await supabase.from("sightings").insert({
-      user_id: user.id,
-      dog_id: dogId,
-      latitude,
-      longitude,
-      character,
-      size,
-      gender,
-      age,
-      notes,
-      image_url: dogImageUrl,
-      ear_tag_image_url: earTagImageUrl,
-      client_uuid: clientUuid,
-    });
+    // Create sighting. Select the id back (it's SELECT-able per lockdown 005)
+    // so the client can offer a "wrong dog? fix the tag" correction that
+    // re-homes this exact sighting.
+    const { data: newSighting, error: sightingErr } = await supabase
+      .from("sightings")
+      .insert({
+        user_id: user.id,
+        dog_id: dogId,
+        latitude,
+        longitude,
+        character,
+        size,
+        gender,
+        age,
+        notes,
+        image_url: dogImageUrl,
+        ear_tag_image_url: earTagImageUrl,
+        client_uuid: clientUuid,
+      })
+      .select("id")
+      .single();
     if (sightingErr) {
       // Concurrent replay raced past the dedupe check and hit the unique index.
       // Treat as duplicate — the other request already succeeded.
@@ -580,6 +586,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       dogId,
+      sightingId: newSighting?.id ?? null,
       points,
       catchType,
       missionAward,

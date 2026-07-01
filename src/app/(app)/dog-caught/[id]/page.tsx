@@ -6,12 +6,14 @@ import { getDogById } from "@/lib/db/dogs";
 import { Icon } from "@/components/ui/icon";
 import { SectionLabel } from "@/components/ui/section-label";
 import { DogNameInput } from "@/components/dog/dog-name-input";
+import { CorrectTagPanel } from "@/components/dog/correct-tag-panel";
 
 interface DogCaughtPageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{
     points?: string;
     catchType?: string;
+    sightingId?: string;
     missionXp?: string;
     missionProgress?: string;
     missionTarget?: string;
@@ -39,6 +41,13 @@ export default async function DogCaughtPage({
   const sp = await searchParams;
   const points = parseInt(sp.points ?? "1", 10);
   const catchType = sp.catchType ?? "repeat";
+  const sightingId = sp.sightingId ?? null;
+  // Only entries that matched an EXISTING dog (first catch / repeat) could
+  // have been mis-attached by a typed tag; a typo is the only way a tag can
+  // "already exist". Offer the correction for exactly those.
+  const canCorrectTag =
+    Boolean(sightingId) &&
+    (catchType === "first_catch" || catchType === "repeat");
   const missionXp = sp.missionXp ? parseInt(sp.missionXp, 10) : 0;
   const missionProgress = sp.missionProgress
     ? parseInt(sp.missionProgress, 10)
@@ -202,6 +211,10 @@ export default async function DogCaughtPage({
               No ear tag — logged as a field sighting, not a catalogued subject.
             </div>
           </div>
+        )}
+
+        {canCorrectTag && sightingId && (
+          <CorrectTagPanel sightingId={sightingId} currentDogId={id} />
         )}
 
         <div className="flex flex-col gap-2.5 mt-6">

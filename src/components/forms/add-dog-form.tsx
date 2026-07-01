@@ -437,6 +437,9 @@ export function AddDogForm() {
         points: String(data.points),
         catchType: String(data.catchType),
       });
+      // Carry the sighting id so the result screen can offer a tag
+      // correction if this entry matched the wrong (mistyped) dog.
+      if (data.sightingId) params.set("sightingId", String(data.sightingId));
       if (data.missionAward) {
         params.set("missionXp", String(data.missionAward.awarded));
         params.set("missionProgress", String(data.missionAward.progress));

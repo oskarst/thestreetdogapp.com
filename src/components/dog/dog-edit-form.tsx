@@ -13,7 +13,6 @@ interface DogEditFormProps {
 }
 
 const TAG_ERRORS: Record<string, string> = {
-  tag_taken: "Another dog already uses that tag id.",
   not_owner: "You can only edit dogs you registered.",
   dog_not_found: "This dog no longer exists.",
 };
@@ -39,9 +38,23 @@ export function DogEditForm({ dogId, initialEarTag }: DogEditFormProps) {
         "update_my_dog_ear_tag",
         { p_dog_id: dogId, p_ear_tag_id: earTag.trim() }
       );
-      const r = data as { ok?: boolean; error?: string } | null;
+      const r = data as {
+        ok?: boolean;
+        error?: string;
+        merged?: boolean;
+        canonical_dog_id?: string;
+      } | null;
       if (rpcErr || !r?.ok) {
         setError(TAG_ERRORS[r?.error ?? ""] ?? "Couldn't save the tag id.");
+        return;
+      }
+      // A dog with this tag already existed in this city: this entry was a
+      // duplicate of the same dog, so its sighting was folded into the
+      // existing record. Land the user on that canonical dog.
+      if (r.merged && r.canonical_dog_id) {
+        toast.success("This dog was already registered here — added your sighting to it.");
+        router.push(`/dog/${r.canonical_dog_id}`);
+        router.refresh();
         return;
       }
       toast.success("Tag id updated.");
