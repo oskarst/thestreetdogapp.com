@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Loader2, WifiOff } from "lucide-react";
 
 import { useViewerLocation } from "@/components/location/location-gate";
+import { announceLevel } from "@/components/dog/level-up-splash";
 
 import { Input } from "@/components/ui/input";
 import { SectionLabel } from "@/components/ui/section-label";
@@ -433,6 +434,10 @@ export function AddDogForm() {
       // Success — drop the saved draft so the next visit starts clean.
       submittedRef.current = true;
       void clearDraft();
+      // Instant level-up feedback: the API returns the fresh level; the
+      // global overlay decides whether it's an increase worth celebrating
+      // (it pops over the /dog-caught reward screen after a beat).
+      if (typeof data.level === "number") announceLevel(data.level);
       const params = new URLSearchParams({
         points: String(data.points),
         catchType: String(data.catchType),

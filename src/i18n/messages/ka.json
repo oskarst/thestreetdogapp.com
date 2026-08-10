@@ -74,7 +74,10 @@
     "achFivePioneers": "5 აღმოჩენილი",
     "achFiftySpottings": "50 ნახვა",
     "achSevenDayStreak": "7-დღიანი სერია",
-    "developedBy": "შემქმნელი:"
+    "developedBy": "შემქმნელი:",
+    "levelUpKicker": "ახალი დონე",
+    "levelUpBody": "გილოცავ! ახლა შენ ხარ",
+    "levelUpContinue": "გაგრძელება"
   },
   "addDog": {
     "dogNamed": "ძაღლი დასახელდა {name}!",

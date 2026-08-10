@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import sharp from "sharp";
+import { deriveLevel } from "@/lib/dashboard";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getDistricts, pointInDistrict } from "@/lib/missions";
@@ -580,6 +582,28 @@ export async function POST(request: Request) {
     }
     mark("finddoggo");
 
+    // Fresh authoritative score so the client can celebrate a level-up
+    // instantly instead of waiting for the next dashboard render. The
+    // dashboard itself is server-rendered from this same RPC, so mark it
+    // stale — the next visit re-renders with the new numbers.
+    let totalScore: number | null = null;
+    let level: number | null = null;
+    try {
+      const { data: scoreRes } = await supabase.rpc("get_user_score", {
+        p_user_id: user.id,
+      });
+      const s = scoreRes as { total_score?: number } | null;
+      if (typeof s?.total_score === "number") {
+        totalScore = s.total_score;
+        level = deriveLevel(s.total_score).level;
+      }
+    } catch (scoreErr) {
+      // Score refresh is best-effort; the sighting itself already saved.
+      console.error("[sightings] score refresh failed:", scoreErr);
+    }
+    revalidatePath("/dashboard");
+    mark("score");
+
     console.log(
       `[perf] sightings.TOTAL = ${Math.round(performance.now() - t0)}ms`
     );
@@ -591,6 +615,8 @@ export async function POST(request: Request) {
       catchType,
       missionAward,
       finddoggoAward,
+      totalScore,
+      level,
     });
   } catch (err) {
     console.error("[POST /api/sightings]", err);

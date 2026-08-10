@@ -7,6 +7,7 @@ import { AuthListener } from "@/components/auth/auth-listener";
 import { PrecachePages } from "@/components/pwa/sw-register";
 import { OfflineBanner } from "@/components/pwa/offline-banner";
 import { LocationGate } from "@/components/location/location-gate";
+import { LevelUpOverlay } from "@/components/dog/level-up-splash";
 import { getCurrentUser, getCurrentProfile } from "@/lib/auth-cache";
 import { getViewerMissionAccess } from "@/lib/viewer-city";
 
@@ -41,6 +42,7 @@ export default async function AppLayout({
         <TopNavWithProfile user={user} />
       </Suspense>
       <OfflineBanner />
+      <LevelUpOverlay />
       <main className="flex-1 overflow-y-auto pb-36">{children}</main>
       <AppFooter />
     </div>

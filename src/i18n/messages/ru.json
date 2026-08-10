@@ -74,7 +74,10 @@
     "achFivePioneers": "5 открытий",
     "achFiftySpottings": "50 наблюдений",
     "achSevenDayStreak": "7-дневная серия",
-    "developedBy": "Разработчик:"
+    "developedBy": "Разработчик:",
+    "levelUpKicker": "Новый уровень",
+    "levelUpBody": "Поздравляем! Теперь ты",
+    "levelUpContinue": "Продолжить"
   },
   "addDog": {
     "dogNamed": "Собака по имени {name}!",

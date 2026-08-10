@@ -74,7 +74,10 @@
     "achFivePioneers": "5 Discovered",
     "achFiftySpottings": "50 Sightings",
     "achSevenDayStreak": "7-Day Streak",
-    "developedBy": "Developed by"
+    "developedBy": "Developed by",
+    "levelUpKicker": "Level up",
+    "levelUpBody": "Congratulations! Now you are",
+    "levelUpContinue": "Continue"
   },
   "addDog": {
     "dogNamed": "Dog named {name}!",
