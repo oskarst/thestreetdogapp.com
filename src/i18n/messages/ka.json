@@ -77,7 +77,9 @@
     "developedBy": "შემქმნელი:",
     "levelUpKicker": "ახალი დონე",
     "levelUpBody": "გილოცავ! ახლა შენ ხარ",
-    "levelUpContinue": "გაგრძელება"
+    "levelUpContinue": "გაგრძელება",
+    "questToast": "+50 XP ჩაირიცხა",
+    "achUnlockedToast": "მიღწევა გახსნილია: {name}"
   },
   "addDog": {
     "dogNamed": "ძაღლი დასახელდა {name}!",

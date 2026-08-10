@@ -97,7 +97,7 @@ export default async function DogCaughtPage({
         <span className="absolute top-3.5 right-3.5 inline-flex items-center gap-1 rounded-full border border-white/25 bg-black/50 backdrop-blur-sm px-2.5 py-1.5 font-mono text-[10.5px] tracking-[0.16em] uppercase text-white">
           view ›
         </span>
-        <div className="absolute bottom-3.5 left-4 font-mono text-[70.4px] font-medium leading-none tracking-[-0.03em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+        <div className="reward-pop absolute bottom-3.5 left-4 font-mono text-[70.4px] font-medium leading-none tracking-[-0.03em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
           +{points}
           <span className="text-lg tracking-[0.16em] uppercase ml-1 align-[12px] opacity-85">
             XP
@@ -130,6 +130,7 @@ export default async function DogCaughtPage({
           <SectionLabel meta="scoring.rpc">Reward Breakdown</SectionLabel>
           <div className="card-soft p-0 overflow-hidden">
             <BreakdownRow
+              seq={0}
               label={
                 catchType === "new"
                   ? "Pioneer base"
@@ -143,6 +144,7 @@ export default async function DogCaughtPage({
             />
             {missionXp > 0 && (
               <BreakdownRow
+                seq={1}
                 label={
                   missionCompleted
                     ? `Mission ${missionProgress}/${missionTarget} · passed`
@@ -153,11 +155,15 @@ export default async function DogCaughtPage({
             )}
             {missionCompleted && missionFinishXp > 0 && (
               <BreakdownRow
+                seq={2}
                 label="Completion bonus"
                 value={`+${missionFinishXp} XP`}
               />
             )}
-            <div className="flex justify-between items-baseline px-3.5 py-3 pt-3">
+            <div
+              className="reward-row flex justify-between items-baseline px-3.5 py-3 pt-3"
+              style={{ animationDelay: "0.75s" }}
+            >
               <span className="font-mono text-[12.1px] uppercase tracking-[0.16em] text-muted-foreground">
                 Total earned
               </span>
@@ -170,7 +176,10 @@ export default async function DogCaughtPage({
         </div>
 
         {missionCompleted && (
-          <div className="mt-3 rounded-xl border border-[var(--green-brand)]/40 bg-green-soft p-3 text-center">
+          <div
+            className="reward-pop mt-3 rounded-xl border border-[var(--green-brand)]/40 bg-green-soft p-3 text-center"
+            style={{ animationDelay: "0.95s" }}
+          >
             <div className="font-mono text-[11px] tracking-[0.22em] uppercase text-green-deep">
               Mission Passed
             </div>
@@ -243,12 +252,18 @@ export default async function DogCaughtPage({
 function BreakdownRow({
   label,
   value,
+  seq = 0,
 }: {
   label: string;
   value: string;
+  /** Position in the staggered entrance sequence. */
+  seq?: number;
 }) {
   return (
-    <div className="flex justify-between items-baseline px-3.5 py-2.5 border-b border-dashed border-rule font-mono text-[13.2px] tracking-[0.04em]">
+    <div
+      className="reward-row flex justify-between items-baseline px-3.5 py-2.5 border-b border-dashed border-rule font-mono text-[13.2px] tracking-[0.04em]"
+      style={{ animationDelay: `${0.35 + seq * 0.12}s` }}
+    >
       <span className="text-ink uppercase tracking-[0.1em] font-medium">
         {label}
       </span>

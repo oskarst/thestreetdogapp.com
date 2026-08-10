@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { SectionLabel } from "@/components/ui/section-label";
+import { StarBurst } from "@/components/ui/star-burst";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +30,14 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [optimisticClaimed, setOptimisticClaimed] = useState(false);
+  const [burst, setBurst] = useState(false);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    };
+  }, []);
 
   const isClaimable = complete && !claimedToday && !optimisticClaimed;
   const isClaimed = claimedToday || optimisticClaimed;
@@ -38,7 +48,7 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
   if (isClaimed) return null;
 
   function handleClaim() {
-    if (!isClaimable || pending) return;
+    if (!isClaimable || pending || burst) return;
     setError(null);
     startTransition(async () => {
       const supabase = createClient();
@@ -52,8 +62,14 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
         setError(result?.error?.replace(/_/g, " ") ?? t("questClaimFailed"));
         return;
       }
-      setOptimisticClaimed(true);
-      router.refresh();
+      // Celebrate on the button before the block disappears: star burst +
+      // toast, then collapse the quest card and refresh the dashboard.
+      setBurst(true);
+      toast.success(t("questToast"));
+      hideTimer.current = setTimeout(() => {
+        setOptimisticClaimed(true);
+        router.refresh();
+      }, 900);
     });
   }
 
@@ -109,12 +125,13 @@ export function DailyQuest({ complete, claimedToday }: DailyQuestProps) {
             onClick={handleClaim}
             disabled={pending}
             className={cn(
-              "shrink-0 font-mono text-[13.2px] font-medium tracking-[0.04em]",
+              "relative shrink-0 font-mono text-[13.2px] font-medium tracking-[0.04em]",
               "px-3 py-1.5 rounded-full bg-ink text-background",
               "transition-transform active:scale-95 disabled:opacity-60"
             )}
           >
             {pending ? "…" : t("claimXp")}
+            {burst && <StarBurst radius={55} size={13} />}
           </button>
         ) : (
           <span

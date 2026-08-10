@@ -500,3 +500,38 @@
   .lvlup-backdrop, .lvlup-card, .lvlup-num, .lvlup-ring { animation: none; }
   .lvlup-star { display: none; }
 }
+
+/* ── Reward screen sequencing + streak flame ─────────────────────────
+   /dog-caught elements enter in a cascade: +XP pops first, breakdown
+   rows slide in one by one, the total and mission banner land last.
+   The streak flame flickers harder the longer the streak holds. */
+@keyframes reward-pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes reward-row-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.reward-pop {
+  animation: reward-pop 0.5s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-origin: bottom left;
+}
+.reward-row { animation: reward-row-in 0.4s ease-out both; }
+@keyframes streak-flicker {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.18) rotate(-4deg); }
+}
+.streak-flame { animation: streak-flicker 1.6s ease-in-out infinite; }
+.streak-flame-2 {
+  animation-duration: 1.1s;
+  filter: drop-shadow(0 0 4px var(--amber-brand));
+}
+.streak-flame-3 {
+  animation-duration: 0.8s;
+  filter: drop-shadow(0 0 6px #ef4444);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reward-pop, .reward-row, .streak-flame { animation: none; }
+}

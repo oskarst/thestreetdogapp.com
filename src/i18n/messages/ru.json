@@ -77,7 +77,9 @@
     "developedBy": "Разработчик:",
     "levelUpKicker": "Новый уровень",
     "levelUpBody": "Поздравляем! Теперь ты",
-    "levelUpContinue": "Продолжить"
+    "levelUpContinue": "Продолжить",
+    "questToast": "+50 XP получено",
+    "achUnlockedToast": "Достижение получено: {name}"
   },
   "addDog": {
     "dogNamed": "Собака по имени {name}!",

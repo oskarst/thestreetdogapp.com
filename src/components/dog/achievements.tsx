@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 import { Icon } from "@/components/ui/icon";
 import type { Achievement } from "@/lib/dashboard";
 import type { ScoreResult } from "@/types/database";
 import { cn } from "@/lib/utils";
+
+const SEEN_ACHS_KEY = "sd_seen_achs";
 
 interface AchievementsProps {
   achievements: Achievement[];
@@ -25,6 +28,61 @@ const ACHIEVEMENT_LABEL_KEY: Record<string, string> = {
 export function Achievements({ achievements, score }: AchievementsProps) {
   const t = useTranslations("dashboard");
   const [open, setOpen] = useState(false);
+
+  // Celebrate freshly unlocked achievements: compare against the ids we
+  // have already celebrated (localStorage) and toast each new one. Runs
+  // after a delay so it queues behind a possible level-up splash. First
+  // ever visit just records the current state silently.
+  useEffect(() => {
+    const unlocked = achievements.filter((a) => a.unlocked).map((a) => a.id);
+    let seen: string[] | null = null;
+    try {
+      const raw = localStorage.getItem(SEEN_ACHS_KEY);
+      seen = raw == null ? null : (JSON.parse(raw) as string[]);
+    } catch {
+      /* storage unavailable — skip celebration */
+    }
+    try {
+      localStorage.setItem(SEEN_ACHS_KEY, JSON.stringify(unlocked));
+    } catch {
+      /* ignore */
+    }
+    if (seen == null) return;
+
+    const fresh = achievements.filter(
+      (a) => a.unlocked && !seen.includes(a.id)
+    );
+    if (fresh.length === 0) return;
+
+    const timer = setTimeout(() => {
+      fresh.forEach((ach, i) => {
+        setTimeout(() => {
+          toast.success(
+            t("achUnlockedToast", {
+              name: ACHIEVEMENT_LABEL_KEY[ach.id]
+                ? t(ACHIEVEMENT_LABEL_KEY[ach.id])
+                : ach.name,
+            }),
+            {
+              icon: (
+                <span
+                  className="grid place-items-center size-6 rounded-full bg-ink text-background"
+                  style={{
+                    animation:
+                      "ach-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both",
+                  }}
+                >
+                  <Icon name={ach.iconName} size={13} />
+                </span>
+              ),
+            }
+          );
+        }, i * 700);
+      });
+    }, 1600);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const stats = [
     {

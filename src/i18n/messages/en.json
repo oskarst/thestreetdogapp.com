@@ -77,7 +77,9 @@
     "developedBy": "Developed by",
     "levelUpKicker": "Level up",
     "levelUpBody": "Congratulations! Now you are",
-    "levelUpContinue": "Continue"
+    "levelUpContinue": "Continue",
+    "questToast": "+50 XP claimed",
+    "achUnlockedToast": "Achievement unlocked: {name}"
   },
   "addDog": {
     "dogNamed": "Dog named {name}!",
